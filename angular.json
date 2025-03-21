@@ -60,10 +60,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "MISW4501-G5-Web:build:production"
+              "buildTarget": "MISW4501-G5-Web:build:production"
             },
             "development": {
-              "browserTarget": "MISW4501-G5-Web:build:development"
+              "buildTarget": "MISW4501-G5-Web:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -71,7 +71,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "MISW4501-G5-Web:build"
+            "buildTarget": "MISW4501-G5-Web:build"
           }
         },
         "test": {
