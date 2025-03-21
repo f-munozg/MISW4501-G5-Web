@@ -22,25 +22,20 @@ src/
 ├── app/
 │   ├── core/                         # Funcionalidades esenciales (i.e., autorización, roles, logs, etc.)
 │   ├── shared/                       # Componentes compartidos (navbar, header), pipelines, directivas, etc.
-│   ├── domains/                      # Componentes y módulos por dominio
-│   │   ├── login/                      # Páginas de inicio de sesión y registro
-│   │   ├── usuarios/                   # Páginas de gestión de usuarios
-│   │   ├── pedidos/                    # Páginas de gestión de pedidos
-│   │   ├── productos/                  # Páginas de gestión de productos
-│   │   ├── fabricantes/                # Páginas de gestión de fabricantes
-│   │   ├── bodegas/                    # Páginas de gestión de bodegas
-│   │   ├── inventarios/                # Páginas de gestión de inventarios
-│   │   ├── rutas/                      # Páginas de gestión de rutas
-│   │   ├── ventas/                     # Páginas de gestión de ventas
-│   │   ├── compras/                    # Páginas de gestión de compras
-│   │   ├── vendedores/                 # Páginas de gestión de vendedores
-│   │   ├── reportes/                   # Páginas de reportes
-│   │   └── reglas/                     # Páginas de reglas
-│   ├── layouts/                      # Layouts para los roles diferentes
-│   │   ├── layout-admin/               # Layout para usuarios con rol de admin
-│   │   ├── layout-vendedor/            # Layout para usuarios con rol de vendedor
-│   │   ├── layout-compras/             # Layout para usuarios con rol de compras
-│   │   └── layout-logistica/           # Layout para usuarios con rol de logística
+│   ├── domains/                      # Módulos por dominio
+│   │   ├── login/                      # Componentes de inicio de sesión y registro
+│   │   ├── usuarios/                   # Componentes de gestión de usuarios
+│   │   ├── pedidos/                    # Componentes de gestión de pedidos
+│   │   ├── productos/                  # Componentes de gestión de productos
+│   │   ├── fabricantes/                # Componentes de gestión de fabricantes
+│   │   ├── bodegas/                    # Componentes de gestión de bodegas
+│   │   ├── inventarios/                # Componentes de gestión de inventarios
+│   │   ├── rutas/                      # Componentes de gestión de rutas
+│   │   ├── ventas/                     # Componentes de gestión de ventas
+│   │   ├── compras/                    # Componentes de gestión de compras
+│   │   ├── vendedores/                 # Componentes de gestión de vendedores
+│   │   ├── reportes/                   # Componentes de reportes
+│   │   └── reglas/                     # Componentes de reglas
 │   ├── app-routing.module.ts         # Configuración principal de routing
 │   ├── app.component.ts              # Componente Root
 │   └── app.module.ts                 # Módulo Root
