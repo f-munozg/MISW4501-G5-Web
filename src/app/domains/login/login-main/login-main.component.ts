@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-main',
@@ -8,9 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginMainComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) {}
 
   ngOnInit() {
+  }
+
+  goToRecover() {
+    this.router.navigate(['/recover']);
   }
 
 }

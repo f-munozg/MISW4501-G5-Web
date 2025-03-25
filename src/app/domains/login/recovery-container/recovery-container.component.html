@@ -1,0 +1,19 @@
+<body>
+  <div class="outer">
+    <div class="middle">
+      <div class="component-container">
+        @switch (currentView) {
+          @case ('recovery-user') {
+            <app-recovery-user (openModal)="showModal()" />
+          }
+          @case ('recovery-modal') {
+            <app-recovery-modal (close)="closeModal()" />
+          }
+          @case ('recovery-password') {
+            <app-recovery-password (goToLogin)="goToLogin()" />
+          }
+        }
+      </div>
+    </div>
+  </div>
+</body>
