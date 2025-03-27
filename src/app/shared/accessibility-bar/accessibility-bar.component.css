@@ -1,0 +1,13 @@
+.increaseFontSizeBtn {
+    padding-top: 5px;
+    color: #e9e7eb;
+    border: none;
+}
+
+.decreaseFontSizeBtn {
+    border: none;
+}
+
+.changeContrastBtn {
+    border: none;
+}

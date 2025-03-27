@@ -1,0 +1,17 @@
+.blankContainer {
+    position: relative;  /* Required for absolute positioning */
+    height: 100vh;       /* Full viewport height */
+  }
+  
+.app-accessibility-bar {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
