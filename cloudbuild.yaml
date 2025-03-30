@@ -3,7 +3,7 @@ steps:
  # Build docker image
 
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/proyectofinal1-455100/github.com/f-munozg/${_CONTAINER_IMAGE}', '.']
+  args: ['build', '-t', 'gcr.io/proyectofinal1-455100/github.com/f-munozg/${_CONTAINER_IMAGE}', '-f', '${_DOCKERFILE_PATH}', '.']
 
  # Push image to artifact registry
 
