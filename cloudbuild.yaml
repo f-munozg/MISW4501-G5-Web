@@ -1,5 +1,18 @@
- # Create the new instance template
 steps:
+
+ # Build docker image
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/proyectofinal1-455100/github.com/f-munozg/${_CONTAINER_IMAGE}', '.']
+
+ # Push image to artifact registry
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/proyectofinal1-455100/github.com/f-munozg/${_CONTAINER_IMAGE}:latest']
+ 
+
+ # Create the new instance template
+
 - name: 'gcr.io/cloud-builders/gcloud'
   id: create-instance-template
   args:
@@ -16,9 +29,9 @@ steps:
     - --service-account=${_SERVICE_ACCOUNT}
     - --container-image
     - gcr.io/proyectofinal1-455100/github.com/f-munozg/${_CONTAINER_IMAGE}:latest
-    
+  env:
+   - 'CLOUDSDK_COMPUTE_REGION=us-central1'
  # Update the managed instance group
-
 
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: 'bash'
