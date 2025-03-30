@@ -1,5 +1,6 @@
 <div class="blankContainer">
-  <app-header></app-header>
+  <app-header (toggleSidenav)="toggleSidenav()"></app-header>
+  <app-sidenav [isOpen]="sidenavOpen"></app-sidenav>
   <app-accessibility-bar class="app-accessibility-bar"></app-accessibility-bar>
 </div>
 
