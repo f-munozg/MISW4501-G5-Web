@@ -1,6 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MaterialModule } from 'src/app/material/material.module';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-header',
@@ -12,7 +11,22 @@ export class HeaderComponent implements OnInit {
 
   @Output() toggleSidenav = new EventEmitter<void>();
 
-  constructor(private dialog: MatDialog) { }
+  selectLanguage(lang: string) {
+    console.log('Selected language:', lang);
+    // Falta agregar la lógica de internacionalización aqui.
+  }
+
+  isMenuOpen = false;
+
+  onMenuOpened() {
+    this.isMenuOpen = true;
+  }
+
+  onMenuClosed() {
+    this.isMenuOpen = false;
+  }
+
+  constructor() { }
 
   ngOnInit() {
   }

@@ -3,7 +3,17 @@
     <mat-icon>menu</mat-icon>
   </button>
   <h2>CCP</h2>
-  <div class="internationalization">
-    <button type="button" class="internationalizationBtn"> <img src="../../../assets/icons/InternationalizationButton_icon.png"></button>
+  <div class="internationalizationContainer">
+    <div class="internationalization">
+      <button mat-button class="internationalizationBtn" [matMenuTriggerFor]="languageMenu"> 
+        <img src="../../../assets/icons/InternationalizationButton_icon.png">
+      </button>
+
+      <mat-menu #languageMenu="matMenu" class="languageMenu">
+        <button mat-menu-item (click)="selectLanguage('en')">English</button>
+        <button mat-menu-item (click)="selectLanguage('es')">Español</button>
+      </mat-menu>
+    </div>
   </div>
+
 </div>
