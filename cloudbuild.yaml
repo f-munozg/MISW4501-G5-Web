@@ -22,7 +22,7 @@ steps:
 
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: 'bash'
-  args: ['-c','gcloud compute instance-groups managed rolling-action start-update ${_SERVICE_NAME}-instance-group --version=template=${_SERVICE_NAME}-instance-template-$_ENV-$SHORT_SHA --region=us-central1 --max-unavailable=0'] 
+  args: ['-c','gcloud compute instance-groups managed rolling-action start-update ${_SERVICE_NAME}-instance-group --version=template=${_SERVICE_NAME}-instance-template-$_ENV-$SHORT_SHA --zone=${_SERVICE_ZONE} --max-unavailable=0'] 
   
 options:
  logging: CLOUD_LOGGING_ONLY
