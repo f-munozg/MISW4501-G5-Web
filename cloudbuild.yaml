@@ -27,6 +27,7 @@ steps:
     - --tags=web,http-server,https-server
     - --region=us-central1
     - --service-account=${_SERVICE_ACCOUNT}
+    - --network-interface=no-address
     - --container-image
     - gcr.io/proyectofinal1-455100/github.com/f-munozg/${_CONTAINER_IMAGE}:latest
   env:
