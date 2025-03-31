@@ -1,4 +1,4 @@
-<mat-drawer-container class="sidenavContainer">
+<mat-drawer-container class="sidenavContainer" [class.collapsed]="!isOpen" autosize="true">
   <mat-drawer mode="side" [opened]="isOpen" class="sidenavDrawer">
     <mat-nav-list class="sidenavList">
       <a mat-list-item>Gestión de Productos</a>
@@ -15,8 +15,4 @@
       <a mat-list-item>Cerrar Sesión</a>
     </mat-nav-list>
   </mat-drawer>
-  <mat-drawer-content class="content-wrapper">
-    <!-- Content will be projected here -->
-    <ng-content></ng-content>
-  </mat-drawer-content>
 </mat-drawer-container>

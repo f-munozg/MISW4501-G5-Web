@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginModule } from './domains/login/login.module';
-
+import { DefaultWindowComponent } from './shared/default-window/default-window.component';
 
 @NgModule({
   declarations: [
@@ -13,7 +13,8 @@ import { LoginModule } from './domains/login/login.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    LoginModule
+    LoginModule,
+    DefaultWindowComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
