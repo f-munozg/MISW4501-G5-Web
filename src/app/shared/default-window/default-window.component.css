@@ -1,17 +1,42 @@
 .blankContainer {
-    position: relative;  /* Required for absolute positioning */
-    height: 100vh;       /* Full viewport height */
-  }
-  
-.app-accessibility-bar {
-    position: fixed;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-  }
+  position: relative;  /* Required for absolute positioning */
+  height: 100vh;       /* Full viewport height */
+}
 
 app-header {
-    position: fixed;
-    top: 0;
-    left: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5000;
+}
+
+app-accessibility-bar {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.pageContent {
+margin-left: 365px;
+transition: margin-left 0.3s ease;
+padding: 20px;
+padding-top: 120px;
+}
+
+.pageContent:not(.drawer-open) {
+margin-left: calc(365px - 345px);
+}
+
+app-sidenav {
+position: fixed;
+left: 0;
+top: 0;
+height: 100vh;
+z-index: 5 !important;
+transition: transform 0.3s ease;
+}
+
+app-sidenav:not([isOpen="true"]) {
+transform: translateX(-100%);
 }

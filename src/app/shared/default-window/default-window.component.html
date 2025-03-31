@@ -1,6 +1,8 @@
 <div class="blankContainer">
   <app-header (toggleSidenav)="toggleSidenav()"></app-header>
   <app-sidenav [isOpen]="sidenavOpen"></app-sidenav>
+  <div class="pageContent" [class.drawer-open]="sidenavOpen">
+    <ng-content></ng-content>
+  </div>
   <app-accessibility-bar class="app-accessibility-bar"></app-accessibility-bar>
 </div>
-
