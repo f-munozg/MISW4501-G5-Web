@@ -1,0 +1,74 @@
+<app-default-window>
+  <main class="cargaProductoContainer">
+    <div class="cargaProductoHeaderGrid">
+      <h2 class="grid-item-cargaProductoTitulo">
+        Registro de Productos
+      </h2>
+      <div class="grid-item-cargaMasivaBtn">
+        <button mat-flat-button class="cargaMasiva">Carga Masiva</button>
+      </div>
+    </div>
+    <div class="cargaProductoGrid">
+      <div class="grid-item-codigoForm">
+        <h3>Producto</h3>
+        <mat-form-field class="codigoFormField">
+          <input matInput placeholder="Código Producto (SKU)">
+        </mat-form-field>
+      </div>
+      <div class="grid-item-fabricanteForm">
+        <h3>Fabricante</h3>
+        <mat-form-field class="fabricanteFormField">
+          <input matInput placeholder="Fabricante">
+        </mat-form-field>
+      </div>
+      <div class="grid-item-valorForm">
+        <h3>Valor</h3>
+        <mat-form-field class="valorFormField">
+          <input matInput placeholder="Valor">
+        </mat-form-field>
+      </div>
+      <div class="grid-item-fechaVencimientoForm">
+        <h3>Fecha de Vencimiento</h3>
+        <mat-form-field class="fechaVencimientoFormField">
+          <mat-label>Fecha de Vencimiento</mat-label>
+          <input matInput [matDatepicker]="picker">
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="grid-item-condicionesAlmacenamientoForm">
+        <h3>Condiciones de almacenamiento</h3>
+        <mat-form-field class="condicionesAlmacenamientoFormField">
+          <input matInput placeholder="Condiciones de almacenamiento">
+        </mat-form-field>
+      </div>
+      <div class="grid-item-fotografiaForm">
+        <h3>Fotografía</h3>
+        <mat-form-field class="fotografiaFormField">
+          <input matInput placeholder="Adjuntar Foto">
+        </mat-form-field>
+      </div>
+      <div class="grid-item-caracteristicasForm">
+        <h3>Características del Producto</h3>
+        <mat-form-field class="caracteristicasFormField">
+          <input matInput placeholder="Características del Producto">
+        </mat-form-field>
+      </div>
+      <div class="grid-item-descripcionForm">
+        <h3>Descripción del Producto</h3>
+        <mat-form-field class="descripcionFormField">
+          <input matInput placeholder="Descripción del Producto">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="cargaProductoBtnsGrid">
+      <div class="grid-item-CancelarBtnDiv">
+        <button mat-flat-button class="CancelarBtn">Cancelar</button>
+      </div>
+      <div class="grid-item-GuardarBtnDiv">
+        <button mat-flat-button class="GuardarBtn">Guardar</button>
+      </div>
+    </div>
+  </main>
+</app-default-window>

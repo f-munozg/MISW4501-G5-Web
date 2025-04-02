@@ -4,12 +4,14 @@ import { LoginMainComponent } from './domains/login/login-main/login-main.compon
 import { RecoveryContainerComponent } from './domains/login/recovery-container/recovery-container.component';
 import { DefaultWindowComponent } from './shared/default-window/default-window.component';
 import { RegistroFabricantesComponent } from './domains/fabricantes/registro-fabricantes/registro-fabricantes.component';
+import { CargaProductoComponent } from './domains/productos/carga-producto/carga-producto.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginMainComponent},
   {path: 'recover', component: RecoveryContainerComponent},
   {path: 'menu', component: DefaultWindowComponent},
-  {path: 'fabricantes/registro', component: RegistroFabricantesComponent}
+  {path: 'fabricantes/registro', component: RegistroFabricantesComponent},
+  {path: 'productos/carga_producto', component: CargaProductoComponent}
 ];
 
 @NgModule({

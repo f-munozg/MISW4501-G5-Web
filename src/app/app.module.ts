@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { LoginModule } from './domains/login/login.module';
 import { DefaultWindowComponent } from './shared/default-window/default-window.component';
 import { FabricantesModule } from './domains/fabricantes/fabricantes.module';
+import { ProductosModule } from './domains/productos/productos.module';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { FabricantesModule } from './domains/fabricantes/fabricantes.module';
     AppRoutingModule,
     LoginModule,
     DefaultWindowComponent,
-    FabricantesModule
+    FabricantesModule,
+    ProductosModule
   ],
   providers: [],
   bootstrap: [AppComponent]
