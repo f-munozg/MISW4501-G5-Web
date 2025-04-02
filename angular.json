@@ -60,10 +60,12 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "MISW4501-G5-Web:build:production"
+              "buildTarget": "MISW4501-G5-Web:build:production",
+              "allowedHosts": ["web-logistics-143596276526.us-central1.run.app", "web-purchases-143596276526.us-central1.run.app", "web-sales-143596276526.us-central1.run.app", "web-sellers-143596276526.us-central1.run.app"]
             },
             "development": {
-              "buildTarget": "MISW4501-G5-Web:build:development"
+              "buildTarget": "MISW4501-G5-Web:build:development",
+              "allowedHosts": ["web-logistics-143596276526.us-central1.run.app", "web-purchases-143596276526.us-central1.run.app", "web-sales-143596276526.us-central1.run.app", "web-sellers-143596276526.us-central1.run.app"]
             },
             "options": {
               "allowedHosts": ["web-logistics-143596276526.us-central1.run.app", "web-purchases-143596276526.us-central1.run.app", "web-sales-143596276526.us-central1.run.app", "web-sellers-143596276526.us-central1.run.app"]
