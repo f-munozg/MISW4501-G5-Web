@@ -24,6 +24,10 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
+      reporters: [
+        { type: 'html' },
+        { type: 'text-summary' }
+      ],
       check: {
         global: {
           statements: 80,
