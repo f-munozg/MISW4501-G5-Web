@@ -64,6 +64,9 @@
             },
             "development": {
               "buildTarget": "MISW4501-G5-Web:build:development"
+            },
+            "options": {
+              "allowedHosts": ["web-logistics-143596276526.us-central1.run.app", "web-purchases-143596276526.us-central1.run.app", "web-sales-143596276526.us-central1.run.app", "web-sellers-143596276526.us-central1.run.app"]
             }
           },
           "defaultConfiguration": "development"
