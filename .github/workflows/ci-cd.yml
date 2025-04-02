@@ -1,24 +1,20 @@
 name: Develop_test
 on: workflow_dispatch
 jobs:
-  test_web:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ 3.10 ]
+        node-version: [18.x, 20.x, 22.x]
     steps:
-      - uses: actions/checkout@v1
-      - name: Save test variable to env variable
-        run: echo "IS_UNIT_TEST=1" >> $GITHUB_ENV
-      - name: Init virtual environment
-        working-directory: ./customers
-        run: python -m venv ./venv
-      - name: Enable environment
-        working-directory: ./customers
-        run: source ./venv/bin/activate
-      - name: Install dependencies
-        working-directory: ./customers
-        run: pip install -r requirements.txt
-      - name: Run unit tests
-        working-directory: ./customers
-        run: pytest --cov=. -v -s --cov-fail-under=80
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
+    - name: Run tests
+      run: npm test
+
