@@ -14,7 +14,7 @@
     grid-template-columns: repeat(9, 1fr);
 
     .grid-item-registroFabricantesTitulo{
-        grid-column: 1 / 4;
+        grid-column: 1 / 6;
     }
 
     .grid-item-PortafolioBtn{
