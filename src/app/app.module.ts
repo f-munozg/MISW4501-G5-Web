@@ -7,6 +7,8 @@ import { LoginModule } from './domains/login/login.module';
 import { DefaultWindowComponent } from './shared/default-window/default-window.component';
 import { FabricantesModule } from './domains/fabricantes/fabricantes.module';
 import { ProductosModule } from './domains/productos/productos.module';
+import { TableTemplateComponent } from './material/table-template/table-template.component';
+import { TableDemoComponent } from './material/table-template/table-demo.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { ProductosModule } from './domains/productos/productos.module';
     LoginModule,
     DefaultWindowComponent,
     FabricantesModule,
-    ProductosModule
+    ProductosModule,
+    TableTemplateComponent,
+    TableDemoComponent // Testing
   ],
   providers: [],
   bootstrap: [AppComponent]

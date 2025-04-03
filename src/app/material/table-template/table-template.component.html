@@ -1,0 +1,39 @@
+<div class="tableComponent">
+  <div class="tableBtnsGrid">
+    <div class="grid-item-ExportarCSVBtn">
+      <button mat-flat-button class="ExportarCSVBtn">Exportar como CSV</button>
+    </div>
+    <div class="grid-item-ExportarPDFBtn">
+      <button mat-flat-button class="ExportarPDFBtn">Exportar como PDF</button>
+    </div>
+  </div>
+  <div class="tableGrid">
+    <table mat-table [dataSource]="dataSource">
+      <!-- Definiciones de columna -->
+      <ng-container *ngFor="let column of columns" [matColumnDef]="column.name">
+        <th mat-header-cell *matHeaderCellDef>{{column.header}}</th>
+        <td mat-cell *matCellDef="let element">{{column.cell(element)}}</td>
+      </ng-container>
+
+      <!-- Columna de acciones (botones)-->
+      <ng-container matColumnDef="actions" *ngIf="actions?.length">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element">
+          <button 
+            mat-icon-button 
+            *ngFor="let action of actions" 
+            [matTooltip]="action.tooltip"
+            (click)="action.action(element)"
+          >
+            <mat-icon>{{ action.icon }}</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Definiciones de filas -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsWithActions"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsWithActions;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>

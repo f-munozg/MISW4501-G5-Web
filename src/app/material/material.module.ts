@@ -11,6 +11,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TableTemplateComponent } from './table-template/table-template.component';
 
 const materialModules = [
   MatFormFieldModule,
@@ -22,7 +26,10 @@ const materialModules = [
   MatIconModule,
   MatDialogModule,
   MatMenuModule,
-  MatDatepickerModule
+  MatDatepickerModule,
+  MatTableModule,
+  MatPaginatorModule,
+  MatTooltipModule
 ]
 
 @NgModule({
@@ -32,10 +39,12 @@ const materialModules = [
   ],
   imports: [
     CommonModule,
-    materialModules
+    materialModules,
+    TableTemplateComponent
   ],
   exports: [
-    materialModules
+    materialModules,
+    TableTemplateComponent
   ],
 })
 export class MaterialModule { }
