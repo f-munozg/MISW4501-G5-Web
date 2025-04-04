@@ -1,12 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MaterialModule } from 'src/app/material/material.module';
+import { DefaultWindowComponent } from 'src/app/shared/default-window/default-window.component';
+import { ConsultaVentasComponent } from './consulta-ventas/consulta-ventas.component';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    ConsultaVentasComponent
+  ],
   imports: [
-    CommonModule
+    CommonModule,
+    MaterialModule,
+    DefaultWindowComponent
   ]
 })
 export class VentasModule { }
