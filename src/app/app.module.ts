@@ -8,6 +8,7 @@ import { FabricantesModule } from './domains/fabricantes/fabricantes.module';
 import { ProductosModule } from './domains/productos/productos.module';
 import { InventariosModule } from './domains/inventarios/inventarios.module';
 import { VentasModule } from './domains/ventas/ventas.module';
+import { VendedoresModule } from './domains/vendedores/vendedores.module';
 
 import { DefaultWindowComponent } from './shared/default-window/default-window.component';
 import { TableTemplateComponent } from './material/table-template/table-template.component';
@@ -26,6 +27,7 @@ import { TableDemoComponent } from './material/table-template/table-demo.compone
     ProductosModule,
     InventariosModule,
     VentasModule,
+    VendedoresModule,
     TableTemplateComponent,
     TableDemoComponent, // Testing
   ],

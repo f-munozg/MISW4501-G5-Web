@@ -20,12 +20,12 @@
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let element">
           <button 
-            mat-icon-button 
+            mat-button 
             *ngFor="let action of actions" 
             [matTooltip]="action.tooltip"
             (click)="action.action(element)"
           >
-            <mat-icon>{{ action.icon }}</mat-icon>
+            {{ action.icon }}
           </button>
         </td>
       </ng-container>
