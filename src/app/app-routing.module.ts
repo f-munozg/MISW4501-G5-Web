@@ -9,6 +9,7 @@ import { TableTemplateComponent } from './material/table-template/table-template
 import { TableDemoComponent } from './material/table-template/table-demo.component';
 import { ConsultaInventarioComponent } from './domains/inventarios/consulta-inventario/consulta-inventario.component';
 import { ConsultaVentasComponent } from './domains/ventas/consulta-ventas/consulta-ventas.component';
+import { ConsultaProductoBodegaComponent } from './domains/inventarios/consulta-producto-bodega/consulta-producto-bodega.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginMainComponent},
@@ -19,7 +20,8 @@ const routes: Routes = [
   {path: 'tabla/container', component: TableTemplateComponent}, // Testing
   {path: 'tabla/demo', component: TableDemoComponent}, // Testing
   {path: 'inventario/consulta', component: ConsultaInventarioComponent},
-  {path: 'ventas/consulta', component: ConsultaVentasComponent}
+  {path: 'ventas/consulta', component: ConsultaVentasComponent},
+  {path: 'inventario/consulta_producto_bodega', component: ConsultaProductoBodegaComponent}
 ];
 
 @NgModule({

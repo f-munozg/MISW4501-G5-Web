@@ -14,6 +14,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSelectModule } from '@angular/material/select';
 import { TableTemplateComponent } from './table-template/table-template.component';
 
 const materialModules = [
@@ -29,7 +30,8 @@ const materialModules = [
   MatDatepickerModule,
   MatTableModule,
   MatPaginatorModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatSelectModule
 ]
 
 @NgModule({
