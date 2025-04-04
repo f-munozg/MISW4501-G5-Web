@@ -36,8 +36,10 @@
       </h2>
     </div>
     <div class="detallesInventarioGrid">
-      <app-table-template>
-
+      <app-table-template
+        [data]="tableData"
+        [columns]="tableColumns"
+        [displayedColumns]="visibleColumns">
       </app-table-template>
     </div>
   </main>
