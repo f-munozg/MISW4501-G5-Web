@@ -13,12 +13,12 @@
         </mat-form-field>
       </div>
       <div class="grid-item-fabricanteForm">
-        <h3>Fabricante</h3>
+        <h3>Bodega</h3>
         <mat-form-field class="fabricanteFormField">
           <mat-label>Escoja la Bodega</mat-label>
           <mat-select [(value)]="selectedValue">
-            <mat-option *ngFor="let bodega of bodegas" [value]="bodega.value">
-              {{ bodega.viewValue }}
+            <mat-option *ngFor="let bodega of bodegas" [value]="bodega">
+              {{ bodega }}
             </mat-option>
           </mat-select>
         </mat-form-field>
