@@ -5,8 +5,8 @@ import { RecoveryContainerComponent } from './domains/login/recovery-container/r
 import { DefaultWindowComponent } from './shared/default-window/default-window.component';
 import { RegistroFabricantesComponent } from './domains/fabricantes/registro-fabricantes/registro-fabricantes.component';
 import { CargaProductoComponent } from './domains/productos/carga-producto/carga-producto.component';
-import { TableTemplateComponent } from './material/table-template/table-template.component';
-import { TableDemoComponent } from './material/table-template/table-demo.component';
+import { TableTemplateComponent } from './shared/table-template/table-template.component';
+import { TableDemoComponent } from './shared/table-template/table-demo.component';
 import { ConsultaInventarioComponent } from './domains/inventarios/consulta-inventario/consulta-inventario.component';
 import { ConsultaVentasComponent } from './domains/ventas/consulta-ventas/consulta-ventas.component';
 import { ConsultaProductoBodegaComponent } from './domains/inventarios/consulta-producto-bodega/consulta-producto-bodega.component';

@@ -15,7 +15,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
-import { TableTemplateComponent } from './table-template/table-template.component';
 
 const materialModules = [
   MatFormFieldModule,
@@ -41,12 +40,10 @@ const materialModules = [
   ],
   imports: [
     CommonModule,
-    materialModules,
-    TableTemplateComponent
+    materialModules
   ],
   exports: [
-    materialModules,
-    TableTemplateComponent
+    materialModules
   ],
 })
 export class MaterialModule { }
