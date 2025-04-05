@@ -44,4 +44,8 @@ export class RegistroFabricantesComponent implements OnInit {
       );
     }
   }
+
+  clearAll(){
+    this.registroFabricantesForm.reset()
+  }
 }
