@@ -2,7 +2,7 @@ import { Component, OnChanges, AfterViewInit, Input, ViewChild, SimpleChanges } 
 import { CommonModule } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { MaterialModule } from '../material.module';
+import { MaterialModule } from '../../material/material.module';
 
 interface TableColumn {
   name: string;

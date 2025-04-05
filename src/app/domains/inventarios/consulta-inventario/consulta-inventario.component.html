@@ -21,7 +21,12 @@
       <div class="grid-item-categoriaForm">
         <h3>Categoría</h3>
         <mat-form-field class="categoriaFormField">
-          <input matInput placeholder="Categoría">
+          <mat-label>Escoja la Categoría</mat-label>
+          <mat-select [(value)]="selectedValue">
+            <mat-option *ngFor="let categoria of categorias" [value]="categoria">
+              {{ categoria }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
       <div class="grid-item-buscarBtnForm">

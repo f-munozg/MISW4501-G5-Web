@@ -11,8 +11,8 @@ import { VentasModule } from './domains/ventas/ventas.module';
 import { VendedoresModule } from './domains/vendedores/vendedores.module';
 
 import { DefaultWindowComponent } from './shared/default-window/default-window.component';
-import { TableTemplateComponent } from './material/table-template/table-template.component';
-import { TableDemoComponent } from './material/table-template/table-demo.component'; // Testing
+import { TableTemplateComponent } from './shared/table-template/table-template.component';
+import { TableDemoComponent } from './shared/table-template/table-demo.component'; // Testing
 
 @NgModule({
   declarations: [

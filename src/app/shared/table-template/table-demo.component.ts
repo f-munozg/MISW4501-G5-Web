@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ELEMENT_DATA } from './mock-data';
 import { TableTemplateComponent } from './table-template.component';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from '../material.module';
+import { MaterialModule } from '../../material/material.module';
 
 @Component({
   selector: 'app-table-demo',

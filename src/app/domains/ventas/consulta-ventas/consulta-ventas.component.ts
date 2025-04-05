@@ -37,6 +37,9 @@ export class ConsultaVentasComponent implements OnInit {
 
   visibleColumns = ['fecha', 'producto', 'unidades_vendidas', 'ingresos'];
 
+  selectedValue!: string; // Debe ser revisado, selectedValue es temporal
+
+  categorias: any[] = []; // any debe ser cambiado cuando se implemente el servicio del cual lea.
 
   constructor() { }
 
