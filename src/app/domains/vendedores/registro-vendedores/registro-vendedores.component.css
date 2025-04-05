@@ -1,0 +1,119 @@
+.registroVendedoresContainer{
+    display: grid;
+    gap: 20px;
+    background-color: #e4e4e4;
+}
+
+[class^='grid-item']{
+    outline: 3px dashed #f90;
+}
+
+.registroVendedoresGrid{
+    display: grid;
+    grid-row: 2;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 20px;
+
+    .grid-item-numeroIdentificacionForm{
+        grid-column: 2 / 5;
+        grid-row: 1;
+
+        .numeroIdentificacionFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-nombreForm{
+        grid-column: 6 / 9;
+        grid-row: 1;
+
+        .nombreFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-correoElectronicoForm{
+        grid-column: 2 / 5;
+        grid-row: 2;
+
+        .correoElectronicoFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-direccionForm{
+        grid-column: 6 / 9;
+        grid-row: 2;
+
+        .direccionFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-telefonoForm{
+        grid-column: 2 / 5;
+        grid-row: 3;
+
+        .telefonoFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-ciudadForm{
+        grid-column: 6 / 9;
+        grid-row: 3;
+
+        .ciudadFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+}
+
+.registroVendedoresBtnsGrid{
+    display: grid;
+    grid-row: 5;
+    grid-template-columns: repeat(9, 1fr);
+
+    .grid-item-planVentasBtnDiv{
+        grid-column: 2 / 4;
+
+        .planVentasBtn{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .registroVendedoresBtnsContainer{
+        grid-column: 6 / 9;
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+    
+        .grid-item-cancelarBtnDiv{
+            flex: 1;
+            min-width: 0;
+
+            .cancelarBtn{
+                width: 100% !important;
+                grid-column: 1 / -1 !important;
+            } 
+        }
+    
+        .grid-item-guardarBtnDiv{
+            flex: 1;
+            min-width: 0;
+            
+            .guardarBtn{
+                width: 100% !important;
+                grid-column: 1 / -1 !important;
+            }
+        }
+    }
+}

@@ -10,6 +10,7 @@ import { TableDemoComponent } from './material/table-template/table-demo.compone
 import { ConsultaInventarioComponent } from './domains/inventarios/consulta-inventario/consulta-inventario.component';
 import { ConsultaVentasComponent } from './domains/ventas/consulta-ventas/consulta-ventas.component';
 import { ConsultaProductoBodegaComponent } from './domains/inventarios/consulta-producto-bodega/consulta-producto-bodega.component';
+import { RegistroVendedoresComponent } from './domains/vendedores/registro-vendedores/registro-vendedores.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginMainComponent},
@@ -21,7 +22,8 @@ const routes: Routes = [
   {path: 'tabla/demo', component: TableDemoComponent}, // Testing
   {path: 'inventario/consulta', component: ConsultaInventarioComponent},
   {path: 'ventas/consulta', component: ConsultaVentasComponent},
-  {path: 'inventario/consulta_producto_bodega', component: ConsultaProductoBodegaComponent}
+  {path: 'inventario/consulta_producto_bodega', component: ConsultaProductoBodegaComponent},
+  {path: 'vendedores/registro', component: RegistroVendedoresComponent}
 ];
 
 @NgModule({
