@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'src/app/material/material.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http'
+
 import { DefaultWindowComponent } from 'src/app/shared/default-window/default-window.component';
 import { RegistroFabricantesComponent } from './registro-fabricantes/registro-fabricantes.component';
 
@@ -12,7 +15,9 @@ import { RegistroFabricantesComponent } from './registro-fabricantes/registro-fa
   imports: [
     CommonModule,
     MaterialModule,
-    DefaultWindowComponent
+    DefaultWindowComponent,
+    ReactiveFormsModule,
+    HttpClientModule
   ]
 })
 export class FabricantesModule { }
