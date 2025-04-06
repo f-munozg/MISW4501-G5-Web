@@ -17,7 +17,7 @@ export class RegistroFabricantesService {
             identification_number: formData.fieldNit,
             name: formData.fieldNombre,
             address: formData.fieldDireccion,
-            countries: formData.fieldPais,
+            countries: [formData.fieldPais],
             identification_number_contact: formData.fieldIdentificacion,
             name_contact: formData.fieldNombreContacto,
             phone_contact: formData.fieldTelefono,
