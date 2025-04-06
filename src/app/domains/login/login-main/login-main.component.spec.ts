@@ -4,6 +4,8 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { LoginMainComponent } from './login-main.component';
+import { MaterialModule } from 'src/app/material/material.module';
+import { LoginModule } from '../login.module';
 
 describe('LoginMainComponent', () => {
   let component: LoginMainComponent;
@@ -11,7 +13,8 @@ describe('LoginMainComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoginMainComponent ]
+      declarations: [ LoginMainComponent ],
+      imports: [ MaterialModule, LoginModule ]
     })
     .compileComponents();
   }));

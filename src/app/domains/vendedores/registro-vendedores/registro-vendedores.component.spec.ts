@@ -4,6 +4,9 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { RegistroVendedoresComponent } from './registro-vendedores.component';
+import { VendedoresModule } from '../vendedores.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('RegistroVendedoresComponent', () => {
   let component: RegistroVendedoresComponent;
@@ -11,7 +14,8 @@ describe('RegistroVendedoresComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ RegistroVendedoresComponent ]
+      declarations: [ RegistroVendedoresComponent ],
+      imports: [ VendedoresModule, HttpClientTestingModule, ReactiveFormsModule]
     })
     .compileComponents();
   }));

@@ -4,6 +4,8 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { RecoveryPasswordComponent } from './recovery-password.component';
+import { MaterialModule } from 'src/app/material/material.module';
+import { LoginModule } from '../login.module';
 
 describe('RecoveryPasswordComponent', () => {
   let component: RecoveryPasswordComponent;
@@ -11,7 +13,8 @@ describe('RecoveryPasswordComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ RecoveryPasswordComponent ]
+      declarations: [ RecoveryPasswordComponent ],
+      imports: [ MaterialModule, LoginModule]
     })
     .compileComponents();
   }));

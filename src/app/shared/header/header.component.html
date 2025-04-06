@@ -10,10 +10,9 @@
       </button>
 
       <mat-menu #languageMenu="matMenu" class="languageMenu">
-        <button mat-menu-item (click)="selectLanguage('en')">English</button>
-        <button mat-menu-item (click)="selectLanguage('es')">Español</button>
+        <button mat-menu-item class="enOption" (click)="selectLanguage('en')">English</button>
+        <button mat-menu-item class="esOption" (click)="selectLanguage('es')">Español</button>
       </mat-menu>
     </div>
   </div>
-
 </div>

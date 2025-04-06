@@ -4,6 +4,9 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { ConsultaInventarioComponent } from './consulta-inventario.component';
+import { InventariosModule } from '../inventarios.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ConsultaInventarioComponent', () => {
   let component: ConsultaInventarioComponent;
@@ -11,7 +14,8 @@ describe('ConsultaInventarioComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConsultaInventarioComponent ]
+      declarations: [ ConsultaInventarioComponent ],
+      imports: [InventariosModule, ReactiveFormsModule, HttpClientTestingModule]
     })
     .compileComponents();
   }));

@@ -4,6 +4,9 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { CargaProductoComponent } from './carga-producto.component';
+import { ProductosModule } from '../productos.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('CargaProductoComponent', () => {
   let component: CargaProductoComponent;
@@ -11,7 +14,8 @@ describe('CargaProductoComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CargaProductoComponent ]
+      declarations: [ CargaProductoComponent ],
+      imports: [ ProductosModule, HttpClientTestingModule, ReactiveFormsModule]
     })
     .compileComponents();
   }));

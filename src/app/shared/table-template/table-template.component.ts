@@ -4,22 +4,16 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MaterialModule } from '../../material/material.module';
 
-interface TableColumn {
+export interface TableColumn {
   name: string;
   header: string;
   cell: (element: any) => string;
-  // Add other properties as needed:
-  // align?: 'left' | 'center' | 'right';
-  // width?: string;
 }
 
-interface TableAction {
+export interface TableAction {
   icon: string;
   tooltip: string;
   action: (element: any) => void;
-  // Optional properties:
-  // color?: 'primary' | 'accent' | 'warn';
-  // disabled?: (element: any) => boolean;
 }
 
 @Component({
@@ -50,7 +44,6 @@ export class TableTemplateComponent<T> implements AfterViewInit, OnChanges  {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['data'] || changes['actions']) {
       this.dataSource.data = this.data || [];
-      // Force Angular to recompute displayed columns
       this.displayedColumns = [...(this.displayedColumns || [])];
     }
   }

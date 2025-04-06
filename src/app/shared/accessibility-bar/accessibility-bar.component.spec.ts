@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { AccessibilityBarComponent } from './accessibility-bar.component';
+import { MaterialModule } from 'src/app/material/material.module';
 
 describe('AccessibilityBarComponent', () => {
   let component: AccessibilityBarComponent;
@@ -11,7 +12,7 @@ describe('AccessibilityBarComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AccessibilityBarComponent ]
+      imports: [ AccessibilityBarComponent, MaterialModule ]
     })
     .compileComponents();
   }));

@@ -4,14 +4,15 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { DefaultWindowComponent } from './default-window.component';
+import { MaterialModule } from 'src/app/material/material.module';
 
-describe('TestContainerComponent', () => {
+describe('DefaultWindowComponent', () => {
   let component: DefaultWindowComponent;
   let fixture: ComponentFixture<DefaultWindowComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DefaultWindowComponent ]
+      imports: [ DefaultWindowComponent, MaterialModule]
     })
     .compileComponents();
   }));
