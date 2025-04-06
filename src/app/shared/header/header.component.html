@@ -1,0 +1,18 @@
+<div class="header">
+  <button mat-icon-button class="sidenavBtn" (click)="toggleSidenav.emit()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <h2>CCP</h2>
+  <div class="internationalizationContainer">
+    <div class="internationalization">
+      <button mat-button class="internationalizationBtn" [matMenuTriggerFor]="languageMenu"> 
+        <img src="../../../assets/icons/InternationalizationButton_icon.png">
+      </button>
+
+      <mat-menu #languageMenu="matMenu" class="languageMenu">
+        <button mat-menu-item class="enOption" (click)="selectLanguage('en')">English</button>
+        <button mat-menu-item class="esOption" (click)="selectLanguage('es')">Español</button>
+      </mat-menu>
+    </div>
+  </div>
+</div>

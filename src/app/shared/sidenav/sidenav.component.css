@@ -1,0 +1,37 @@
+.sidenavContainer {
+  position: fixed;
+  top: 120px;
+  left: 0;
+  bottom: 0;
+  width: 345px;
+  z-index: 100;
+  transition: transform 0.3s ease, width 0.3s ease;
+}
+
+.sidenavContainer.collapsed {
+  width: 0;
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+
+.sidenavDrawer {
+  background: linear-gradient(to right, #005d52, #a4e0a4) !important;
+  width: 345px;
+}
+
+
+.content-wrapper {
+  display: none;
+}
+
+mat-nav-list {
+  --mdc-list-list-item-label-text-color: white !important; /* Le hace override a la variable */
+
+  a {
+    height: 65px !important;
+  }
+}
+
+.mat-drawer.sidenavDrawer.mat-drawer-side {
+  border-right: none !important;
+}
