@@ -129,4 +129,38 @@ describe('RegistroFabricantesComponent', () => {
     req.flush({ success: true });
     });
 
+  it('should call postData() when Save button is clicked', () => {
+    spyOn(service, 'postData').and.callThrough();
+
+    component.registroFabricantesForm.setValue({
+      fieldNit: '1234',
+      fieldNombre: 'TestFabrica',
+      fieldDireccion: 'Avenida Falsa 123',
+      fieldPais: 'Colombia',
+      fieldIdentificacion: '5678',
+      fieldNombreContacto: 'TestFabricante',
+      fieldTelefono: '1234567890',
+      fieldDireccionContacto: 'Avenida Falsa 456'
+    });
+
+    const saveButton = fixture.nativeElement.querySelector('.GuardarBtn');
+    saveButton.click();
+
+    expect(service.postData).toHaveBeenCalledWith(component.registroFabricantesForm.value);
+
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers/add');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({
+      identification_number: '1234',
+      name: 'TestFabrica',
+      address: 'Avenida Falsa 123',
+      countries: 'Colombia',
+      identification_number_contact: '5678',
+      name_contact: 'TestFabricante',
+      phone_contact: '1234567890',
+      address_contact: 'Avenida Falsa 456'
+    });
+    req.flush({ success: true });
+  });
+  
 });
