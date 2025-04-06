@@ -1,7 +1,7 @@
 /* tslint:disable:no-unused-variable */
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { RegistroFabricantesService } from './registro-fabricantes.service';
 import { RegistroFabricantesComponent } from './registro-fabricantes.component';
@@ -10,6 +10,8 @@ import { FabricantesModule } from '../fabricantes.module';
 describe('RegistroFabricantesComponent', () => {
   let component: RegistroFabricantesComponent;
   let fixture: ComponentFixture<RegistroFabricantesComponent>;
+  let service: RegistroFabricantesService;
+  let httpMock: HttpTestingController;
 
   beforeEach(waitForAsync(async () => {
     await TestBed.configureTestingModule({
@@ -17,12 +19,20 @@ describe('RegistroFabricantesComponent', () => {
       imports: [ReactiveFormsModule, HttpClientTestingModule, FabricantesModule],
       providers: [RegistroFabricantesService]
     }).compileComponents();
+
+    service = TestBed.inject(RegistroFabricantesService);
+    httpMock = TestBed.inject(HttpTestingController);
+
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(RegistroFabricantesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    httpMock.verify(); // Verify no unmatched requests are outstanding
   });
 
   it('should create', () => {
@@ -83,6 +93,40 @@ describe('RegistroFabricantesComponent', () => {
     })
   });
 
-  
+  it('should send a POST request with the form data', () => {
+    const mockFormData = {
+      fieldNit: '1234',
+      fieldNombre: 'TestFabrica',
+      fieldDireccion: 'Avenida Falsa 123',
+      fieldPais: 'Colombia',
+      fieldIdentificacion: '5678',
+      fieldNombreContacto: 'TestFabricante',
+      fieldTelefono: '1234567890',
+      fieldDireccionContacto: 'Avenida Falsa 456'
+    };
+
+    const requestData = {
+      identification_number: '1234',
+      name: 'TestFabrica',
+      address: 'Avenida Falsa 123',
+      countries: 'Colombia',
+      identification_number_contact: '5678',
+      name_contact: 'TestFabricante',
+      phone_contact: '1234567890',
+      address_contact: 'Avenida Falsa 456'
+    };
+
+    service.postData(mockFormData).subscribe();
+
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers/add');
+
+    expect(req.request.method).toBe('POST');
+
+    expect(req.request.body).toEqual(requestData); 
+
+    expect(req.request.headers.get('Content-Type')).toBe('application/json');
+
+    req.flush({ success: true });
+    });
 
 });
