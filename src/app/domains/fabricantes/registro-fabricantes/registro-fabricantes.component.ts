@@ -20,7 +20,7 @@ export class RegistroFabricantesComponent implements OnInit {
     this.registroFabricantesForm = this.formBuilder.group({
       fieldNit: ['', Validators.required],
       fieldNombre: ['', Validators.required],
-      fieldPais: ['', Validators.required],
+      fieldPais: [[''], Validators.required],
       fieldDireccion: ['', Validators.required],
       fieldIdentificacion: ['', Validators.required],
       fieldNombreContacto: ['', Validators.required],
@@ -32,8 +32,8 @@ export class RegistroFabricantesComponent implements OnInit {
 
   onSubmit() {
     if (this.registroFabricantesForm.valid) {
-      const formData = this.registroFabricantesForm.value;
-      
+      const formData = this.registroFabricantesForm.value
+
       this.apiService.postData(formData).subscribe(
         response => {
           console.log('Success!', response);
