@@ -2,6 +2,7 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { of, throwError } from 'rxjs';
 
 import { RegistroFabricantesService } from './registro-fabricantes.service';
 import { RegistroFabricantesComponent } from './registro-fabricantes.component';
@@ -12,6 +13,7 @@ describe('RegistroFabricantesComponent', () => {
   let fixture: ComponentFixture<RegistroFabricantesComponent>;
   let service: RegistroFabricantesService;
   let httpMock: HttpTestingController;
+  let apiUrl = 'https://backend-providers-143596276526.us-central1.run.app/providers/add';
 
   beforeEach(waitForAsync(async () => {
     await TestBed.configureTestingModule({
@@ -118,7 +120,7 @@ describe('RegistroFabricantesComponent', () => {
 
     service.postData(mockFormData).subscribe();
 
-    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers/add');
+    const req = httpMock.expectOne(apiUrl);
 
     expect(req.request.method).toBe('POST');
 
@@ -148,7 +150,7 @@ describe('RegistroFabricantesComponent', () => {
 
     expect(service.postData).toHaveBeenCalledWith(component.registroFabricantesForm.value);
 
-    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers/add');
+    const req = httpMock.expectOne(apiUrl);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({
       identification_number: '1234',
@@ -163,4 +165,30 @@ describe('RegistroFabricantesComponent', () => {
     req.flush({ success: true });
   });
   
+  it('should handle failed POST request', (done) => {
+    component.registroFabricantesForm.patchValue({
+      fieldNit: '1234',
+      fieldNombre: 'TestFabrica',
+      fieldPais: 'Colombia',
+      fieldDireccion: 'Avenida Falsa 123',
+      fieldIdentificacion: '5678',
+      fieldNombreContacto: 'TestFabricante',
+      fieldTelefono: '1234567890',
+      fieldDireccionContacto: 'Avenida Falsa 456' 
+    });
+    fixture.detectChanges();
+  
+    const errorSpy = spyOn(console, 'error'); 
+  
+    component.onSubmit();
+  
+    const req = httpMock.expectOne(apiUrl);
+    req.flush({}, { status: 400, statusText: 'Error!' });
+  
+    setTimeout(() => {
+      expect(errorSpy).toHaveBeenCalled();
+      done();
+    });
+  });
+
 });
