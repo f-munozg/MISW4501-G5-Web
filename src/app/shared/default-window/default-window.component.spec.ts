@@ -26,4 +26,21 @@ describe('DefaultWindowComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should initialize with sidenav closed', () => {
+    expect(component.sidenavOpen).toBeFalse();
+  });
+
+  it('should toggle sidenav state when toggleSidenav is called', () => {
+    // Al lanzarse el componente
+    expect(component.sidenavOpen).toBeFalse();
+    
+    // Se presiona el botón de menú una vez para abrir
+    component.toggleSidenav();
+    expect(component.sidenavOpen).toBeTrue();
+    
+    // Se presiona el botón de menú por segunda vez para cerrar
+    component.toggleSidenav();
+    expect(component.sidenavOpen).toBeFalse();
+  });
 });

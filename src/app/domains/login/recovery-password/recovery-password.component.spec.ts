@@ -28,4 +28,19 @@ describe('RecoveryPasswordComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should call onNavigate() when button is clicked', () => {
+    spyOn(component, 'onNavigate');
+    const button = fixture.debugElement.query(By.css('.confirmNewPasswordBtn'));
+    button.nativeElement.click();
+    
+    expect(component.onNavigate).toHaveBeenCalled();
+  });
+
+  it('should emit goToLogin event when onNavigate is called', () => {
+    spyOn(component.goToLogin, 'emit');
+    component.onNavigate();
+    
+    expect(component.goToLogin.emit).toHaveBeenCalled();
+  });
 });
