@@ -64,8 +64,8 @@ describe('ConsultaInventarioComponent', () => {
     it('should render table headers correctly', () => {
       const headerCells = fixture.debugElement.queryAll(By.css('mat-header-cell'));
       expect(headerCells.length).toBe(4);
-      expect(headerCells[0].nativeElement.textContent.trim()).toBe('Column 1');
-      expect(headerCells[1].nativeElement.textContent.trim()).toBe('Column 2');
+      expect(headerCells[0].nativeElement.textContent.trim()).toBe('Bodega');
+      expect(headerCells[1].nativeElement.textContent.trim()).toBe('Stock (Unidades)');
     });
 
     it('should render table rows with correct data', () => {
@@ -82,7 +82,7 @@ describe('ConsultaInventarioComponent', () => {
     });
 
     it('should apply cell functions correctly', () => {
-      const testItem = { col1: 'test1', col2: 'test2', col3: 'test3', col4: 'test4' };
+      const testItem = { bodega: 'test1', unidades: 'test2', fecha_reposicion: 'test3', ultima_actualizacion: 'test4' };
       
       expect(component.tableColumns[0].cell(testItem)).toBe('test1');
       expect(component.tableColumns[1].cell(testItem)).toBe('test2');
@@ -105,7 +105,7 @@ describe('ConsultaInventarioComponent', () => {
       const headerCells = fixture.debugElement.queryAll(By.css('mat-header-cell'));
       expect(headerCells.length).toBe(2);
       expect(headerCells[0].nativeElement.textContent.trim()).toBe('Bodega');
-      expect(headerCells[1].nativeElement.textContent.trim()).toBe('Fecha Estimada Reposición');
+      expect(headerCells[1].nativeElement.textContent.trim()).toBe('Stock (Unidades)');
     });
   });
 });

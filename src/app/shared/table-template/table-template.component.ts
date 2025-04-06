@@ -22,31 +22,74 @@ export interface TableAction {
   styleUrls: ['./table-template.component.css'],
   imports: [ MaterialModule, CommonModule ]
 })
-export class TableTemplateComponent<T> implements AfterViewInit, OnChanges  {
+export class TableTemplateComponent<T> implements AfterViewInit, OnChanges {
+  private _data: T[] = [];
+  private _columns: TableColumn[] = [];
+  private _displayedColumns: string[] = [];
 
-  @Input() data: T[] = [];
-  @Input() columns: TableColumn[] = [];
-  @Input() displayedColumns: string[] = [];
+  @Input() 
+  set data(value: T[]) {
+    this._data = value || [];
+    this.updateDataSource();
+  }
+  get data(): T[] {
+    return this._data;
+  }
+
+  @Input() 
+  set columns(value: TableColumn[]) {
+    this._columns = value || [];
+    this.updateDisplayedColumns();
+  }
+  get columns(): TableColumn[] {
+    return this._columns;
+  }
+
+  @Input() 
+  set displayedColumns(value: string[]) {
+    this._displayedColumns = value || [];
+    this.updateDisplayedColumns();
+  }
+  get displayedColumns(): string[] {
+    return this._displayedColumns;
+  }
+
   @Input() actions: TableAction[] = [];
   
-  dataSource = new MatTableDataSource<T>();
+  dataSource = new MatTableDataSource<T>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  get displayedColumnsWithActions(): string[] {
-    const baseColumns = this.displayedColumns || [];
-    return this.actions?.length > 0 ? [...baseColumns, 'actions'] : baseColumns;
-  }
-
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    this.connectPaginator();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['data'] || changes['actions']) {
-      this.dataSource.data = this.data || [];
-      this.displayedColumns = [...(this.displayedColumns || [])];
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('data' in changes) {
+      this.updateDataSource();
+    }
+    if ('actions' in changes || 'columns' in changes) {
+      this.updateDisplayedColumns();
     }
   }
 
+  private updateDataSource(): void {
+    this.dataSource.data = [...this._data];
+    this.connectPaginator();
+  }
+
+  private updateDisplayedColumns(): void {
+    this._displayedColumns = [...this._displayedColumns];
+  }
+
+  private connectPaginator(): void {
+    if (this.paginator) {
+      this.dataSource.paginator = this.paginator;
+    }
+  }
+
+  get displayedColumnsWithActions(): string[] {
+    const baseColumns = this._displayedColumns;
+    return this.actions?.length ? [...baseColumns, 'actions'] : baseColumns;
+  }
 }
 
