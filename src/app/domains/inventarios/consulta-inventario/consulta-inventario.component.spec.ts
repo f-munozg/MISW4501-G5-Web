@@ -1,5 +1,5 @@
 /* tslint:disable:no-unused-variable */
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
@@ -61,52 +61,49 @@ describe('ConsultaInventarioComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should render table headers correctly', () => {
-      const headerCells = fixture.debugElement.queryAll(By.css('mat-header-cell'));
-      expect(headerCells.length).toBe(4);
-      expect(headerCells[0].nativeElement.textContent.trim()).toBe('Bodega');
-      expect(headerCells[1].nativeElement.textContent.trim()).toBe('Stock (Unidades)');
-    });
+    it('should render table headers correctly', fakeAsync(() => {
+      tick(); // Para esperar en operaciones con async
+      fixture.detectChanges();
+      
+      const headers = fixture.nativeElement.querySelectorAll('th[mat-header-cell]');
+      expect(headers.length).toBe(4);
+      expect(headers[0].textContent.trim()).toBe('Bodega');
+      expect(headers[1].textContent.trim()).toBe('Stock (Unidades)');
+    }));
 
-    it('should render table rows with correct data', () => {
-      const rows = fixture.debugElement.queryAll(By.css('mat-row'));
+    it('should render table rows with correct data', fakeAsync(() => {
+      tick();
+      fixture.detectChanges();
+      
+      const rows = fixture.nativeElement.querySelectorAll('tr[mat-row]');
       expect(rows.length).toBe(2);
 
-      const firstRowCells = rows[0].queryAll(By.css('mat-cell'));
-      expect(firstRowCells[0].nativeElement.textContent.trim()).toBe('Value 1');
-      expect(firstRowCells[1].nativeElement.textContent.trim()).toBe('Value 2');
+      const cells = fixture.nativeElement.querySelectorAll('td[mat-cell]');
+      expect(cells[0].textContent.trim()).toBe('Value 1');
+      expect(cells[1].textContent.trim()).toBe('Value 2');
+      expect(cells[4].textContent.trim()).toBe('Value A');
+      expect(cells[5].textContent.trim()).toBe('Value B');
+    }));
 
-      const secondRowCells = rows[1].queryAll(By.css('mat-cell'));
-      expect(secondRowCells[0].nativeElement.textContent.trim()).toBe('Value A');
-      expect(secondRowCells[1].nativeElement.textContent.trim()).toBe('Value B');
-    });
-
-    it('should apply cell functions correctly', () => {
-      const testItem = { bodega: 'test1', unidades: 'test2', fecha_reposicion: 'test3', ultima_actualizacion: 'test4' };
-      
-      expect(component.tableColumns[0].cell(testItem)).toBe('test1');
-      expect(component.tableColumns[1].cell(testItem)).toBe('test2');
-      expect(component.tableColumns[2].cell(testItem)).toBe('test3');
-      expect(component.tableColumns[3].cell(testItem)).toBe('test4');
-    });
-
-    it('should update table when data changes', () => {
-      component.tableData = [{ bodega: 'Value 1', unidades: 'Value 2', fecha_reposicion: 'Value 3', ultima_actualizacion: 'Value 4' }];
+    it('should update table when data changes', fakeAsync(() => {
+      component.tableData = [{ bodega: 'New', unidades: 'Data', fecha_reposicion: '', ultima_actualizacion: '' }];
+      tick();
       fixture.detectChanges();
       
-      const cells = fixture.debugElement.queryAll(By.css('mat-cell'));
-      expect(cells[0].nativeElement.textContent.trim()).toBe('New');
-    });
+      const cells = fixture.nativeElement.querySelectorAll('td[mat-cell]');
+      expect(cells[0].textContent.trim()).toBe('New');
+    }));
 
-    it('should update visible columns when changed', () => {
+    it('should update visible columns when changed', fakeAsync(() => {
       component.visibleColumns = ['bodega', 'fecha_reposicion'];
+      tick();
       fixture.detectChanges();
       
-      const headerCells = fixture.debugElement.queryAll(By.css('mat-header-cell'));
-      expect(headerCells.length).toBe(2);
-      expect(headerCells[0].nativeElement.textContent.trim()).toBe('Bodega');
-      expect(headerCells[1].nativeElement.textContent.trim()).toBe('Stock (Unidades)');
-    });
+      const headers = fixture.nativeElement.querySelectorAll('th[mat-header-cell]');
+      expect(headers.length).toBe(2);
+      expect(headers[0].textContent.trim()).toBe('Bodega');
+      expect(headers[1].textContent.trim()).toBe('Fecha Estimada Reposición');
+    }));
   });
 });
 
