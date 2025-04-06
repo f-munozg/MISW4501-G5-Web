@@ -1,0 +1,45 @@
+.tableComponent{
+    display: grid;
+    gap: 20px;
+    background-color: #EEF0F4;
+}
+
+.tableBtnsGrid{
+    display: grid;
+    grid-row: 1;
+    grid-template-columns: repeat(9, 1fr);
+    column-gap: 10px;
+
+
+    .grid-item-ExportarCSVBtn{
+        grid-column: 6 / 8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .grid-item-ExportarPDFBtn{
+        grid-column: 8 / 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.ExportarCSVBtn, .ExportarPDFBtn {
+    height: 30px;
+    width: 100%;
+    background-color: #005D52 !important;
+    color: white;
+}
+
+.ExportarCSVBtn:hover, .ExportarPDFBtn:hover {
+    background-color: #004a42;
+}
+
+
+.tableGrid{
+    .mat-mdc-table .mat-mdc-header-cell {
+        background-color: #A4E0A4 !important;
+      }
+}

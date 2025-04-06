@@ -1,0 +1,92 @@
+.consultaVentasContainer{
+    display: grid;
+    gap: 20px;
+    background-color: #e4e4e4;
+}
+
+[class^='grid-item']{
+    outline: 3px dashed #f90;
+}
+
+.consultaVentasGrid{
+    display: grid;
+    grid-row: 2;
+    grid-template-columns: repeat(9, 1fr);
+
+
+    .grid-item-productoForm{
+        grid-column: 2 / 5;
+        grid-row: 1;
+
+        .productoFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-fabricanteForm{
+        grid-column: 6 / 9;
+        grid-row: 1;
+
+        .fabricanteFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-categoriaForm{
+        grid-column: 2 / 5;
+        grid-row: 2;
+
+        .categoriaFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-fechasForm{
+        grid-column: 6 / 9;
+        grid-row: 2;
+        align-items: center;
+        display: grid;
+        grid-template-columns: 1fr 1fr; 
+
+        .grid-item-desdeForm {
+            justify-self: start;
+          }
+          
+        .grid-item-hastaForm {
+            justify-self: end;
+        }
+    }
+
+}
+
+.consultaVentasBtnGrid{
+    display: grid;
+    grid-row: 3;
+    grid-template-columns: repeat(9, 1fr);
+
+    .grid-item-buscarBtnForm{
+        grid-column: 6 / 9;
+
+        .buscarBtn{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+}
+
+.resultadosVentasGrid {
+    display: grid;
+    grid-row: 6;
+    grid-template-columns: repeat(9, 1fr);
+
+    .grid-item-tendenciasMercado{
+        grid-column: 2 / 5;
+    }
+
+    .grid-item-demandaProducto{
+        grid-column: 6 / 9;
+    }
+}

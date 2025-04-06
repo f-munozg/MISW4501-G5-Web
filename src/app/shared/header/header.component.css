@@ -1,0 +1,69 @@
+:host {
+    display: block !important;
+    height: 120px !important;
+    margin: 0;
+    padding: 0;
+    h2 {
+        font-size: 48px;
+      }
+}
+
+.header{
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to right, #005d52, #a4e0a4) !important;
+    height: 100% !important;
+    width: 100vw !important;
+    z-index: 1000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.header h2 {
+    line-height: 120px;
+    text-align: center;
+    color: white;
+    margin: 0px;
+    margin-left: 100px;
+}
+
+.internationalizationContainer {
+    position: absolute;
+    right: 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+.internationalization{
+    display: flex;
+    height: 100% !important;
+    align-items: center;
+    width: 40px;
+    right: 20px;
+}
+
+.internationalizationBtn{
+    background-color: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.sidenavBtn{
+    color: white !important;
+    height: 60px !important;
+    width: 60px !important;
+    padding: 0 !important;
+    left: 20px !important;
+
+    .mat-icon {
+        font-size: 60px !important;
+        height: 60px !important;
+        width: 60px !important
+    }
+}
+

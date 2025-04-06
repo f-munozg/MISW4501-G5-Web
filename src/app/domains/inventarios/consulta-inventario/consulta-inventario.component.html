@@ -1,0 +1,51 @@
+<app-default-window>
+  <main class="consultaInventarioContainer">
+    <div class="consultaInventarioHeaderGrid">
+      <h2 class="grid-item-registroFabricantesTitulo">
+        Consulta de Inventario
+      </h2>
+    </div>
+    <div class="consultaInventarioGrid">
+      <div class="grid-item-productoForm">
+        <h3>Producto</h3>
+        <mat-form-field class="productoFormField">
+          <input matInput placeholder="Producto">
+        </mat-form-field>
+      </div>
+      <div class="grid-item-fabricanteForm">
+        <h3>Fabricante</h3>
+        <mat-form-field class="fabricanteFormField">
+          <input matInput placeholder="Fabricante">
+        </mat-form-field>
+      </div>
+      <div class="grid-item-categoriaForm">
+        <h3>Categoría</h3>
+        <mat-form-field class="categoriaFormField">
+          <mat-label>Escoja la Categoría</mat-label>
+          <mat-select [(value)]="selectedValue">
+            <mat-option *ngFor="let categoria of categorias" [value]="categoria">
+              {{ categoria }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="grid-item-buscarBtnForm">
+        <div class="grid-item-buscarBtnDiv">
+          <button mat-flat-button class="buscarBtn">Buscar</button>
+        </div>
+      </div>
+    </div>
+    <div class="detallesInventarioHeaderGrid">
+      <h2 class="grid-item-detallesInventarioTitulo">
+        Detalles de Inventario
+      </h2>
+    </div>
+    <div class="detallesInventarioGrid">
+      <app-table-template
+        [data]="tableData"
+        [columns]="tableColumns"
+        [displayedColumns]="visibleColumns">
+      </app-table-template>
+    </div>
+  </main>
+</app-default-window>

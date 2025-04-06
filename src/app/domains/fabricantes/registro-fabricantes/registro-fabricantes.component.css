@@ -1,0 +1,136 @@
+.registroFabricantesContainer{
+    display: grid;
+    gap: 20px;
+    background-color: #e4e4e4;
+}
+
+[class^='grid-item']{
+    outline: 3px dashed #f90;
+}
+
+.registroFabricantesHeaderGrid{
+    display: grid;
+    grid-row: 1;
+    grid-template-columns: repeat(9, 1fr);
+
+    .grid-item-registroFabricantesTitulo{
+        grid-column: 1 / 6;
+    }
+
+    .grid-item-PortafolioBtn{
+        grid-column: 9 / 10;
+    }
+}
+
+.registroFabricantesGrid{
+    display: grid;
+    grid-row: 2;
+    grid-template-columns: repeat(9, 1fr);
+
+
+    .grid-item-nitForm{
+        grid-column: 2 / 5;
+        grid-row: 1;
+
+        .nitFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-nombreForm{
+        grid-column: 6 / 9;
+        grid-row: 1;
+
+        .nombreFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-paisForm{
+        grid-column: 2 / 5;
+        grid-row: 2;
+
+        .paisFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-direccionForm{
+        grid-column: 6 / 9;
+        grid-row: 2;
+
+        .direccionFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+}
+
+.informacionContactoHeaderGrid{
+    grid-row: 3;
+}
+
+.informacionContactoGrid{
+    display: grid;
+    grid-row: 4;
+    grid-template-columns: repeat(9, 1fr);
+
+
+    .grid-item-identificacionForm{
+        grid-column: 2 / 5;
+        grid-row: 1;
+
+        .identificacionFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-nombreContactoForm{
+        grid-column: 6 / 9;
+        grid-row: 1;
+
+        .nombreContactoFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-telefonoForm{
+        grid-column: 2 / 5;
+        grid-row: 2;
+
+        .telefonoFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-direccionContactoForm{
+        grid-column: 6 / 9;
+        grid-row: 2;
+
+        .direccionContactoFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+}
+
+.informacionContactoBtnsGrid{
+    display: grid;
+    grid-row: 5;
+    grid-template-columns: repeat(9, 1fr);
+
+
+    .grid-item-CancelarBtnDiv{
+        grid-column: 6 / 7;
+    }
+
+    .grid-item-GuardarBtnDiv{
+        grid-column: 8 / 9;
+    }
+}

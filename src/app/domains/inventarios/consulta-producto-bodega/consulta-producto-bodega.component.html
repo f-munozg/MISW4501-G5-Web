@@ -1,0 +1,58 @@
+<app-default-window>
+  <main class="consultaProductoBodegaContainer">
+    <div class="consultaProductoBodegaHeaderGrid">
+      <h2 class="grid-item-consultaProductoBodegaTitulo">
+        Consulta de Producto en Bodega
+      </h2>
+    </div>
+    <div class="consultaProductoBodegaGrid">
+      <div class="grid-item-productoForm">
+        <h3>Código o Nombre de Producto</h3>
+        <mat-form-field class="productoFormField">
+          <input matInput placeholder="Escriba el Nombre o Código de Producto">
+        </mat-form-field>
+      </div>
+      <div class="grid-item-fabricanteForm">
+        <h3>Bodega</h3>
+        <mat-form-field class="fabricanteFormField">
+          <mat-label>Escoja la Bodega</mat-label>
+          <mat-select [(value)]="selectedValue">
+            <mat-option *ngFor="let bodega of bodegas" [value]="bodega">
+              {{ bodega }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="consultaProductoBodegaBuscarBtnGrid">
+      <div class="grid-item-buscarBtnForm">
+        <button mat-flat-button class="buscarBtn">Buscar</button>
+      </div>
+    </div>
+    <div class="tablaUbicacionStockHeaderGrid">
+      <h2 class="grid-item-tablaUbicacionStockTitulo">
+        Ubicación y Stock
+      </h2>
+    </div>
+    <div class="tablaUbicacionStockGrid">
+      <app-table-template
+      [data]="tableData"
+      [columns]="tableColumns"
+      [displayedColumns]="visibleColumns">
+      </app-table-template>
+    </div>
+    <div class="consultaProductoBodegaBtnsGrid">
+      <div class="consultaProductoBodegaBtnsContainer">
+        <div class="grid-item-consultaInventarioBtnDiv">
+          <button mat-flat-button class="consultaInventarioBtn">Consulta de Inventario</button>
+        </div>
+        <div class="grid-item-movimientosProductoBtnDiv">
+          <button mat-flat-button class="movimientosProductoBtn">Movimientos de Producto</button>
+        </div>
+        <div class="grid-item-consultaBodegasBtnDiv">
+          <button mat-flat-button class="consultaBodegasBtn">Ir a Consulta de Bodegas</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</app-default-window>

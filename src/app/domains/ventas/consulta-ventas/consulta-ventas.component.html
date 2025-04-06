@@ -1,0 +1,81 @@
+<app-default-window>
+  <main class="consultaVentasContainer">
+    <div class="consultaVentasHeaderGrid">
+      <h2 class="grid-item-rconsultaVentasTitulo">
+        Consulta de Ventas
+      </h2>
+    </div>
+    <div class="consultaVentasGrid">
+      <div class="grid-item-productoForm">
+        <h3>Producto</h3>
+        <mat-form-field class="productoFormField">
+          <input matInput placeholder="Producto">
+        </mat-form-field>
+      </div>
+      <div class="grid-item-fabricanteForm">
+        <h3>Fabricante</h3>
+        <mat-form-field class="fabricanteFormField">
+          <input matInput placeholder="Fabricante">
+        </mat-form-field>
+      </div>
+      <div class="grid-item-categoriaForm">
+        <h3>Categoría</h3>
+        <mat-form-field class="categoriaFormField">
+          <mat-label>Escoja la Categoría</mat-label>
+          <mat-select [(value)]="selectedValue">
+          <mat-option *ngFor="let categoria of categorias" [value]="categoria">
+            {{ categoria }}
+          </mat-option>
+        </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="grid-item-fechasForm">
+        <div class="grid-item-desdeForm">
+          <h3>Desde</h3>
+          <mat-form-field class="desdeFormField">
+            <mat-label>MM/DD/YYYY</mat-label>
+            <input matInput [matDatepicker]="picker1">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="grid-item-hastaForm">
+          <h3>Hasta</h3>
+          <mat-form-field class="hastaFormField">
+            <mat-label>MM/DD/YYYY</mat-label>
+            <input matInput [matDatepicker]="picker2">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="consultaVentasBtnGrid">
+      <div class="grid-item-buscarBtnForm">
+        <button mat-flat-button class="buscarBtn">Buscar</button>
+      </div>
+    </div>
+    <div class="historialVentasHeader">
+      <h2 class="grid-item-cargaProductoTitulo">
+        Historial de Ventas
+      </h2>
+    </div>
+    <div class="historialVentasTableGrid">
+      <app-table-template
+        [data]="tableData"
+        [columns]="tableColumns"
+        [displayedColumns]="visibleColumns">
+      </app-table-template>
+    </div>
+    <div class="resultadosVentasGrid">
+      <div class="grid-item-tendenciasMercado">
+        <h3>Tendencias del Mercado</h3>
+      </div>
+      <div class="grid-item-demandaProducto">
+        <h3>Demanda del Producto</h3>
+      </div>
+    </div>
+  </main>
+</app-default-window>  
