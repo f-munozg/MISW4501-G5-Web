@@ -89,20 +89,23 @@ export class CargaProductoComponent implements OnInit {
   }
 
   formatDateToISOWithTime(date: Date | string): string {
+    let d: Date;
+    
     if (!(date instanceof Date)) {
-      date = new Date(date);
+      if (isNaN(Date.parse(date))) {
+        throw new Error('Invalid date string');
+      }
+      d = new Date(date);
+      d = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    } else {
+      d = date;
     }
   
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-  
-    // Hora por defecto
-    const hours = '00'; 
-    const minutes = '00';
-    const seconds = '00';
-  
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-  }
+    const year = d.getUTCFullYear();
+    const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(d.getUTCDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}T00:00:00`;
+}
 
 }
