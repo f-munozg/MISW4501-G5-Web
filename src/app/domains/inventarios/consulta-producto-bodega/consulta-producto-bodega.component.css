@@ -1,12 +1,14 @@
 .consultaProductoBodegaContainer{
     display: grid;
     gap: 20px;
-    background-color: #e4e4e4;
+    /* background-color: #e4e4e4; */
 }
 
+/*
 [class^='grid-item']{
     outline: 3px dashed #f90;
 }
+*/
 
 .consultaProductoBodegaGrid{
     display: grid;
@@ -43,6 +45,11 @@
 
     .grid-item-buscarBtnForm{
         grid-column: 2 / 3;
+        
+        .mat-mdc-unelevated-button:not(:disabled) {
+            color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+            background-color: #005d52 !important;
+        }
 
         .buscarBtn{
             width: 100% !important;
@@ -66,6 +73,11 @@
             flex: 1;
             min-width: 0;
 
+            .mat-mdc-unelevated-button:not(:disabled) {
+                color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+                background-color: #005d52 !important;
+            }
+
             .consultaInventarioBtn{
                 width: 100% !important;
                 grid-column: 1 / -1 !important;
@@ -75,6 +87,11 @@
         .grid-item-movimientosProductoBtnDiv{
             flex: 1;
             min-width: 0;
+
+            .mat-mdc-unelevated-button:not(:disabled) {
+                color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+                background-color: #005d52 !important;
+            }
 
             .movimientosProductoBtn{
                 width: 100% !important;
@@ -86,6 +103,11 @@
             flex: 1;
             min-width: 0;
             
+            .mat-mdc-unelevated-button:not(:disabled) {
+                color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+                background-color: #005d52 !important;
+            }
+
             .consultaBodegasBtn{
                 width: 100% !important;
                 grid-column: 1 / -1 !important;
