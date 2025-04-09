@@ -9,6 +9,10 @@ export class ConsultaInventarioService {
 
   constructor(private http: HttpClient) { }
 
+  getListaFabricantes() {
+    return this.http.get(''); // Aquí va la URL del endpoint de Mateo G.
+  }
+
   getData(formData: any):
   Observable<any>{
     let apiUrl = `https://backend-stock-143596276526.us-central1.run.app/stock/query`

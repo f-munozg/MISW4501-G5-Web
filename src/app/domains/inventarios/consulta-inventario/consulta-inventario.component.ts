@@ -20,6 +20,7 @@ export interface TableRow {
 })
 export class ConsultaInventarioComponent implements OnInit {
   consultaInventarioForm!: FormGroup;
+  listaFabricantes: any;
 
   public FileType2LabelMapping = FileType2LabelMapping;
   public fileTypes = Object.values(CategoriaProductos);
@@ -65,7 +66,9 @@ export class ConsultaInventarioComponent implements OnInit {
       fieldProducto: ['', Validators.required],
       fieldFabricante: [''],
       fieldCategoria: ['']
-    })
+    });
+
+    this.apiService.getListaFabricantes().subscribe(data => {this.listaFabricantes = data})
   }
 
   onSubmit() {
