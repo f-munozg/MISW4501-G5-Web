@@ -11,6 +11,10 @@ export class CargaProductoService {
 
   constructor(private http: HttpClient) { }
 
+  getListaFabricantes() {
+    return this.http.get(''); // Aquí va la URL del endpoint de Mateo G.
+  }
+
   postData(formData: any):
   Promise<Observable<any>>{
     return new Promise(async (resolve, reject) => {

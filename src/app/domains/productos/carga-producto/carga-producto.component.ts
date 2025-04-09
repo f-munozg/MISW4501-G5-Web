@@ -13,6 +13,7 @@ export class CargaProductoComponent implements OnInit {
   cargaProductoForm!: FormGroup;
   selectedFile: File | null = null;
   isSubmitting = false;
+  listaFabricantes: any;
 
   public FileType2LabelMapping = FileType2LabelMapping;
   public fileTypes = Object.values(CategoriaProductos);
@@ -35,6 +36,8 @@ export class CargaProductoComponent implements OnInit {
       fieldNombre: ['', Validators.required]
       }
     );
+
+    this.apiService.getListaFabricantes().subscribe(data => {this.listaFabricantes = data})
   }
 
   onFileSelected(event: Event): void {

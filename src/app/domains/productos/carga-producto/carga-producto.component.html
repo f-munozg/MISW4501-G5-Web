@@ -19,7 +19,13 @@
       <div class="grid-item-fabricanteForm">
         <h3>Fabricante</h3>
         <mat-form-field class="fabricanteFormField">
-          <input matInput formControlName="fieldFabricante" placeholder="Fabricante">
+          <mat-label>Escoja el Fabricante</mat-label>
+          <mat-select formControlName="fieldFabricante">
+            <mat-option *ngFor="let fabricante of listaFabricantes"
+                [value]="fabricante">
+                {{fabricante}}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
       <div class="grid-item-valorForm">
