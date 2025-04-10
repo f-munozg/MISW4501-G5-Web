@@ -1,6 +1,6 @@
 .tableComponent{
     display: grid;
-    gap: 5px;
+    gap: 10px;
     background-color: #EEF0F4;
 }
 
@@ -15,7 +15,7 @@
     grid-row: 1;
     grid-template-columns: repeat(9, 1fr);
     column-gap: 10px;
-    padding-top: 5px;
+    padding-top: 10px;
 
     .grid-item-ExportarCSVBtn{
         display: grid;
