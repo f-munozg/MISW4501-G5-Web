@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FileType2LabelMapping, CategoriaProductos, ApiResponse } from '../inventario.model'
+import { ApiResponse, ProductInventoryItem } from '../inventario.model'
 import { ConsultaProductoBodegaService } from './consulta-producto-bodega.service';
 
 export interface TableRow {
@@ -57,11 +57,22 @@ export class ConsultaProductoBodegaComponent implements OnInit {
     this.consultaProductoBodegaForm = this.formBuilder.group({
       fieldProducto: ['', Validators.required],
       fieldBodega: ['']
-    })
+    });
+
+    this.apiService.getListaBodegas().subscribe(data => {this.listaBodegas = data})
   }
 
   onSubmit() {
-
+    if (this.consultaProductoBodegaForm.valid) {
+          const formData = {
+            ...this.consultaProductoBodegaForm.value
+          }
+    
+        this.apiService.getData(formData).subscribe(
+          (response: ApiResponse<ProductInventoryItem>) => { this.tableData = response.results},
+          error => console.log(error)
+          )
+        }
   }
 
 }

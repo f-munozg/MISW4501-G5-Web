@@ -1,8 +1,8 @@
-export interface ApiResponse {
+export interface ApiResponse<T> {
     total: number;
     limit: number;
     offset: number;
-    results: InventoryItem[];
+    results: T[];
   }
   
 export interface InventoryItem {
@@ -15,7 +15,11 @@ export interface InventoryItem {
   }
 
 export interface ProductInventoryItem {
-
+    product: string;
+    sku: string;
+    quantity: number;
+    location: string;
+    status: string;
 }
 
 export enum CategoriaProductos {
