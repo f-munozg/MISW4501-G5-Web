@@ -6,38 +6,55 @@ import { DebugElement } from '@angular/core';
 import { ConsultaInventarioComponent } from './consulta-inventario.component';
 import { InventariosModule } from '../inventarios.module';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { CategoriaProductos } from '../inventario.model';
+import { ConsultaInventarioService } from './consulta-inventario.service';
 
 describe('ConsultaInventarioComponent', () => {
+  
   let component: ConsultaInventarioComponent;
   let fixture: ComponentFixture<ConsultaInventarioComponent>;
+  let service: ConsultaInventarioService;
+  let httpMock: HttpTestingController;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ConsultaInventarioComponent ],
-      imports: [InventariosModule, ReactiveFormsModule, HttpClientTestingModule]
+      imports: [InventariosModule, ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
+      providers: [ConsultaInventarioService]
     })
     .compileComponents();
+
+    service = TestBed.inject(ConsultaInventarioService);
+    httpMock = TestBed.inject(HttpTestingController);
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ConsultaInventarioComponent);
     component = fixture.componentInstance;
+    service = TestBed.inject(ConsultaInventarioService);
+    httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
   });
 
+  /*
+  afterEach(() => {
+    httpMock.verify(); // Verify no outstanding HTTP requests
+  });
+  */
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   it('should have correct column definitions', () => {
     expect(component.tableColumns.length).toBe(4);
-    expect(component.tableColumns.map(c => c.name)).toEqual(['bodega', 'unidades', 'fecha_reposicion', 'ultima_actualizacion']);
+    expect(component.tableColumns.map(c => c.name)).toEqual(['warehouse', 'stock', 'estimated_delivery_time', 'date_update']);
     expect(component.tableColumns.map(c => c.header)).toEqual(['Bodega', 'Stock (Unidades)', 'Fecha Estimada Reposición', 'Última Actualización']);
   });
 
   it('should have correct visible columns', () => {
-    expect(component.visibleColumns).toEqual(['bodega', 'unidades', 'fecha_reposicion', 'ultima_actualizacion']);
+    expect(component.visibleColumns).toEqual(['warehouse', 'stock', 'estimated_delivery_time', 'date_update']);
   });
 
   it('should initialize with empty table data', () => {
@@ -48,8 +65,8 @@ describe('ConsultaInventarioComponent', () => {
     expect(component.selectedValue).toBeUndefined();
   });
 
-  it('should initialize categorias as empty array', () => {
-    expect(component.fileTypes).toEqual([]);
+  it('should initialize categorias with 9 values', () => {
+    expect(component.fileTypes).toEqual(Object.values(CategoriaProductos));
   });
 
   describe('with test data', () => {
@@ -80,9 +97,9 @@ describe('ConsultaInventarioComponent', () => {
 
       const cells = fixture.nativeElement.querySelectorAll('td[mat-cell]');
       expect(cells[0].textContent.trim()).toBe('Value 1');
-      expect(cells[1].textContent.trim()).toBe('Value 2');
+      expect(cells[1].textContent.trim()).toBe('34');
       expect(cells[4].textContent.trim()).toBe('Value A');
-      expect(cells[5].textContent.trim()).toBe('Value B');
+      expect(cells[5].textContent.trim()).toBe('65');
     }));
 
     it('should update table when data changes', fakeAsync(() => {
@@ -95,7 +112,7 @@ describe('ConsultaInventarioComponent', () => {
     }));
 
     it('should update visible columns when changed', fakeAsync(() => {
-      component.visibleColumns = ['bodega', 'fecha_reposicion'];
+      component.visibleColumns = ['warehouse', 'estimated_delivery_time'];
       tick();
       fixture.detectChanges();
       
