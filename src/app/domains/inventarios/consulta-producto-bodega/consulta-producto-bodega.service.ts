@@ -11,13 +11,12 @@ export class ConsultaProductoBodegaService {
   constructor(private http: HttpClient) { }
 
   getListaBodegas() {
-    // return this.http.get('https://backend-stock-143596276526.us-central1.run.app/stock/product_location'); // Aquí va la URL del endpoint de Mateo G.
-    return this.http.get('http://localhost:5003/stock/product_location');
+    return this.http.get(''); // Aquí va la URL del endpoint de Mateo G.
   }
 
   getData(formData:any):
   Observable<ApiResponse<ProductInventoryItem>>{
-    let apiUrl = ``;
+    let apiUrl = `http://localhost:5003/stock/product_location`;
 
     let producto = formData.fieldProducto;
     let bodega = formData.fieldBodega;
