@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FileType2LabelMapping, CategoriaProductos } from './productos-categoria.enum';
+import { FileType2LabelMapping, CategoriaProductos, ApiResponse, InventoryItem } from '../inventario.model';
 import { ConsultaInventarioService } from './consulta-inventario.service';
-import { ApiResponse, InventoryItem } from '../consulta-inventario/consulta-inventario.model';
 
 export interface TableRow {
   warehouse: string;
@@ -77,7 +76,7 @@ export class ConsultaInventarioComponent implements OnInit {
       }
 
     this.apiService.getData(formData).subscribe(
-      (response: ApiResponse) => { this.tableData = response.results},
+      (response: ApiResponse<InventoryItem>) => { this.tableData = response.results},
       error => console.log(error)
       )
     }

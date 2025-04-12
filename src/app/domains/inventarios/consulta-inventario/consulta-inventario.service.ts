@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ApiResponse } from './consulta-inventario.model';
+import { ApiResponse, InventoryItem } from '../inventario.model';
 
 
 @Injectable({
@@ -16,8 +16,8 @@ export class ConsultaInventarioService {
   }
 
   getData(formData: any):
-  Observable<ApiResponse>{
-    let apiUrl = `https://backend-stock-143596276526.us-central1.run.app/stock/query`
+  Observable<ApiResponse<InventoryItem>>{
+    let apiUrl = `https://localhost:5003/stock/query`
 
     let producto = formData.fieldProducto;
     let fabricante = formData.fieldFabricante;
@@ -37,7 +37,7 @@ export class ConsultaInventarioService {
       apiUrl += `&category=${categoria}`
     }
 
-    return this.http.get<ApiResponse>(apiUrl);
+    return this.http.get<ApiResponse<InventoryItem>>(apiUrl);
   }
 
 }
