@@ -49,14 +49,14 @@ describe('ConsultaInventarioComponent', () => {
   });
 
   it('should initialize categorias as empty array', () => {
-    expect(component.categorias).toEqual([]);
+    expect(component.fileTypes).toEqual([]);
   });
 
   describe('with test data', () => {
     beforeEach(() => {
       component.tableData = [
-        { bodega: 'Value 1', unidades: 'Value 2', fecha_reposicion: 'Value 3', ultima_actualizacion: 'Value 4' },
-        { bodega: 'Value A', unidades: 'Value B', fecha_reposicion: 'Value C', ultima_actualizacion: 'Value D' }
+        { warehouse: 'Value 1', quantity: 34, estimated_delivery_time: 'Value 3', date_update: 'Value 4', product: 'Product 1',  category: ''},
+        { warehouse: 'Value A', quantity: 65, estimated_delivery_time: 'Value C', date_update: 'Value D', product: 'Product A',  category: ''}
       ];
       fixture.detectChanges();
     });
@@ -86,7 +86,7 @@ describe('ConsultaInventarioComponent', () => {
     }));
 
     it('should update table when data changes', fakeAsync(() => {
-      component.tableData = [{ bodega: 'New', unidades: 'Data', fecha_reposicion: '', ultima_actualizacion: '' }];
+      component.tableData = [{ warehouse: 'New', quantity: 20, estimated_delivery_time: '', date_update: '' , product: 'Product 1',  category: ''}];
       tick();
       fixture.detectChanges();
       
