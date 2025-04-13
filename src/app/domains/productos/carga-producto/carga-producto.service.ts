@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { FabricantesResponse } from '../producto.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CargaProductoService {
 
-  private apiUrl = 'http://localhost:5005/products/add'; // Mirar si se puede poner en los archivos de environment.
+  private apiUrl = 'http://localhost:5002/products/add'; // Mirar si se puede poner en los archivos de environment.
 
   constructor(private http: HttpClient) { }
 
-  getListaFabricantes() {
-    return this.http.get(''); // Aquí va la URL del endpoint de Mateo G.
+  getListaFabricantes():
+  Observable<FabricantesResponse> {
+    return this.http.get<FabricantesResponse>('http://localhost:5003/providers'); // Aquí va la URL del endpoint de Mateo G.
   }
 
   postData(formData: any):

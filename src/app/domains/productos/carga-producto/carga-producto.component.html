@@ -5,7 +5,7 @@
         Registro de Productos
       </h2>
       <div class="grid-item-cargaMasivaBtn">
-        <button mat-flat-button class="cargaMasiva">Carga Masiva</button>
+        <button mat-flat-button class="CargaMasivaBtn">Carga Masiva</button>
       </div>
     </div>
   <form [formGroup]="cargaProductoForm" (ngSubmit)="onSubmit()">
@@ -22,8 +22,8 @@
           <mat-label>Escoja el Fabricante</mat-label>
           <mat-select formControlName="fieldFabricante">
             <mat-option *ngFor="let fabricante of listaFabricantes"
-                [value]="fabricante">
-                {{fabricante}}
+                [value]="fabricante.id">
+                {{fabricante.name}}
             </mat-option>
           </mat-select>
         </mat-form-field>
