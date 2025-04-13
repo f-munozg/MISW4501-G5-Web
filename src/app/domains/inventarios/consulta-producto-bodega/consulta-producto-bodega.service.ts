@@ -16,7 +16,7 @@ export class ConsultaProductoBodegaService {
 
   getData(formData:any):
   Observable<ApiResponse<ProductInventoryItem>>{
-    let apiUrl = `http://localhost:5003/stock/product_location`;
+    let apiUrl = `http://localhost:5008/stock/product_location`;
 
     let producto = formData.fieldProducto;
     let bodega = formData.fieldBodega;
