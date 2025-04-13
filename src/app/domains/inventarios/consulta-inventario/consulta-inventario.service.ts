@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ApiResponse, InventoryItem } from '../inventario.model';
+import { ApiResponse, InventoryItem, Fabricante, FabricantesResponse } from '../inventario.model';
 
 
 @Injectable({
@@ -12,7 +12,7 @@ export class ConsultaInventarioService {
   constructor(private http: HttpClient) { }
 
   getListaFabricantes() {
-    return this.http.get(''); // Aquí va la URL del endpoint de Mateo G.
+    return this.http.get<FabricantesResponse>('http://localhost:5003/providers'); // Aquí va la URL del endpoint de Mateo G.
   }
 
   getData(formData: any):

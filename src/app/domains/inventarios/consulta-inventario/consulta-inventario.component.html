@@ -19,8 +19,8 @@
           <mat-label>Escoja el Fabricante</mat-label>
           <mat-select formControlName="fieldFabricante">
             <mat-option *ngFor="let fabricante of listaFabricantes"
-                [value]="fabricante">
-                {{fabricante}}
+                [value]="fabricante.id">
+                {{fabricante.name}}
             </mat-option>
           </mat-select>
         </mat-form-field>

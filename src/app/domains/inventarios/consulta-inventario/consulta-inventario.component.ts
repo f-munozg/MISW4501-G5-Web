@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FileType2LabelMapping, CategoriaProductos, ApiResponse, InventoryItem } from '../inventario.model';
+import { FileType2LabelMapping, CategoriaProductos, ApiResponse, InventoryItem, Fabricante, FabricantesResponse } from '../inventario.model';
 import { ConsultaInventarioService } from './consulta-inventario.service';
 
 export interface TableRow {
@@ -20,7 +20,7 @@ export interface TableRow {
 })
 export class ConsultaInventarioComponent implements OnInit {
   consultaInventarioForm!: FormGroup;
-  listaFabricantes: any;
+  listaFabricantes: Fabricante[] = [];
 
   public FileType2LabelMapping = FileType2LabelMapping;
   public fileTypes = Object.values(CategoriaProductos);
@@ -66,7 +66,14 @@ export class ConsultaInventarioComponent implements OnInit {
       fieldCategoria: ['']
     });
 
-    this.apiService.getListaFabricantes().subscribe(data => {this.listaFabricantes = data})
+    this.apiService.getListaFabricantes().subscribe({
+      next: (response: FabricantesResponse) => {
+        this.listaFabricantes = response.providers;
+      },
+      error: (err) => {
+        console.error('Error loading providers:', err);
+      }
+    });
   }
 
   onSubmit() {
