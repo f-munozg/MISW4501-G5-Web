@@ -37,6 +37,9 @@ describe('CargaProductoComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   });
 
   it('should clear the form fields when using the clearAll function', () => {
@@ -65,6 +68,9 @@ describe('CargaProductoComponent', () => {
       fieldDescripcion: null,
       fieldNombre: null,
     })
+
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   });
 
   it('should clear the form when the Cancel button is clicked', () => {
@@ -94,7 +100,10 @@ describe('CargaProductoComponent', () => {
       fieldCaracteristicas: null,
       fieldDescripcion: null,
       fieldNombre: null,
-    })
+    });
+
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   });
 
   it('should handle file selection', () => {
@@ -103,12 +112,18 @@ describe('CargaProductoComponent', () => {
     
     component.onFileSelected(event);
     expect(component.selectedFile).toBe(file);
+
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   });
 
   it('should not set file when no files are selected', () => {
     const event = { target: { files: [] } } as unknown as Event;
     component.onFileSelected(event);
     expect(component.selectedFile).toBeNull();
+
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   });
 
   it('should not submit when form is invalid', () => {
@@ -116,6 +131,9 @@ describe('CargaProductoComponent', () => {
     component.onSubmit();
     expect(service.postData).not.toHaveBeenCalled();
     expect(component.isSubmitting).toBeFalse();
+
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   });
 
   it('should format date before submission', () => {
@@ -140,6 +158,9 @@ describe('CargaProductoComponent', () => {
     component.onSubmit();
     
     expect(component.formatDateToISOWithTime).toHaveBeenCalled();
+
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   });
 
   it('should handle successful submission', fakeAsync(() => {
@@ -161,6 +182,9 @@ describe('CargaProductoComponent', () => {
     tick();
     
     expect(component.isSubmitting).toBeFalse();
+
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   }));
 
   it('should handle API error', fakeAsync(() => {
@@ -185,6 +209,9 @@ describe('CargaProductoComponent', () => {
     
     expect(console.error).toHaveBeenCalledWith('API Error:', errorResponse);
     expect(component.isSubmitting).toBeFalse();
+
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   }));
 
   it('should handle image processing error', fakeAsync(() => {
@@ -209,46 +236,70 @@ describe('CargaProductoComponent', () => {
     
     expect(console.error).toHaveBeenCalledWith('Image processing error:', error);
     expect(component.isSubmitting).toBeFalse();
+
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   }));
 
   it('should format Date object correctly', () => {
     const testDate = new Date(2025, 3, 6); // Abril 6, 2025
     const result = component.formatDateToISOWithTime(testDate);
     expect(result).toBe('2025-04-06T00:00:00');
+
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   });
 
   it('should format date string correctly', () => {
     const dateString = '2025-04-06';
     const result = component.formatDateToISOWithTime(dateString);
     expect(result).toBe('2025-04-06T00:00:00');
+  
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   });
 
   it('should handle single-digit months and days', () => {
     const testDate = new Date(2025, 0, 1); // Enero 1, 2025
     const result = component.formatDateToISOWithTime(testDate);
     expect(result).toBe('2025-01-01T00:00:00');
+  
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   });
 
   it('should pad hours, minutes and seconds with zeros', () => {
     const testDate = new Date(2025, 5, 15);
     const result = component.formatDateToISOWithTime(testDate);
     expect(result.endsWith('T00:00:00')).toBeTrue();
+  
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   });
 
   it('should convert string to Date object', () => {
     const dateString = 'April 6, 2025';
     const result = component.formatDateToISOWithTime(dateString);
     expect(result).toBe('2025-04-06T00:00:00');
+  
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   });
 
   it('should handle ISO string input', () => {
     const isoString = '2025-04-06T14:30:00Z';
     const result = component.formatDateToISOWithTime(isoString);
     expect(result).toBe('2025-04-06T00:00:00');
+  
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   });
 
   it('should throw error for invalid date string', () => {
     expect(() => component.formatDateToISOWithTime('invalid-date')).toThrow();
+  
+    const req = httpMock.expectOne('http://localhost:5003/providers');
+    req.flush({});
   });
 
 

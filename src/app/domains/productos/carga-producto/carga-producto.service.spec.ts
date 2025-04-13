@@ -5,7 +5,7 @@ import { CargaProductoService } from './carga-producto.service';
 describe('Service Tests', () => {
   let service: CargaProductoService; 
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
-  let apiUrl = 'http://localhost:5003/providers/add';
+  let apiUrl = 'https://backend-products-143596276526.us-central1.run.app/products/add';
 
   beforeEach(() => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
