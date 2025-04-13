@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class CargaProductoService {
 
-  private apiUrl = 'https://backend-products-143596276526.us-central1.run.app/products/add'; // Mirar si se puede poner en los archivos de environment.
+  private apiUrl = 'http://localhost:5005/products/add'; // Mirar si se puede poner en los archivos de environment.
 
   constructor(private http: HttpClient) { }
 

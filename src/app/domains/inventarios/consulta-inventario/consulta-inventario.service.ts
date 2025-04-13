@@ -17,7 +17,7 @@ export class ConsultaInventarioService {
 
   getData(formData: any):
   Observable<ApiResponse<InventoryItem>>{
-    let apiUrl = `https://localhost:5003/stock/query`
+    let apiUrl = `http://localhost:5008/stock/query`
 
     let producto = formData.fieldProducto;
     let fabricante = formData.fieldFabricante;

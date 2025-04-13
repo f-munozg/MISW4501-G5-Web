@@ -11,7 +11,7 @@ describe('CargaProductoComponent', () => {
   let fixture: ComponentFixture<CargaProductoComponent>;
   let service: CargaProductoService;
   let httpMock: HttpTestingController;
-  let apiUrl = 'https://backend-products-143596276526.us-central1.run.app/products/add';
+  let apiUrl = 'http://localhost:5003/products/add';
 
   beforeEach(waitForAsync(async () => {
     await TestBed.configureTestingModule({
