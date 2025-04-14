@@ -9,7 +9,7 @@ import { FabricantesResponse,ApiResponse, InventoryItem, CategoriaProductos } fr
 describe('Service: ConsultaInventario', () => {
   let service: ConsultaInventarioService;
   let httpMock: HttpTestingController;
-  let apiUrlProviders = 'http://localhost:5003/providers'
+  let apiUrlProviders = 'https://backend-providers-143596276526.us-central1.run.app/providers'
 
   const mockPlant1 = {
     name: "Production Line 1",
@@ -47,7 +47,7 @@ describe('Service: ConsultaInventario', () => {
       service.getData(formData).subscribe();
 
       const req = httpMock.expectOne(
-        'http://localhost:5008/stock/query?product=production'
+        'https://backend-stock-143596276526.us-central1.run.app/stock/query?product=production'
       );
       expect(req.request.method).toBe('GET');
       req.flush({});
@@ -62,7 +62,7 @@ describe('Service: ConsultaInventario', () => {
 
       service.getData(formData).subscribe();
 
-      const expectedUrl = `http://localhost:5008/stock/query?product=universal` +
+      const expectedUrl = `https://backend-stock-143596276526.us-central1.run.app/stock/query?product=universal` +
                          `&provider=${mockPlant1.id}` +
                          `&category=${CategoriaProductos.LIMPIEZA}`;
       

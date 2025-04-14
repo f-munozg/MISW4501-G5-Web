@@ -11,7 +11,7 @@ describe('CargaProductoComponent', () => {
   let fixture: ComponentFixture<CargaProductoComponent>;
   let service: CargaProductoService;
   let httpMock: HttpTestingController;
-  let apiUrl = 'http://localhost:5003/products/add';
+  let apiUrl = 'https://backend-products-143596276526.us-central1.run.app/products/add';
 
   beforeEach(waitForAsync(async () => {
     await TestBed.configureTestingModule({
@@ -38,7 +38,7 @@ describe('CargaProductoComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
 
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   });
 
@@ -69,7 +69,7 @@ describe('CargaProductoComponent', () => {
       fieldNombre: null,
     })
 
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   });
 
@@ -102,7 +102,7 @@ describe('CargaProductoComponent', () => {
       fieldNombre: null,
     });
 
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   });
 
@@ -113,7 +113,7 @@ describe('CargaProductoComponent', () => {
     component.onFileSelected(event);
     expect(component.selectedFile).toBe(file);
 
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   });
 
@@ -122,7 +122,7 @@ describe('CargaProductoComponent', () => {
     component.onFileSelected(event);
     expect(component.selectedFile).toBeNull();
 
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   });
 
@@ -132,7 +132,7 @@ describe('CargaProductoComponent', () => {
     expect(service.postData).not.toHaveBeenCalled();
     expect(component.isSubmitting).toBeFalse();
 
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   });
 
@@ -159,7 +159,7 @@ describe('CargaProductoComponent', () => {
     
     expect(component.formatDateToISOWithTime).toHaveBeenCalled();
 
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   });
 
@@ -183,7 +183,7 @@ describe('CargaProductoComponent', () => {
     
     expect(component.isSubmitting).toBeFalse();
 
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   }));
 
@@ -210,7 +210,7 @@ describe('CargaProductoComponent', () => {
     expect(console.error).toHaveBeenCalledWith('API Error:', errorResponse);
     expect(component.isSubmitting).toBeFalse();
 
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   }));
 
@@ -237,7 +237,7 @@ describe('CargaProductoComponent', () => {
     expect(console.error).toHaveBeenCalledWith('Image processing error:', error);
     expect(component.isSubmitting).toBeFalse();
 
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   }));
 
@@ -246,7 +246,7 @@ describe('CargaProductoComponent', () => {
     const result = component.formatDateToISOWithTime(testDate);
     expect(result).toBe('2025-04-06T00:00:00');
 
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   });
 
@@ -255,7 +255,7 @@ describe('CargaProductoComponent', () => {
     const result = component.formatDateToISOWithTime(dateString);
     expect(result).toBe('2025-04-06T00:00:00');
   
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   });
 
@@ -264,7 +264,7 @@ describe('CargaProductoComponent', () => {
     const result = component.formatDateToISOWithTime(testDate);
     expect(result).toBe('2025-01-01T00:00:00');
   
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   });
 
@@ -273,7 +273,7 @@ describe('CargaProductoComponent', () => {
     const result = component.formatDateToISOWithTime(testDate);
     expect(result.endsWith('T00:00:00')).toBeTrue();
   
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   });
 
@@ -282,7 +282,7 @@ describe('CargaProductoComponent', () => {
     const result = component.formatDateToISOWithTime(dateString);
     expect(result).toBe('2025-04-06T00:00:00');
   
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   });
 
@@ -291,14 +291,14 @@ describe('CargaProductoComponent', () => {
     const result = component.formatDateToISOWithTime(isoString);
     expect(result).toBe('2025-04-06T00:00:00');
   
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   });
 
   it('should throw error for invalid date string', () => {
     expect(() => component.formatDateToISOWithTime('invalid-date')).toThrow();
   
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne('https://backend-providers-143596276526.us-central1.run.app/providers');
     req.flush({});
   });
 

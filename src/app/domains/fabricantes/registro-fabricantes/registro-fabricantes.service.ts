@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 
 export class RegistroFabricantesService {
-    private apiUrl = 'http://localhost:5003/providers/add'; // Mirar si se puede poner en los archivos de environment.
+    private apiUrl = 'https://backend-providers-143596276526.us-central1.run.app/providers/add'; // Mirar si se puede poner en los archivos de environment.
 
     constructor(private http: HttpClient){}
 

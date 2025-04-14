@@ -13,7 +13,7 @@ describe('RegistroFabricantesComponent', () => {
   let fixture: ComponentFixture<RegistroFabricantesComponent>;
   let service: RegistroFabricantesService;
   let httpMock: HttpTestingController;
-  let apiUrl = 'http://localhost:5003/providers/add';
+  let apiUrl = 'https://backend-providers-143596276526.us-central1.run.app/providers/add';
 
   beforeEach(waitForAsync(async () => {
     await TestBed.configureTestingModule({

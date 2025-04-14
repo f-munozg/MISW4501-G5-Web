@@ -8,13 +8,13 @@ import { FabricantesResponse } from '../producto.model';
 })
 export class CargaProductoService {
 
-  private apiUrl = 'http://localhost:5002/products/add'; // Mirar si se puede poner en los archivos de environment.
+  private apiUrl = 'https://backend-products-143596276526.us-central1.run.app/products/add'; // Mirar si se puede poner en los archivos de environment.
 
   constructor(private http: HttpClient) { }
 
   getListaFabricantes():
   Observable<FabricantesResponse> {
-    return this.http.get<FabricantesResponse>('http://localhost:5003/providers'); // Aquí va la URL del endpoint de Mateo G.
+    return this.http.get<FabricantesResponse>('https://backend-providers-143596276526.us-central1.run.app/providers'); // Aquí va la URL del endpoint de Mateo G.
   }
 
   postData(formData: any):
