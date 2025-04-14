@@ -1,5 +1,6 @@
 <app-default-window>
   <main class="consultaProductoBodegaContainer">
+  <form [formGroup]="consultaProductoBodegaForm" (ngSubmit)="onSubmit()">
     <div class="consultaProductoBodegaHeaderGrid">
       <h2 class="grid-item-consultaProductoBodegaTitulo">
         Consulta de Producto en Bodega
@@ -9,15 +10,15 @@
       <div class="grid-item-productoForm">
         <h3>Código o Nombre de Producto</h3>
         <mat-form-field class="productoFormField">
-          <input matInput placeholder="Escriba el Nombre o Código de Producto">
+          <input matInput formControlName="fieldProducto" placeholder="Escriba el Nombre o Código de Producto">
         </mat-form-field>
       </div>
-      <div class="grid-item-fabricanteForm">
+      <div class="grid-item-bodegaForm">
         <h3>Bodega</h3>
-        <mat-form-field class="fabricanteFormField">
+        <mat-form-field class="bodegaFormField">
           <mat-label>Escoja la Bodega</mat-label>
-          <mat-select [(value)]="selectedValue">
-            <mat-option *ngFor="let bodega of bodegas" [value]="bodega">
+          <mat-select formControlName="fieldBodega">
+            <mat-option *ngFor="let bodega of listaBodegas" [value]="bodega">
               {{ bodega }}
             </mat-option>
           </mat-select>
@@ -29,6 +30,7 @@
         <button mat-flat-button class="buscarBtn">Buscar</button>
       </div>
     </div>
+  </form>  
     <div class="tablaUbicacionStockHeaderGrid">
       <h2 class="grid-item-tablaUbicacionStockTitulo">
         Ubicación y Stock
@@ -44,7 +46,7 @@
     <div class="consultaProductoBodegaBtnsGrid">
       <div class="consultaProductoBodegaBtnsContainer">
         <div class="grid-item-consultaInventarioBtnDiv">
-          <button mat-flat-button class="consultaInventarioBtn">Consulta de Inventario</button>
+          <button mat-flat-button class="consultaInventarioBtn" routerLink="/inventario/consulta">Consulta de Inventario</button> <!-- Revisar routing si se hacen cambios a app-routing.module -->
         </div>
         <div class="grid-item-movimientosProductoBtnDiv">
           <button mat-flat-button class="movimientosProductoBtn">Movimientos de Producto</button>

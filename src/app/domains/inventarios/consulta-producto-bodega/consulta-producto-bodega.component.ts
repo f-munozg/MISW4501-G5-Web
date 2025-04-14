@@ -1,4 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ApiResponse, ProductInventoryItem } from '../inventario.model'
+import { ConsultaProductoBodegaService } from './consulta-producto-bodega.service';
+
+export interface TableRow {
+  product: string,
+  sku: string,
+  quantity: number,
+  location: string,
+  status: string
+}
 
 @Component({
   selector: 'app-consulta-producto-bodega',
@@ -7,39 +18,61 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./consulta-producto-bodega.component.css']
 })
 export class ConsultaProductoBodegaComponent implements OnInit {
-  tableData = [
-
-  ]
+  consultaProductoBodegaForm!: FormGroup;
+  listaBodegas: any;
+  
+  tableData: TableRow[] = [];
 
   tableColumns = [
     { 
-      name: 'ubicacion_bodega', 
+      name: 'location', 
       header: 'Ubicación en Bodega', 
-      cell: (item: any) => `${item.ubicacion_bodega}` 
+      cell: (item: TableRow) => item.location.toString()
     },
     { 
-      name: 'cantidad_disponible', 
+      name: 'quantity', 
       header: 'Cantidad Disponible', 
-      cell: (item: any) => item.cantidad_disponible 
+      cell: (item: TableRow) => item.quantity.toString() 
     },
     { 
-      name: 'estado', 
+      name: 'status', 
       header: 'Estado', 
-      cell: (item: any) => item.estado
+      cell: (item: TableRow) => item.status.toString()
     },
   ];
 
-  visibleColumns = ['ubicacion_bodega', 'cantidad_disponible', 'estado'];
+  visibleColumns = ['location', 'quantity', 'status'];
 
 
   selectedValue!: string; // Debe ser revisado, selectedValue es temporal
 
   bodegas: any[] = []; // any debe ser cambiado cuando se implemente el servicio del cual lea.
 
-  constructor() { }
-  // constructor(private dataService: YourDataService) {} `Debe ser implementado`
+  constructor(
+    private formBuilder: FormBuilder,
+    private apiService: ConsultaProductoBodegaService
+  ) { }
 
   ngOnInit() {
+    this.consultaProductoBodegaForm = this.formBuilder.group({
+      fieldProducto: ['', Validators.required],
+      fieldBodega: ['']
+    });
+
+    this.apiService.getListaBodegas().subscribe(data => {this.listaBodegas = data})
+  }
+
+  onSubmit() {
+    if (this.consultaProductoBodegaForm.valid) {
+          const formData = {
+            ...this.consultaProductoBodegaForm.value
+          }
+    
+        this.apiService.getData(formData).subscribe(
+          (response: ApiResponse<ProductInventoryItem>) => { this.tableData = response.results},
+          error => console.log(error)
+          )
+        }
   }
 
 }

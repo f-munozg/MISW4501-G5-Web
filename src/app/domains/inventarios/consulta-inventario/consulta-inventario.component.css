@@ -1,12 +1,14 @@
 .consultaInventarioContainer{
     display: grid;
     gap: 20px;
-    background-color: #e4e4e4;
+    /* background-color: #e4e4e4; */
 }
 
+/*
 [class^='grid-item']{
     outline: 3px dashed #f90;
 }
+*/
 
 .consultaInventarioGrid{
     display: grid;
@@ -47,10 +49,19 @@
     .grid-item-buscarBtnForm{
         grid-column: 6 / 9;
         grid-row: 2;
+        display: grid;
+
+        align-items: center;
+
+        .mat-mdc-unelevated-button:not(:disabled) {
+            color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+            background-color: #005d52 !important;
+        }
 
         .buscarBtn{
             width: 100% !important;
             grid-column: 1 / -1 !important;
         }
+
     }
 }
