@@ -37,7 +37,7 @@ export class ConsultaInventarioService {
       apiUrl += `&category=${categoria}`
     }
 
-    return this.http.get<ApiResponse<InventoryItem>>(apiUrl);
+    return this.http.get<ApiResponse<InventoryItem>>(apiUrl, {headers});
   }
 
 }
