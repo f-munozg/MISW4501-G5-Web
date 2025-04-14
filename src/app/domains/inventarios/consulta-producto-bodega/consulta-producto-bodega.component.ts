@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiResponse, ProductInventoryItem } from '../inventario.model'
+import { ApiResponse, Bodega, BodegasResponse, ProductInventoryItem } from '../inventario.model'
 import { ConsultaProductoBodegaService } from './consulta-producto-bodega.service';
 
 export interface TableRow {
@@ -19,7 +19,7 @@ export interface TableRow {
 })
 export class ConsultaProductoBodegaComponent implements OnInit {
   consultaProductoBodegaForm!: FormGroup;
-  listaBodegas: any;
+  listaBodegas: Bodega[] = [];
   
   tableData: TableRow[] = [];
 
@@ -43,10 +43,7 @@ export class ConsultaProductoBodegaComponent implements OnInit {
 
   visibleColumns = ['location', 'quantity', 'status'];
 
-
   selectedValue!: string; // Debe ser revisado, selectedValue es temporal
-
-  bodegas: any[] = []; // any debe ser cambiado cuando se implemente el servicio del cual lea.
 
   constructor(
     private formBuilder: FormBuilder,
@@ -59,7 +56,14 @@ export class ConsultaProductoBodegaComponent implements OnInit {
       fieldBodega: ['']
     });
 
-    this.apiService.getListaBodegas().subscribe(data => {this.listaBodegas = data})
+    this.apiService.getListaBodegas().subscribe({
+      next: (response: BodegasResponse) => {
+        this.listaBodegas = response.Warehouses;
+      },
+      error: (err) => {
+        console.error('Error loading warehouses:', err);
+      }
+    });
   }
 
   onSubmit() {
