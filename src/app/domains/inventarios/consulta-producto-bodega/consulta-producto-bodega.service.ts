@@ -17,21 +17,24 @@ export class ConsultaProductoBodegaService {
   getData(formData:any):
   Observable<ApiResponse<ProductInventoryItem>>{
     let apiUrl = `http://localhost:5008/stock/product_location`;
+    const params = new URLSearchParams();
 
     let producto = formData.fieldProducto;
     let bodega = formData.fieldBodega;
+
+    if (formData.fieldProducto) {
+      params.append('product', formData.fieldProducto);
+    }
+
+    if (formData.fieldBodega) {
+      params.append('warehouse_id', formData.fieldBodega);
+    }
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
 
-    apiUrl += `?product=${producto}`
-
-    if ( bodega.value != ''){
-      apiUrl += `&warehouse_id=${bodega}`
-    }
-
-    return this.http.get<ApiResponse<ProductInventoryItem>>(apiUrl, {headers});
+    return this.http.get<ApiResponse<ProductInventoryItem>>(`${apiUrl}?${params.toString()}`, {headers});
   }
 
 }
