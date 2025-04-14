@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { FabricantesResponse } from '../producto.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,11 @@ export class CargaProductoService {
   private apiUrl = 'https://backend-products-143596276526.us-central1.run.app/products/add'; // Mirar si se puede poner en los archivos de environment.
 
   constructor(private http: HttpClient) { }
+
+  getListaFabricantes():
+  Observable<FabricantesResponse> {
+    return this.http.get<FabricantesResponse>('https://backend-providers-143596276526.us-central1.run.app/providers'); // Aquí va la URL del endpoint de Mateo G.
+  }
 
   postData(formData: any):
   Promise<Observable<any>>{

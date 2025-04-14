@@ -20,7 +20,19 @@
     }
 
     .grid-item-PortafolioBtn{
-        grid-column: 9 / 10;
+        grid-column: 8 / 9;
+        display: grid;
+
+        .mat-mdc-unelevated-button:not(:disabled) {
+            color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+            background-color: #005d52 !important;
+        }
+
+        .PortafolioBtn{
+            justify-content: center;
+            justify-items: center;
+            align-self: center;
+        }
     }
 }
 
@@ -130,9 +142,31 @@
 
     .grid-item-CancelarBtnDiv{
         grid-column: 6 / 7;
+        display: grid;
+
+        .mat-mdc-unelevated-button:not(:disabled) {
+            color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+            background-color: #EC1C1C !important;
+        }
+
+        .CancelarBtn{
+            justify-content: center;
+            justify-items: center;
+        }
     }
 
     .grid-item-GuardarBtnDiv{
         grid-column: 8 / 9;
+        display: grid;
+
+        .mat-mdc-unelevated-button:not(:disabled) {
+            color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+            background-color: #005d52 !important;
+        }
+
+        .GuardarBtn{
+            justify-content: center;
+            justify-items: center;
+        }
     }
 }

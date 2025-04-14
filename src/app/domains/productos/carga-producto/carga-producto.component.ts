@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CargaProductoService } from './carga-producto.service';
-import { FileType2LabelMapping, CategoriaProductos } from './productos-categoria.enum';
+import { FileType2LabelMapping, CategoriaProductos, Fabricante, FabricantesResponse } from '../producto.model';
 
 @Component({
   selector: 'app-carga-producto',
@@ -13,6 +13,7 @@ export class CargaProductoComponent implements OnInit {
   cargaProductoForm!: FormGroup;
   selectedFile: File | null = null;
   isSubmitting = false;
+  listaFabricantes: Fabricante[] = [];
 
   public FileType2LabelMapping = FileType2LabelMapping;
   public fileTypes = Object.values(CategoriaProductos);
@@ -35,6 +36,17 @@ export class CargaProductoComponent implements OnInit {
       fieldNombre: ['', Validators.required]
       }
     );
+
+    this.apiService.getListaFabricantes().subscribe({
+      next: (response: FabricantesResponse) => {
+        this.listaFabricantes = response.providers;
+      },
+      error: (err) => {
+        console.error('Error loading providers:', err);
+      }
+    });
+
+  
   }
 
   onFileSelected(event: Event): void {

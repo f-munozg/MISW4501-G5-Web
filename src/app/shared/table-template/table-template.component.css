@@ -1,27 +1,31 @@
 .tableComponent{
     display: grid;
-    gap: 20px;
+    gap: 10px;
     background-color: #EEF0F4;
 }
+
+/*
+[class^='grid-item']{
+    outline: 3px dashed #f90;
+}
+*/
 
 .tableBtnsGrid{
     display: grid;
     grid-row: 1;
     grid-template-columns: repeat(9, 1fr);
     column-gap: 10px;
-
+    padding-top: 10px;
 
     .grid-item-ExportarCSVBtn{
+        display: grid;
         grid-column: 6 / 8;
-        display: flex;
-        justify-content: center;
         align-items: center;
     }
 
     .grid-item-ExportarPDFBtn{
+        display: grid;
         grid-column: 8 / 10;
-        display: flex;
-        justify-content: center;
         align-items: center;
     }
 }
