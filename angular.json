@@ -107,7 +107,7 @@
             "scripts": []
           },
           "configurations": {
-            "local": {
+            "development": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
