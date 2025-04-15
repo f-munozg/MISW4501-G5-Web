@@ -9,12 +9,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ConsultaProductoBodegaService } from './consulta-producto-bodega.service';
 import { RouterTestingModule } from '@angular/router/testing';
+import { environment } from '../../../../environments/environment'
 
 describe('ConsultaProductoBodegaComponent', () => {
   let component: ConsultaProductoBodegaComponent;
   let fixture: ComponentFixture<ConsultaProductoBodegaComponent>;
   let service: ConsultaProductoBodegaService;
   let httpMock: HttpTestingController;
+
+  let apiUrlStock = environment.apiUrlStock
+  let apiUrlWarehouses = apiUrlStock + '/stock/get_warehouses';
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -43,7 +47,7 @@ describe('ConsultaProductoBodegaComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
 
-    const req = httpMock.expectOne('http://localhost:5008/stock/get_warehouses');
+    const req = httpMock.expectOne(apiUrlWarehouses);
     req.flush({});
   });
 
@@ -52,28 +56,28 @@ describe('ConsultaProductoBodegaComponent', () => {
     expect(component.tableColumns.map(c => c.name)).toEqual(['location', 'quantity', 'status']);
     expect(component.tableColumns.map(c => c.header)).toEqual(['Ubicación en Bodega', 'Cantidad Disponible', 'Estado']);
   
-    const req = httpMock.expectOne('http://localhost:5008/stock/get_warehouses');
+    const req = httpMock.expectOne(apiUrlWarehouses);
     req.flush({});
   });
 
   it('should have correct visible columns', () => {
     expect(component.visibleColumns).toEqual(['location', 'quantity', 'status']);
   
-    const req = httpMock.expectOne('http://localhost:5008/stock/get_warehouses');
+    const req = httpMock.expectOne(apiUrlWarehouses);
     req.flush({});
   });
 
   it('should initialize with empty table data', () => {
     expect(component.tableData).toEqual([]);
   
-    const req = httpMock.expectOne('http://localhost:5008/stock/get_warehouses');
+    const req = httpMock.expectOne(apiUrlWarehouses);
     req.flush({});
   });
 
   it('should initialize selectedValue as undefined', () => {
     expect(component.selectedValue).toBeUndefined();
   
-    const req = httpMock.expectOne('http://localhost:5008/stock/get_warehouses');
+    const req = httpMock.expectOne(apiUrlWarehouses);
     req.flush({});
   });
 
@@ -96,7 +100,7 @@ describe('ConsultaProductoBodegaComponent', () => {
       expect(headers[0].textContent.trim()).toBe('Ubicación en Bodega');
       expect(headers[1].textContent.trim()).toBe('Cantidad Disponible');
     
-      const req = httpMock.expectOne('http://localhost:5008/stock/get_warehouses');
+      const req = httpMock.expectOne(apiUrlWarehouses);
       req.flush({});
     }));
 
@@ -113,7 +117,7 @@ describe('ConsultaProductoBodegaComponent', () => {
       expect(cells[4].textContent.trim()).toBe('35');
       expect(cells[5].textContent.trim()).toBe('Vigente');
     
-      const req = httpMock.expectOne('http://localhost:5008/stock/get_warehouses');
+      const req = httpMock.expectOne(apiUrlWarehouses);
       req.flush({});
     }));
 
@@ -125,7 +129,7 @@ describe('ConsultaProductoBodegaComponent', () => {
       const cells = fixture.nativeElement.querySelectorAll('td[mat-cell]');
       expect(cells[0].textContent.trim()).toBe('A4');
 
-      const req = httpMock.expectOne('http://localhost:5008/stock/get_warehouses');
+      const req = httpMock.expectOne(apiUrlWarehouses);
       req.flush({});
     }));
 
@@ -139,7 +143,7 @@ describe('ConsultaProductoBodegaComponent', () => {
       expect(headers[0].textContent.trim()).toBe('Ubicación en Bodega');
       expect(headers[1].textContent.trim()).toBe('Cantidad Disponible');
     
-      const req = httpMock.expectOne('http://localhost:5008/stock/get_warehouses');
+      const req = httpMock.expectOne(apiUrlWarehouses);
       req.flush({});
     }));
 
@@ -151,7 +155,7 @@ describe('ConsultaProductoBodegaComponent', () => {
     component.onSubmit();
     expect(getDataSpy).not.toHaveBeenCalled();
 
-    const req = httpMock.expectOne('http://localhost:5008/stock/get_warehouses');
+    const req = httpMock.expectOne(apiUrlWarehouses);
     req.flush({});
   });
 
@@ -165,9 +169,9 @@ describe('ConsultaProductoBodegaComponent', () => {
     
     expect(getDataSpy).toHaveBeenCalledWith(testData);
 
-    const req1 = httpMock.expectOne('http://localhost:5008/stock/get_warehouses');
+    const req1 = httpMock.expectOne(apiUrlWarehouses);
     req1.flush({});
-    const req2 = httpMock.expectOne('http://localhost:5008/stock/product_location?product=value1&warehouse_id=value2');
+    const req2 = httpMock.expectOne(apiUrlStock + `/stock/product_location?product=value1&warehouse_id=value2`);
     req2.flush({})
   });
 

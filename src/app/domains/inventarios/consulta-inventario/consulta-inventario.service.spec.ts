@@ -10,7 +10,8 @@ import { environment } from '../../../../environments/environment'
 describe('Service: ConsultaInventario', () => {
   let service: ConsultaInventarioService;
   let httpMock: HttpTestingController;
-  let apiUrlProviders = environment.apiUrlProviders + `/providers`;
+  let apiUrlProviders = environment.apiUrlProviders + `/providers`
+  let apiUrlStock = environment.apiUrlStock
 
   const mockPlant1 = {
     name: "Production Line 1",
@@ -46,7 +47,7 @@ describe('Service: ConsultaInventario', () => {
       service.getData(formData).subscribe();
 
       const req = httpMock.expectOne(
-        environment.apiUrlStock + `/stock/query?product=production`
+        apiUrlStock + `/stock/query?product=production`
       );
       expect(req.request.method).toBe('GET');
       req.flush({});
@@ -61,7 +62,7 @@ describe('Service: ConsultaInventario', () => {
 
       service.getData(formData).subscribe();
 
-      const expectedUrl = environment.apiUrlStock + `/stock/query?product=universal` +
+      const expectedUrl = apiUrlStock + `/stock/query?product=universal` +
                          `&provider=${mockPlant1.id}` +
                          `&category=${CategoriaProductos.LIMPIEZA}`;
       
