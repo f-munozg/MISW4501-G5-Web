@@ -19,11 +19,8 @@ export class ConsultaProductoBodegaService {
     let apiUrl = `http://localhost:5008/stock/product_location`;
     const params = new URLSearchParams();
 
-    let producto = formData.fieldProducto;
-    let bodega = formData.fieldBodega;
-
     if (formData.fieldProducto) {
-      params.append('product', formData.fieldProducto);
+      params.append('product', formData.fieldProducto); // search se puede cambiar por product dependiendo de Mateo
     }
 
     if (formData.fieldBodega) {
