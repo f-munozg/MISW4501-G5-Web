@@ -1,13 +1,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment'
 
 @Injectable({
     providedIn: 'root'
 })
 
 export class RegistroFabricantesService {
-    private apiUrl = 'http://localhost:5003/providers/add'; // Mirar si se puede poner en los archivos de environment.
+    private apiUrl = environment.apiUrlProviders + `/providers/add`;
 
     constructor(private http: HttpClient){}
 
