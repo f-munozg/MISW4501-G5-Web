@@ -23,7 +23,7 @@ import { ConsultaProductoBodegaComponent } from './consulta-producto-bodega/cons
     HttpClientModule,
     DefaultWindowComponent,
     TableTemplateComponent,
-    RouterModule
+    RouterModule.forRoot([])
   ]
 })
 export class InventariosModule { }

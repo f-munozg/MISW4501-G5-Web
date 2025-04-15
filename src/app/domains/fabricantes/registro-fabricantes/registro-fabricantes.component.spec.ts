@@ -3,6 +3,7 @@ import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { of, throwError } from 'rxjs';
+import { environment } from '../../../../environments/environment'
 
 import { RegistroFabricantesService } from './registro-fabricantes.service';
 import { RegistroFabricantesComponent } from './registro-fabricantes.component';
@@ -13,7 +14,7 @@ describe('RegistroFabricantesComponent', () => {
   let fixture: ComponentFixture<RegistroFabricantesComponent>;
   let service: RegistroFabricantesService;
   let httpMock: HttpTestingController;
-  let apiUrl = 'https://backend-providers-143596276526.us-central1.run.app/providers/add';
+  let apiUrl = environment.apiUrlProviders + `/providers/add`;
 
   beforeEach(waitForAsync(async () => {
     await TestBed.configureTestingModule({

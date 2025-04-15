@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiResponse, ProductInventoryItem } from '../inventario.model'
+import { ApiResponse, Bodega, BodegasResponse, ProductInventoryItem } from '../inventario.model'
 import { ConsultaProductoBodegaService } from './consulta-producto-bodega.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export interface TableRow {
   product: string,
@@ -19,7 +20,7 @@ export interface TableRow {
 })
 export class ConsultaProductoBodegaComponent implements OnInit {
   consultaProductoBodegaForm!: FormGroup;
-  listaBodegas: any;
+  listaBodegas: Bodega[] = [];
   
   tableData: TableRow[] = [];
 
@@ -43,14 +44,13 @@ export class ConsultaProductoBodegaComponent implements OnInit {
 
   visibleColumns = ['location', 'quantity', 'status'];
 
-
   selectedValue!: string; // Debe ser revisado, selectedValue es temporal
-
-  bodegas: any[] = []; // any debe ser cambiado cuando se implemente el servicio del cual lea.
 
   constructor(
     private formBuilder: FormBuilder,
-    private apiService: ConsultaProductoBodegaService
+    private apiService: ConsultaProductoBodegaService,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -59,10 +59,31 @@ export class ConsultaProductoBodegaComponent implements OnInit {
       fieldBodega: ['']
     });
 
-    this.apiService.getListaBodegas().subscribe(data => {this.listaBodegas = data})
+    this.apiService.getListaBodegas().subscribe({
+      next: (response: BodegasResponse) => {
+        this.listaBodegas = response.Warehouses;
+      },
+      error: (err) => {
+        console.error('Error loading warehouses:', err);
+      }
+    });
+  
+    this.route.queryParams.subscribe(params => {
+      this.consultaProductoBodegaForm.patchValue({
+        fieldProducto: params['product'] || '',
+        fieldBodega: params['warehouse_id'] || ''
+      });
+    });
+
   }
 
   onSubmit() {
+    if (this.consultaProductoBodegaForm.invalid) {
+      return;
+    }
+
+    this.updateUrlWithParams();
+
     if (this.consultaProductoBodegaForm.valid) {
           const formData = {
             ...this.consultaProductoBodegaForm.value
@@ -73,6 +94,24 @@ export class ConsultaProductoBodegaComponent implements OnInit {
           error => console.log(error)
           )
         }
+  };
+
+  private updateUrlWithParams() {
+    const formValues = this.consultaProductoBodegaForm.value;
+    const queryParams: any = {
+      product: formValues.fieldProducto
+    };
+
+    if (formValues.fieldBodega) {
+      queryParams.warehouse_id = formValues.fieldBodega;
+    }
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: queryParams,
+      queryParamsHandling: 'merge'
+    });
   }
+
 
 }

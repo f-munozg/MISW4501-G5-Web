@@ -17,7 +17,12 @@ export class ConsultaInventarioService {
 
   getData(formData: any):
   Observable<ApiResponse<InventoryItem>>{
+<<<<<<< HEAD
     let apiUrl = `https://backend-stock-143596276526.us-central1.run.app/stock/query`
+=======
+    let apiUrl = `http://localhost:5008/stock/query`
+    const params = new URLSearchParams();
+>>>>>>> HU1.1.1
 
     let producto = formData.fieldProducto;
     let fabricante = formData.fieldFabricante;
@@ -27,17 +32,19 @@ export class ConsultaInventarioService {
       'Content-Type': 'application/json'
     });
 
-    apiUrl += `?product=${producto}`
-
-    if ( fabricante.value != ''){
-      apiUrl += `&provider=${fabricante}`
-    } 
-    
-    if ( categoria.value != '') {
-      apiUrl += `&category=${categoria}`
+    if (producto) {
+      params.append('product', producto);
     }
 
-    return this.http.get<ApiResponse<InventoryItem>>(apiUrl, {headers});
+    if (fabricante) {
+      params.append('provider', fabricante);
+    }
+
+    if (categoria) {
+      params.append('category', categoria);
+    }
+
+    return this.http.get<ApiResponse<InventoryItem>>(`${apiUrl}?${params.toString()}`, {headers});
   }
 
 }

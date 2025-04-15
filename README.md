@@ -23,25 +23,38 @@ src/
 │   ├── core/                         # Funcionalidades esenciales (i.e., autorización, roles, logs, etc.)
 │   ├── shared/                       # Componentes compartidos (navbar, header), pipelines, directivas, etc.
 │   ├── domains/                      # Módulos por dominio
+│   │   ├── bodegas/                    # Componentes de gestión de bodegas 
+│   │   ├── compras/                    # Componentes de gestión de compras
+│   │   ├── fabricantes/                # Componentes de gestión de fabricantes 
+│   │   ├── inventarios/                # Componentes de gestión de inventarios
 │   │   ├── login/                      # Componentes de inicio de sesión y registro
-│   │   ├── usuarios/                   # Componentes de gestión de usuarios
 │   │   ├── pedidos/                    # Componentes de gestión de pedidos
 │   │   ├── productos/                  # Componentes de gestión de productos
-│   │   ├── fabricantes/                # Componentes de gestión de fabricantes
-│   │   ├── bodegas/                    # Componentes de gestión de bodegas
-│   │   ├── inventarios/                # Componentes de gestión de inventarios
-│   │   ├── rutas/                      # Componentes de gestión de rutas
-│   │   ├── ventas/                     # Componentes de gestión de ventas
-│   │   ├── compras/                    # Componentes de gestión de compras
-│   │   ├── vendedores/                 # Componentes de gestión de vendedores
+│   │   ├── reglas/                     # Componentes de reglas
 │   │   ├── reportes/                   # Componentes de reportes
-│   │   └── reglas/                     # Componentes de reglas
+│   │   ├── rutas/                      # Componentes de gestión de rutas
+│   │   ├── usuarios/                   # Componentes de gestión de usuarios
+│   │   ├── vendedores/                 # Componentes de gestión de vendedores
+│   │   └── ventas/                     # Componentes de gestión de ventas
+│   ├── material                      # Módulo de Angular Material
+│   │   └── material.module.ts          # Archivo de módulo de Angular Material
+│   ├── shared                        # Carpeta de componentes compartidos
+│   │   ├── accessibility-bar/           # Componente de barra de accesibilidad
+│   │   ├── default-window/             # Componente de ventana por defecto (la unión de todos los componentes shared)
+│   │   ├── header/                     # Componente de encabezado
+│   │   ├── sidenav/                    # Componente de barra de navegación
+│   │   └── table-template/             # Componente de formato de tabla
 │   ├── app-routing.module.ts         # Configuración principal de routing
+│   ├── app.component.css             # Configuración principal de estilo
+│   ├── app.component.html            # Configuración principal de estructura de pantalla
+│   ├── app.component.spec.ts         # Configuración principal de pruebas
 │   ├── app.component.ts              # Componente Root
 │   └── app.module.ts                 # Módulo Root
 ├── assets/                           # Assets (imágenes, íconos, fuentes, etc.)
 ├── environments/                     # Configuración de los environments
-└── ...                               # Otros (i.e., styles, pruebas e2e.)
+├── Dockerfile                        # Configuración para creación de contenedor Docker. 
+├── karma.conf.js                     # Configuración de archivo para ejecución de pruebas unitarias.
+└── ...                               # Otros (i.e., styles, tsconfig json files, package.json, pruebas e2e.)
 ```
 
 ## Despliegue
@@ -58,7 +71,7 @@ Para construir el proyecto se utiliza el comando `ng build`. Los artefactos del 
 
 ### Ejecución de Pruebas Unitarias
 
-Las pruebas unitarias se ejecutan con el comando `ng test` via [Karma](https://karma-runner.github.io).
+Las pruebas unitarias se ejecutan con el comando `ng test` via [Karma](https://karma-runner.github.io). Las pruebas están configuradas para asegurar que el coverage de las líneas de código es mayor al 80%. La configuración y el coverage de las pruebas se encuentran en `karma.conf.js`.
 
 ### Ejecución de Pruebas End-to-End
 
