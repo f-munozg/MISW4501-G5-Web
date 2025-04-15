@@ -18,8 +18,9 @@
         <mat-form-field class="bodegaFormField">
           <mat-label>Escoja la Bodega</mat-label>
           <mat-select formControlName="fieldBodega">
-            <mat-option *ngFor="let bodega of listaBodegas" [value]="bodega">
-              {{ bodega }}
+            <mat-option *ngFor="let bodega of listaBodegas" 
+              [value]="bodega.id">
+              {{ bodega.name }}
             </mat-option>
           </mat-select>
         </mat-form-field>

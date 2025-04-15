@@ -5,11 +5,13 @@ import { ConsultaInventarioService } from './consulta-inventario.service';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { FabricantesResponse,ApiResponse, InventoryItem, CategoriaProductos } from '../inventario.model';
+import { environment } from '../../../../environments/environment'
 
 describe('Service: ConsultaInventario', () => {
   let service: ConsultaInventarioService;
   let httpMock: HttpTestingController;
-  let apiUrlProviders = 'https://backend-providers-143596276526.us-central1.run.app/providers'
+  let apiUrlProviders = environment.apiUrlProviders + `/providers`
+  let apiUrlStock = environment.apiUrlStock
 
   const mockPlant1 = {
     name: "Production Line 1",
@@ -40,14 +42,12 @@ describe('Service: ConsultaInventario', () => {
     it('should create request with only required fields', () => {
       const formData = {
         fieldProducto: 'production',
-        fieldFabricante: { value: '' },
-        fieldCategoria: {value: ''}
       };
 
       service.getData(formData).subscribe();
 
       const req = httpMock.expectOne(
-        'https://backend-stock-143596276526.us-central1.run.app/stock/query?product=production'
+        apiUrlStock + `/stock/query?product=production`
       );
       expect(req.request.method).toBe('GET');
       req.flush({});
@@ -62,7 +62,7 @@ describe('Service: ConsultaInventario', () => {
 
       service.getData(formData).subscribe();
 
-      const expectedUrl = `https://backend-stock-143596276526.us-central1.run.app/stock/query?product=universal` +
+      const expectedUrl = apiUrlStock + `/stock/query?product=universal` +
                          `&provider=${mockPlant1.id}` +
                          `&category=${CategoriaProductos.LIMPIEZA}`;
       
