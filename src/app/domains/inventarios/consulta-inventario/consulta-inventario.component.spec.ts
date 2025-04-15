@@ -10,6 +10,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CategoriaProductos } from '../inventario.model';
 import { ConsultaInventarioService } from './consulta-inventario.service';
+import { environment } from '../../../../environments/environment'
 
 describe('ConsultaInventarioComponent', () => {
   
@@ -17,6 +18,9 @@ describe('ConsultaInventarioComponent', () => {
   let fixture: ComponentFixture<ConsultaInventarioComponent>;
   let service: ConsultaInventarioService;
   let httpMock: HttpTestingController;
+
+  let apiUrlProviders = environment.apiUrlProviders + `/providers`;
+  let apiUrlStock = environment.apiUrlStock;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -45,7 +49,7 @@ describe('ConsultaInventarioComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
 
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne(apiUrlProviders);
     req.flush({});
   });
 
@@ -54,35 +58,35 @@ describe('ConsultaInventarioComponent', () => {
     expect(component.tableColumns.map(c => c.name)).toEqual(['warehouse', 'stock', 'estimated_delivery_time', 'date_update']);
     expect(component.tableColumns.map(c => c.header)).toEqual(['Bodega', 'Stock (Unidades)', 'Fecha Estimada Reposición', 'Última Actualización']);
   
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne(apiUrlProviders);
     req.flush({});
   });
 
   it('should have correct visible columns', () => {
     expect(component.visibleColumns).toEqual(['warehouse', 'stock', 'estimated_delivery_time', 'date_update']);
   
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne(apiUrlProviders);
     req.flush({});
   });
 
   it('should initialize with empty table data', () => {
     expect(component.tableData).toEqual([]);
   
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne(apiUrlProviders);
     req.flush({});
   });
 
   it('should initialize selectedValue as undefined', () => {
     expect(component.selectedValue).toBeUndefined();
   
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne(apiUrlProviders);
     req.flush({});
   });
 
   it('should initialize categorias with 9 values', () => {
     expect(component.fileTypes).toEqual(Object.values(CategoriaProductos));
   
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne(apiUrlProviders);
     req.flush({});
   });
 
@@ -104,7 +108,7 @@ describe('ConsultaInventarioComponent', () => {
       expect(headers[0].textContent.trim()).toBe('Bodega');
       expect(headers[1].textContent.trim()).toBe('Stock (Unidades)');
     
-      const req = httpMock.expectOne('http://localhost:5003/providers');
+      const req = httpMock.expectOne(apiUrlProviders);
       req.flush({});
     }));
 
@@ -121,7 +125,7 @@ describe('ConsultaInventarioComponent', () => {
       expect(cells[4].textContent.trim()).toBe('Value A');
       expect(cells[5].textContent.trim()).toBe('65');
     
-      const req = httpMock.expectOne('http://localhost:5003/providers');
+      const req = httpMock.expectOne(apiUrlProviders);
       req.flush({});
     }));
 
@@ -133,7 +137,7 @@ describe('ConsultaInventarioComponent', () => {
       const cells = fixture.nativeElement.querySelectorAll('td[mat-cell]');
       expect(cells[0].textContent.trim()).toBe('New');
 
-      const req = httpMock.expectOne('http://localhost:5003/providers');
+      const req = httpMock.expectOne(apiUrlProviders);
       req.flush({});
     }));
 
@@ -147,7 +151,7 @@ describe('ConsultaInventarioComponent', () => {
       expect(headers[0].textContent.trim()).toBe('Bodega');
       expect(headers[1].textContent.trim()).toBe('Fecha Estimada Reposición');
     
-      const req = httpMock.expectOne('http://localhost:5003/providers');
+      const req = httpMock.expectOne(apiUrlProviders);
       req.flush({});
     }));
   });
@@ -158,7 +162,7 @@ describe('ConsultaInventarioComponent', () => {
     component.onSubmit();
     expect(getDataSpy).not.toHaveBeenCalled();
 
-    const req = httpMock.expectOne('http://localhost:5003/providers');
+    const req = httpMock.expectOne(apiUrlProviders);
     req.flush({});
   });
 
@@ -172,9 +176,9 @@ describe('ConsultaInventarioComponent', () => {
     
     expect(getDataSpy).toHaveBeenCalledWith(testData);
 
-    const req1 = httpMock.expectOne('http://localhost:5003/providers');
+    const req1 = httpMock.expectOne(apiUrlProviders);
     req1.flush({});
-    const req2 = httpMock.expectOne('http://localhost:5008/stock/query?product=value1&provider=value2&category=value3');
+    const req2 = httpMock.expectOne(apiUrlStock + `/stock/query?product=value1&provider=value2&category=value3`);
     req2.flush({})
   });
 
