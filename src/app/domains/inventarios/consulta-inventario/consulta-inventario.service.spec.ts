@@ -5,11 +5,12 @@ import { ConsultaInventarioService } from './consulta-inventario.service';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { FabricantesResponse,ApiResponse, InventoryItem, CategoriaProductos } from '../inventario.model';
+import { environment } from '../../../../environments/environment'
 
 describe('Service: ConsultaInventario', () => {
   let service: ConsultaInventarioService;
   let httpMock: HttpTestingController;
-  let apiUrlProviders = 'http://localhost:5003/providers'
+  let apiUrlProviders = environment.apiUrlProviders + `/providers`;
 
   const mockPlant1 = {
     name: "Production Line 1",
@@ -45,7 +46,7 @@ describe('Service: ConsultaInventario', () => {
       service.getData(formData).subscribe();
 
       const req = httpMock.expectOne(
-        'http://localhost:5008/stock/query?product=production'
+        environment.apiUrlStock + `/stock/query?product=production`
       );
       expect(req.request.method).toBe('GET');
       req.flush({});
@@ -60,7 +61,7 @@ describe('Service: ConsultaInventario', () => {
 
       service.getData(formData).subscribe();
 
-      const expectedUrl = `http://localhost:5008/stock/query?product=universal` +
+      const expectedUrl = environment.apiUrlStock + `/stock/query?product=universal` +
                          `&provider=${mockPlant1.id}` +
                          `&category=${CategoriaProductos.LIMPIEZA}`;
       
