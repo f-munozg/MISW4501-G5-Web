@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FileType2LabelMapping, CategoriaProductos, ApiResponse, InventoryItem, Fabricante, FabricantesResponse } from '../inventario.model';
 import { ConsultaInventarioService } from './consulta-inventario.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export interface TableRow {
   warehouse: string;
@@ -56,7 +57,9 @@ export class ConsultaInventarioComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private apiService: ConsultaInventarioService
+    private apiService: ConsultaInventarioService,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -74,9 +77,23 @@ export class ConsultaInventarioComponent implements OnInit {
         console.error('Error loading providers:', err);
       }
     });
+
+    this.route.queryParams.subscribe(params => {
+      this.consultaInventarioForm.patchValue({
+        fieldProducto: params['product'] || '',
+        fieldFabricante: params['provider'] || '',
+        fieldCategoria: params['category'] || ''
+      });
+    });
   }
 
   onSubmit() {
+    if (this.consultaInventarioForm.invalid) {
+      return;
+    }
+
+    this.updateUrlWithParams();
+
     if (this.consultaInventarioForm.valid) {
       const formData = {
         ...this.consultaInventarioForm.value
@@ -87,6 +104,27 @@ export class ConsultaInventarioComponent implements OnInit {
       error => console.log(error)
       )
     }
+  }
+
+  private updateUrlWithParams() {
+    const formValues = this.consultaInventarioForm.value;
+    const queryParams: any = {
+      product: formValues.fieldProducto
+    };
+
+    if (formValues.fieldFabricante) {
+      queryParams.provider = formValues.fieldFabricante
+    }
+
+    if (formValues.fieldCategoria) {
+      queryParams.category = formValues.fieldCategoria;
+    }
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: queryParams,
+      queryParamsHandling: 'merge'
+    });
   }
 
 }

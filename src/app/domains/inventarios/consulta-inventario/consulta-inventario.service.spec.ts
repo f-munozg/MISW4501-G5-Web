@@ -40,8 +40,6 @@ describe('Service: ConsultaInventario', () => {
     it('should create request with only required fields', () => {
       const formData = {
         fieldProducto: 'production',
-        fieldFabricante: { value: '' },
-        fieldCategoria: {value: ''}
       };
 
       service.getData(formData).subscribe();
