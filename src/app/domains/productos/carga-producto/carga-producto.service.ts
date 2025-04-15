@@ -2,19 +2,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FabricantesResponse } from '../producto.model';
+import { environment } from '../../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class CargaProductoService {
 
-  private apiUrl = 'http://localhost:5002/products/add'; // Mirar si se puede poner en los archivos de environment.
+  private apiUrl = environment.apiUrlProducts + `/products/add`; 
 
   constructor(private http: HttpClient) { }
 
   getListaFabricantes():
   Observable<FabricantesResponse> {
-    return this.http.get<FabricantesResponse>('http://localhost:5003/providers'); // Aquí va la URL del endpoint de Mateo G.
+    return this.http.get<FabricantesResponse>(environment.apiUrlProviders + `/providers`); // Aquí va la URL del endpoint de Mateo G.
   }
 
   postData(formData: any):
@@ -31,7 +32,7 @@ export class CargaProductoService {
           unit_value: formData.fieldValor,
           storage_conditions: formData.fieldCondicionesAlmacenamiento,
           product_features: formData.fieldCaracteristicas,
-          provider_id: formData.fieldFabricante, // Esto debe ser modificado para que se lea de un dropdown
+          provider_id: formData.fieldFabricante,
           estimated_delivery_time: formData.fieldFechaVencimiento,
           photo: imageBase64,
           description: formData.fieldDescripcion,
