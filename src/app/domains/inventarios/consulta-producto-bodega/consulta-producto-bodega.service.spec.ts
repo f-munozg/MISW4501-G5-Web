@@ -4,11 +4,13 @@ import { TestBed, waitForAsync, inject } from '@angular/core/testing';
 import { ConsultaProductoBodegaService } from './consulta-producto-bodega.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { BodegasResponse } from '../inventario.model';
+import { environment } from '../../../../environments/environment'
 
 describe('Service: ConsultaProductoBodega', () => {
   let service: ConsultaProductoBodegaService;
   let httpMock: HttpTestingController;
-  let apiUrlWarehouses = 'http://localhost:5008/stock/get_warehouses';
+  let apiUrlStock = environment.apiUrlStock
+  let apiUrlWarehouses = apiUrlStock + '/stock/get_warehouses';
 
   const mockWarehouse1 = {
     name: "Bodega Norte",
@@ -96,7 +98,7 @@ describe('Service: ConsultaProductoBodega', () => {
       service.getData(formData).subscribe();
 
       const req = httpMock.expectOne(
-        'http://localhost:5008/stock/product_location?product=Producto1&warehouse_id=46b8f660-2006-45de-ad57-1764607876ac'
+        apiUrlStock + `/stock/product_location?product=Producto1&warehouse_id=46b8f660-2006-45de-ad57-1764607876ac`
       );
       expect(req.request.method).toBe('GET');
       req.flush({});
