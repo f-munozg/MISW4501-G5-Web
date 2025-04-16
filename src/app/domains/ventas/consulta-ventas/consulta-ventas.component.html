@@ -5,65 +5,73 @@
         Consulta de Ventas
       </h2>
     </div>
-    <div class="consultaVentasGrid">
-      <div class="grid-item-productoForm">
-        <h3>Producto</h3>
-        <mat-form-field class="productoFormField">
-          <input matInput placeholder="Producto">
-        </mat-form-field>
-      </div>
-      <div class="grid-item-fabricanteForm">
-        <h3>Fabricante</h3>
-        <mat-form-field class="fabricanteFormField">
-          <mat-label>Escoja el Fabricante</mat-label>
-          <mat-select formControlName="fieldFabricante">
-            <mat-option *ngFor="let fabricante of listaFabricantes"
-                [value]="fabricante.id">
-                {{fabricante.name}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="grid-item-categoriaForm">
-        <h3>Categoría</h3>
-        <mat-form-field class="categoriaFormField">
-          <mat-label>Escoja la Categoría</mat-label>
-          <mat-select formControlName="fieldCategoria">
-            <mat-option *ngFor="let fileType of fileTypes"
-                [value]="fileType">
-                {{FileType2LabelMapping[fileType]}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="grid-item-fechasForm">
-        <div class="grid-item-desdeForm">
-          <h3>Desde</h3>
-          <mat-form-field class="desdeFormField">
-            <mat-label>MM/DD/YYYY</mat-label>
-            <input matInput [matDatepicker]="picker1">
-            <mat-hint>MM/DD/YYYY</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
-            <mat-datepicker #picker1></mat-datepicker>
+    <form [formGroup]="consultaVentasForm" (ngSubmit)="onSubmit()">
+      <div class="consultaVentasGrid">
+        <div class="grid-item-productoForm">
+          <h3>Producto</h3>
+          <mat-form-field class="productoFormField">
+            <mat-label>Escoja el Producto</mat-label>
+            <mat-select formControlName="fieldProducto">
+              <mat-option *ngFor="let producto of listaProductos"
+                  [value]="producto.id">
+                  {{producto.name}}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
         </div>
-        <div class="grid-item-hastaForm">
-          <h3>Hasta</h3>
-          <mat-form-field class="hastaFormField">
-            <mat-label>MM/DD/YYYY</mat-label>
-            <input matInput [matDatepicker]="picker2">
-            <mat-hint>MM/DD/YYYY</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
-            <mat-datepicker #picker2></mat-datepicker>
+        <div class="grid-item-fabricanteForm">
+          <h3>Fabricante</h3>
+          <mat-form-field class="fabricanteFormField">
+            <mat-label>Escoja el Fabricante</mat-label>
+            <mat-select formControlName="fieldFabricante">
+              <mat-option *ngFor="let fabricante of listaFabricantes"
+                  [value]="fabricante.id">
+                  {{fabricante.name}}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
         </div>
+        <div class="grid-item-categoriaForm">
+          <h3>Categoría</h3>
+          <mat-form-field class="categoriaFormField">
+            <mat-label>Escoja la Categoría</mat-label>
+            <mat-select formControlName="fieldCategoria">
+              <mat-option *ngFor="let fileType of fileTypes"
+                  [value]="fileType">
+                  {{FileType2LabelMapping[fileType]}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="grid-item-fechasForm">
+          <div class="grid-item-desdeForm">
+            <h3>Desde</h3>
+            <mat-form-field class="desdeFormField">
+              <mat-label>MM/DD/YYYY</mat-label>
+              <input matInput [matDatepicker]="picker1">
+              <mat-hint>MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="grid-item-hastaForm">
+            <h3>Hasta</h3>
+            <mat-form-field class="hastaFormField">
+              <mat-label>MM/DD/YYYY</mat-label>
+              <input matInput [matDatepicker]="picker2">
+              <mat-hint>MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="consultaVentasBtnGrid">
-      <div class="grid-item-buscarBtnForm">
-        <button mat-flat-button class="buscarBtn">Buscar</button>
+      <div class="consultaVentasBtnGrid">
+        <div class="grid-item-buscarBtnForm">
+          <button mat-flat-button class="buscarBtn">Buscar</button>
+        </div>
       </div>
-    </div>
+    </form> 
     <div class="historialVentasHeader">
       <h2 class="grid-item-cargaProductoTitulo">
         Historial de Ventas
@@ -93,6 +101,6 @@
 
         </div>
       </div>
-    </div>
+    </div> 
   </main>
 </app-default-window>  

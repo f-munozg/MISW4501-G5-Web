@@ -65,3 +65,21 @@ export interface Bodega {
 export interface BodegasResponse{
   Warehouses: Bodega[];
 }
+
+export interface Producto {
+  id: string;
+  sku: string;
+  name: string;
+  unit_value: number;
+  storage_conditions: string;
+  product_features: string;
+  provider_id: string;
+  estimated_delivery_time: string;
+  photo: string;
+  description: string;
+  category: string;
+}
+
+export interface ProductosResponse{
+  products: Producto[];
+}
