@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FileType2LabelMapping, CategoriaProductos, Fabricante, FabricantesResponse, Producto, ProductosResponse } from '../ventas.model';
 import { ConsultaVentasService } from './consulta-ventas.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { timestamp } from 'rxjs';
 
 export interface TableRow {
   id: string;
@@ -133,11 +134,11 @@ export class ConsultaVentasComponent implements OnInit {
     }
 
     if (formValues.fieldDesde) {
-      queryParams.initial_date = formValues.fieldDesde;
+      queryParams.initial_date = this.formatDate(formValues.fieldDesde);
     }
 
     if (formValues.fieldHasta) {
-      queryParams.final_date = formValues.fieldHasta;
+      queryParams.final_date = this.formatDate(formValues.fieldHasta);
     }
 
     this.router.navigate([], {
@@ -146,6 +147,26 @@ export class ConsultaVentasComponent implements OnInit {
       queryParamsHandling: 'merge'
     });
 
+  }
+
+  formatDate(date: Date | string): string {
+    let d: Date;
+
+    if (!(date instanceof Date)){
+      if (isNaN(Date.parse(date))){
+        throw new Error('Invalid date string');
+      }
+      d = new Date(date);
+      d = new Date(Date.UTC(d.getFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    } else {
+      d = date;
+    }
+
+    const year = d.getUTCFullYear();
+    const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(d.getUTCDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 
 }
