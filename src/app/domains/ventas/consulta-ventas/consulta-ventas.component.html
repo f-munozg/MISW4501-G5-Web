@@ -15,18 +15,25 @@
       <div class="grid-item-fabricanteForm">
         <h3>Fabricante</h3>
         <mat-form-field class="fabricanteFormField">
-          <input matInput placeholder="Fabricante">
+          <mat-label>Escoja el Fabricante</mat-label>
+          <mat-select formControlName="fieldFabricante">
+            <mat-option *ngFor="let fabricante of listaFabricantes"
+                [value]="fabricante.id">
+                {{fabricante.name}}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
       <div class="grid-item-categoriaForm">
         <h3>Categoría</h3>
         <mat-form-field class="categoriaFormField">
           <mat-label>Escoja la Categoría</mat-label>
-          <mat-select [(value)]="selectedValue">
-          <mat-option *ngFor="let categoria of categorias" [value]="categoria">
-            {{ categoria }}
-          </mat-option>
-        </mat-select>
+          <mat-select formControlName="fieldCategoria">
+            <mat-option *ngFor="let fileType of fileTypes"
+                [value]="fileType">
+                {{FileType2LabelMapping[fileType]}}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
       <div class="grid-item-fechasForm">

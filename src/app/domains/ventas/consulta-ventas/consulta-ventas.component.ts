@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FileType2LabelMapping, CategoriaProductos, Fabricante, FabricantesResponse } from '../ventas.model';
+import { ConsultaVentasService } from './consulta-ventas.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-consulta-ventas',
@@ -7,6 +11,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./consulta-ventas.component.css']
 })
 export class ConsultaVentasComponent implements OnInit {
+  consultaVentasForm!: FormGroup;
+  listaFabricantes: Fabricante[] = [];
+
+  public FileType2LabelMapping = FileType2LabelMapping;
+  public fileTypes = Object.values(CategoriaProductos);
 
   tableData = [
 
@@ -39,11 +48,33 @@ export class ConsultaVentasComponent implements OnInit {
 
   selectedValue!: string; // Debe ser revisado, selectedValue es temporal
 
-  categorias: any[] = []; // any debe ser cambiado cuando se implemente el servicio del cual lea.
-
-  constructor() { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private apiService: ConsultaVentasService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit() {
+    this.consultaVentasForm = this.formBuilder.group({
+      fieldProducto: ['', Validators.required],
+      fieldFabricante: [''],
+      fieldCategoria: [''],
+      fieldDesde: [''],
+      fieldHasta: ['']
+    });
+
+    this.apiService.getListaFabricantes().subscribe({
+      next: (response: FabricantesResponse) => {
+        this.listaFabricantes = response.providers;
+      },
+      error: (err) => {
+        console.error('Error loading providers: ', err)
+      }
+    })
+
   }
+
+
 
 }
