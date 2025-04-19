@@ -23,15 +23,15 @@ export interface ProductInventoryItem {
 }
 
 export enum CategoriaProductos {
-    FARMACIA = "Farmacia",
-    ALIMENTACIÓN = "Alimentación",
-    LIMPIEZA = "Limpieza",
-    ELECTRÓNICA = "Electrónica",
-    ROPA = "Ropa",
-    HERRAMIENTAS = "Herramientas",
-    BELLEZA = "Belleza",
-    JUGUETE = "Juguete",
-    HOGAR = "Hogar",
+    FARMACIA = "FARMACIA",
+    ALIMENTACIÓN = "ALIMENTACIÓN",
+    LIMPIEZA = "LIMPIEZA",
+    ELECTRÓNICA = "ELECTRÓNICA",
+    ROPA = "ROPA",
+    HERRAMIENTAS = "HERRAMIENTAS",
+    BELLEZA = "BELLEZA",
+    JUGUETE = "JUGUETE",
+    HOGAR = "HOGAR",
 }
 
 // Record type annotation para garantizar que todos los valores 
@@ -82,4 +82,12 @@ export interface Producto {
 
 export interface ProductosResponse{
   products: Producto[];
+}
+
+export interface Venta {
+  id: string;
+  name: string;
+  total_quantity: number;
+  unit_value: number;
+  purchase_date: string;
 }

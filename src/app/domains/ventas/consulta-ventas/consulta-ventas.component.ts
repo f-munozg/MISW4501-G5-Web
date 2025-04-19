@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FileType2LabelMapping, CategoriaProductos, Fabricante, FabricantesResponse, Producto, ProductosResponse } from '../ventas.model';
+import { FileType2LabelMapping, CategoriaProductos, Fabricante, FabricantesResponse, Producto, ProductosResponse, Venta } from '../ventas.model';
 import { ConsultaVentasService } from './consulta-ventas.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { timestamp } from 'rxjs';
@@ -10,9 +10,7 @@ export interface TableRow {
   name: string;
   total_quantity: number;
   unit_value: number;
-  /* Hacen falta la fecha de venta
-  date_order: string;
-  */
+  purchase_date: string;
 }
 
 @Component({
@@ -32,31 +30,29 @@ export class ConsultaVentasComponent implements OnInit {
   tableData: TableRow[] = [];
 
   tableColumns = [
-    /*
     {
-      name: 'fecha',
+      name: 'purchase_date',
       header: 'Fecha',
-      cell: (item: any) => item.date_order.toString()
+      cell: (item: TableRow) => item.purchase_date.toString()
     },
-    */
     { 
       name: 'name', 
       header: 'Producto', 
-      cell: (item: any) => item.name.toString()
+      cell: (item: TableRow) => item.name.toString()
     },
     { 
       name: 'total_quantity', 
       header: 'Unidades Vendidas', 
-      cell: (item: any) => item.total_quantity.toString() 
+      cell: (item: TableRow) => item.total_quantity.toString() 
     },
     { 
       name: 'total_value', 
       header: 'Ingresos', 
-      cell: (item: any) => (item.total_quantity * item.unit_value).toString() 
+      cell: (item: TableRow) => (item.unit_value * item.total_quantity).toString() 
     },
   ];
 
-  visibleColumns = [/*date_order,*/ 'name', 'total_quantity', 'total_value'];
+  visibleColumns = ['purchase_date', 'name', 'total_quantity', 'total_value'];
 
   selectedValue!: string; // Debe ser revisado, selectedValue es temporal
 
@@ -116,6 +112,19 @@ export class ConsultaVentasComponent implements OnInit {
       const formData = {
         ...this.consultaVentasForm.value
       }
+    
+      if (formData.fieldDesde) {
+        formData.fieldDesde = this.formatDate(formData.fieldDesde);
+      }
+
+      if (formData.fieldHasta) {
+        formData.fieldHasta = this.formatDate(formData.fieldHasta);
+      }
+
+      this.apiService.getData(formData).subscribe(
+        (response: Venta[]) => { this.tableData = response; console.log(this.tableData) },
+        error => console.log(error)
+      )
     }
   }
 
