@@ -60,6 +60,9 @@
               <input matInput [matDatepicker]="picker2" formControlName="fieldHasta">
               <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
+              <mat-error *ngIf="consultaVentasForm.get('fieldHasta')?.hasError('invalidDate')">
+                Fecha inválida
+              </mat-error>
             </mat-form-field>
           </div>
         </div>

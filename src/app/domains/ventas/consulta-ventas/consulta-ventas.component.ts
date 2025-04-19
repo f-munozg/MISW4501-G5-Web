@@ -72,6 +72,8 @@ export class ConsultaVentasComponent implements OnInit {
       fieldHasta: ['']
     });
 
+    this.setupDateValidation();
+
     this.apiService.getListaProductos().subscribe({
       next: (response: ProductosResponse) => {
         this.listaProductos = response.products;
@@ -176,6 +178,31 @@ export class ConsultaVentasComponent implements OnInit {
     const day = String(d.getUTCDate()).padStart(2, '0');
 
     return `${year}-${month}-${day}`;
+  }
+
+  private setupDateValidation(): void {
+    this.consultaVentasForm.get('fieldDesde')?.valueChanges.subscribe(() => {
+      this.validateDates();
+    });
+    
+    this.consultaVentasForm.get('fieldHasta')?.valueChanges.subscribe(() => {
+      this.validateDates();
+    });
+  }
+
+  private validateDates(): void {
+    const initialDate = this.consultaVentasForm.get('fieldDesde')?.value;
+    const finalDate = this.consultaVentasForm.get('fieldHasta')?.value;
+
+    if (initialDate && finalDate) {
+      if (new Date(initialDate) > new Date(finalDate)) {
+        this.consultaVentasForm.get('fieldHasta')?.setErrors({ invalidDate: true });
+      } else {
+        this.consultaVentasForm.get('fieldHasta')?.setErrors(null);
+      }
+    } else {
+      this.consultaVentasForm.get('fieldHasta')?.setErrors(null);
+    }
   }
 
 }
