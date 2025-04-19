@@ -48,7 +48,7 @@ export class ConsultaVentasComponent implements OnInit {
     { 
       name: 'total_value', 
       header: 'Ingresos', 
-      cell: (item: TableRow) => (item.unit_value * item.total_quantity).toString() 
+      cell: (item: TableRow) => (item.unit_value * item.total_quantity).toFixed(2) 
     },
   ];
 

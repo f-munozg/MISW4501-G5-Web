@@ -48,11 +48,11 @@ export class ConsultaVentasService {
       params.append('category', categoria);
     }
 
-    if (categoria) {
+    if (desdeFecha) {
       params.append('initial_date', desdeFecha);
     }
 
-    if (categoria) {
+    if (hastaFecha) {
       params.append('final_date', hastaFecha);
     }
 
