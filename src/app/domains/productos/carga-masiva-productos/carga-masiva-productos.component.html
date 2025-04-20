@@ -8,8 +8,20 @@
         <button mat-flat-button class="CargaIndividualBtn" routerLink="/productos/carga_producto">Carga Individual</button>
       </div>
     </div>
-    <form>
+    <form [formGroup]="cargaMasivaProductosForm">
       <div class="cargaMasivaProductosGrid">
+        <div class="grid-item-fabricanteForm">
+          <h3 class="fabricanteHeader">Fabricante:</h3>
+          <mat-form-field class="fabricanteFormField">
+            <mat-label>Escoja el Fabricante</mat-label>
+            <mat-select formControlName="fieldFabricante">
+              <mat-option *ngFor="let fabricante of listaFabricantes"
+                  [value]="fabricante.id">
+                  {{fabricante.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>  
         <div class="grid-item-cargaMasivaProductosDragDrop">
           <img class="grid-item-uploadIcon" src="../../../assets/icons/Upload_icon.png">
           <h3>Arrastra tu archivo aquí</h3>

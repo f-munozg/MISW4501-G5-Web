@@ -40,12 +40,27 @@
 
 .cargaMasivaProductosGrid{
     display: grid;
-    grid-row: 1;
     grid-template-columns: repeat(9, 1fr);
     padding-bottom: 40px;
 
+    .grid-item-fabricanteForm{
+        grid-row: 2;
+        grid-template-columns: repeat(9, 1fr);
+        display: grid;
+        grid-column: 1 / -1;
+
+        .fabricanteHeader {
+            grid-column: 2 / 3;
+        }
+
+        .fabricanteFormField {
+            grid-column: 4 / 7;
+        }
+    }
+
     .grid-item-cargaMasivaProductosDragDrop{
         grid-column: 2 / 9;
+        grid-row: 3;
         display: grid;
         height: 535px;
         justify-items: center;
@@ -60,7 +75,7 @@
 
 .cargaMasivaProductosBtnsGrid{
     display: grid;
-    grid-row: 3;
+    grid-row: 4;
     grid-template-columns: repeat(9, 1fr);
 
 
