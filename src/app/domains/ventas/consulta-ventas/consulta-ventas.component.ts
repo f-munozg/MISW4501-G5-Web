@@ -97,7 +97,6 @@ export class ConsultaVentasComponent implements OnInit {
       const patchValues: any = {};
   
       if (params['initial_date']) {
-        // If the date is already in YYYY-MM-DD format, use it directly
         if (params['initial_date'].match(/^\d{4}-\d{2}-\d{2}$/)) {
           patchValues.fieldDesde = params['initial_date'];
         } else {
@@ -189,7 +188,6 @@ export class ConsultaVentasComponent implements OnInit {
 
     if (!(date instanceof Date)) {
       if (typeof date === 'string' && date.match(/^\d{4}-\d{2}-\d{2}$/)) {
-        // If it's already in YYYY-MM-DD format, return as-is
         return date;
       }
       d = new Date(date);
@@ -200,7 +198,6 @@ export class ConsultaVentasComponent implements OnInit {
       d = date;
     }
 
-    // Use local date components (not UTC)
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
