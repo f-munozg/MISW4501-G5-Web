@@ -93,12 +93,32 @@ export class ConsultaVentasComponent implements OnInit {
     });
 
     this.route.queryParams.subscribe(params => {
+      
+      const patchValues: any = {};
+  
+      if (params['initial_date']) {
+        // If the date is already in YYYY-MM-DD format, use it directly
+        if (params['initial_date'].match(/^\d{4}-\d{2}-\d{2}$/)) {
+          patchValues.fieldDesde = params['initial_date'];
+        } else {
+          patchValues.fieldDesde = this.formatDate(new Date(params['initial_date']));
+        }
+      }
+
+      if (params['final_date']) {
+        if (params['final_date'].match(/^\d{4}-\d{2}-\d{2}$/)) {
+          patchValues.fieldHasta = params['final_date'];
+        } else {
+          patchValues.fieldHasta = this.formatDate(new Date(params['final_date']));
+        }
+      }
+
+
       this.consultaVentasForm.patchValue({
         fieldProducto: params['product'] || '',
         fieldFabricante: params['provider'] || '',
         fieldCategoria: params['category'] || '',
-        fieldDesde: params['initial_date'] || '',
-        fieldHasta: params['final_date'] || ''
+        patchValues
       });
     });
   }
@@ -108,20 +128,20 @@ export class ConsultaVentasComponent implements OnInit {
       return;
     }
 
-    this.updateUrlWithParams();
-
     if (this.consultaVentasForm.valid) {
       const formData = {
         ...this.consultaVentasForm.value
       }
     
-      if (formData.fieldDesde) {
+      if (formData.fieldDesde instanceof Date) {
         formData.fieldDesde = this.formatDate(formData.fieldDesde);
       }
-
-      if (formData.fieldHasta) {
+  
+      if (formData.fieldHasta instanceof Date) {
         formData.fieldHasta = this.formatDate(formData.fieldHasta);
       }
+  
+      this.updateUrlWithParams();
 
       this.apiService.getData(formData).subscribe(
         (response: Venta[]) => { this.tableData = response; console.log(this.tableData) },
@@ -145,11 +165,15 @@ export class ConsultaVentasComponent implements OnInit {
     }
 
     if (formValues.fieldDesde) {
-      queryParams.initial_date = this.formatDate(formValues.fieldDesde);
+      queryParams.initial_date = typeof formValues.fieldDesde === 'string' 
+        ? formValues.fieldDesde 
+        : this.formatDate(formValues.fieldDesde);
     }
 
     if (formValues.fieldHasta) {
-      queryParams.final_date = this.formatDate(formValues.fieldHasta);
+      queryParams.final_date = typeof formValues.fieldHasta === 'string'
+        ? formValues.fieldHasta
+        : this.formatDate(formValues.fieldHasta);
     }
 
     this.router.navigate([], {
@@ -163,22 +187,26 @@ export class ConsultaVentasComponent implements OnInit {
   formatDate(date: Date | string): string {
     let d: Date;
 
-    if (!(date instanceof Date)){
-      if (isNaN(Date.parse(date))){
-        throw new Error('Invalid date string');
+    if (!(date instanceof Date)) {
+      if (typeof date === 'string' && date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        // If it's already in YYYY-MM-DD format, return as-is
+        return date;
       }
       d = new Date(date);
-      d = new Date(Date.UTC(d.getFullYear(), d.getUTCMonth(), d.getUTCDate()));
+      if (isNaN(d.getTime())) {
+        throw new Error('Invalid date');
+      }
     } else {
       d = date;
     }
 
-    const year = d.getUTCFullYear();
-    const month = String(d.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(d.getUTCDate()).padStart(2, '0');
+    // Use local date components (not UTC)
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
 
     return `${year}-${month}-${day}`;
-  }
+}
 
   private setupDateValidation(): void {
     this.consultaVentasForm.get('fieldDesde')?.valueChanges.subscribe(() => {
