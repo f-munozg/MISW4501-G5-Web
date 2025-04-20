@@ -38,21 +38,55 @@ export class CargaMasivaProductosComponent implements OnInit {
     });
   }
 
-  onFileSelected(event: any): void {
-    this.errorMessage = '';
-    const file: File = event.target.files[0];
+  // Comportamiento del drag and drop
+  isDragOver = false;
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragOver = true;
+  }
+
+  onDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragOver = false;
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragOver = false;
     
-    if (!file) {
+    this.errorMessage = '';
+    
+    if (!event.dataTransfer?.files?.length) {
       return;
     }
 
+    const file = event.dataTransfer.files[0];
+    this.processSelectedFile(file);
+  }
+  
+  // Manejo de los archivos
+  onFileSelected(event: any): void {
+    this.errorMessage = '';
+    const file: File = event.target.files[0];
+    this.processSelectedFile(file);
+  }  
+    
+  private processSelectedFile(file: File | null): void {
+    if (!file) {
+      return;
+    }
+  
     const fileExt = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
     if (!this.allowedExtensions.includes(fileExt)) {
       this.errorMessage = 'Archivo inválido. Solo subir archivos CSV o Excel.';
       this.selectedFile = null;
       return;
     }
-
+  
     this.selectedFile = file;
   }
 

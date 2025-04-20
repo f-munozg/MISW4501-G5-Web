@@ -22,15 +22,19 @@
             </mat-select>
           </mat-form-field>
         </div>  
-        <div class="grid-item-cargaMasivaProductosDragDrop">
+        <div class="grid-item-cargaMasivaProductosDragDrop"
+              [class.drag-over]="isDragOver"
+              (drop)="onDrop($event)"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)">
           <img class="grid-item-uploadIcon" src="../../../assets/icons/Upload_icon.png">
-          <h3>Sube tu archivo aquí</h3>
+          <h3>Selecciona o arrastra tu archivo aquí</h3>
           <p>Aceptamos formatos CSV y Excel</p>
           <div class="grid-item-buscarArchivoBtn">
-            <input  type="file" #fileInput 
-                (change)="onFileSelected($event)" 
-                accept=".csv,.xlsx,.xls"
-                style="display: none" >
+            <input type="file" #fileInput 
+                    (change)="onFileSelected($event)" 
+                    accept=".csv,.xlsx,.xls"
+                    style="display: none">
             <button mat-flat-button class="BuscarArchivoBtn" (click)="fileInput.click()">
               {{ selectedFile ? selectedFile.name : 'Subir Archivo' }}
             </button>

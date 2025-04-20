@@ -78,6 +78,52 @@
 
 }
 
+.grid-item-cargaMasivaProductosDragDrop {
+    grid-column: 2 / 9;
+    grid-row: 3;
+    display: grid;
+    height: 535px;
+    justify-items: center;
+    align-content: center;
+    align-self: center;
+    border: 2px solid #cccccc;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  
+    &.drag-over {
+      border: 2px dashed #005d52 !important;
+      background-color: rgba(63, 81, 181, 0.05);
+    }
+  
+    .grid-item-uploadIcon {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+  
+    &.drag-over .grid-item-uploadIcon {
+      opacity: 1;
+    }
+  
+    .grid-item-buscarArchivoBtn {
+      display: grid;
+      justify-items: center;
+      align-self: center;
+  
+      .BuscarArchivoBtn {
+        margin-top: 16px;
+        padding: 8px 24px;
+      }
+  
+      .error {
+        color: #EC1C1C;
+        margin-top: 8px;
+        font-size: 14px;
+      }
+    }
+  }
 
 .cargaMasivaProductosBtnsGrid{
     display: grid;
