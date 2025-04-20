@@ -1,12 +1,14 @@
 .consultaVentasContainer{
     display: grid;
     gap: 20px;
-    background-color: #e4e4e4;
+    /* background-color: #e4e4e4; */
 }
 
+/*
 [class^='grid-item']{
     outline: 3px dashed #f90;
 }
+*/
 
 .consultaVentasGrid{
     display: grid;
@@ -50,13 +52,26 @@
         align-items: center;
         display: grid;
         grid-template-columns: 1fr 1fr; 
+        gap: 20px;
 
         .grid-item-desdeForm {
-            justify-self: start;
-          }
+            grid-column: 1 / 2;
+        
+            .desdeFormField{
+                width: 100% !important;
+                grid-column: 1 / -1 !important;
+            }
+        
+        }
           
         .grid-item-hastaForm {
-            justify-self: end;
+            grid-column: 2 / 3;
+        
+            .hastaFormField{
+                width: 100% !important;
+                grid-column: 1 / -1 !important;
+            }
+
         }
     }
 
@@ -69,6 +84,11 @@
 
     .grid-item-buscarBtnForm{
         grid-column: 6 / 9;
+
+        .mat-mdc-unelevated-button:not(:disabled) {
+            color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+            background-color: #005d52 !important;
+        }
 
         .buscarBtn{
             width: 100% !important;
@@ -84,9 +104,11 @@
 
     .grid-item-tendenciasMercado{
         grid-column: 2 / 5;
+        text-align: center;
     }
 
     .grid-item-demandaProducto{
         grid-column: 6 / 9;
+        text-align: center;
     }
 }
