@@ -8,11 +8,14 @@ import { DefaultWindowComponent } from 'src/app/shared/default-window/default-wi
 import { TableTemplateComponent } from 'src/app/shared/table-template/table-template.component';
 
 import { CargaProductoComponent } from './carga-producto/carga-producto.component';
+import { CargaMasivaProductosComponent } from './carga-masiva-productos/carga-masiva-productos.component';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
   declarations: [
-    CargaProductoComponent
+    CargaProductoComponent,
+    CargaMasivaProductosComponent
   ],
   imports: [
     CommonModule,
@@ -20,7 +23,8 @@ import { CargaProductoComponent } from './carga-producto/carga-producto.componen
     ReactiveFormsModule,
     HttpClientModule,
     DefaultWindowComponent,
-    TableTemplateComponent
+    TableTemplateComponent,
+    RouterModule.forRoot([])
   ]
 })
 export class ProductosModule { }

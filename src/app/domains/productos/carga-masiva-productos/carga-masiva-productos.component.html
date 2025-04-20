@@ -1,0 +1,34 @@
+<app-default-window>
+  <main class="cargaMasivaProductosContainer">
+    <div class="cargaMasivaProductosHeaderGrid">
+      <h2 class="grid-item-cargaMasivaProductosTitulo">
+        Registro Masivo de Productos
+      </h2>
+      <div class="grid-item-cargaIndividualBtn">
+        <button mat-flat-button class="CargaIndividualBtn" routerLink="/productos/carga_producto">Carga Individual</button>
+      </div>
+    </div>
+    <form>
+      <div class="cargaMasivaProductosGrid">
+        <div class="grid-item-cargaMasivaProductosDragDrop">
+          <img class="grid-item-uploadIcon" src="../../../assets/icons/Upload_icon.png">
+          <h3>Arrastra tu archivo aquí</h3>
+          <p>Aceptamos formatos CSV y Excel</p>
+          <div class="grid-item-buscarArchivoBtn">
+            <button mat-flat-button class="BuscarArchivoBtn">Busque aquí</button>
+          </div>
+        </div>
+      </div>
+      <div class="cargaMasivaProductosBtnsGrid">
+        <div class="grid-item-CancelarBtnDiv">
+          <button mat-flat-button type="button" class="CancelarBtn">Cancelar</button>
+        </div>
+        <div class="grid-item-GuardarBtnDiv">
+          <button mat-flat-button class="GuardarBtn">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </form>
+  </main>
+</app-default-window>  

@@ -1,0 +1,100 @@
+.cargaMasivaProductosContainer{
+    display: grid;
+    gap: 20px;
+    /* background-color: #e4e4e4; */
+}
+
+/*
+[class^='grid-item']{
+    outline: 3px dashed #f90;
+}
+*/
+
+.cargaMasivaProductosHeaderGrid{
+    display: grid;
+    grid-row: 1;
+    grid-template-columns: repeat(9, 1fr);
+
+    .grid-item-cargaMasivaProductosTitulo{
+        grid-column: 1 / 6;
+    }
+
+    .grid-item-cargaIndividualBtn{
+        grid-column: 7 / 9;
+        display: grid;
+        justify-items: center;
+        align-self: center;
+        
+        .mat-mdc-unelevated-button:not(:disabled) {
+            color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+            background-color: #005d52 !important;
+        }
+
+        .CargaIndividualBtn {
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+}
+
+
+.cargaMasivaProductosGrid{
+    display: grid;
+    grid-row: 1;
+    grid-template-columns: repeat(9, 1fr);
+    padding-bottom: 40px;
+
+    .grid-item-cargaMasivaProductosDragDrop{
+        grid-column: 2 / 9;
+        display: grid;
+        height: 535px;
+        justify-items: center;
+        align-content: center;
+        align-self: center;
+
+        border: 2px solid #cccccc;
+    }
+
+}
+
+
+.cargaMasivaProductosBtnsGrid{
+    display: grid;
+    grid-row: 3;
+    grid-template-columns: repeat(9, 1fr);
+
+
+    .grid-item-CancelarBtnDiv{
+        grid-column: 6 / 7;
+        display: grid;
+        justify-items: center;
+        align-self: center;
+
+        .mat-mdc-unelevated-button:not(:disabled) {
+            color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+            background-color: #EC1C1C !important;
+        }
+    
+        .CancelarBtn{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-GuardarBtnDiv{
+        grid-column: 8 / 9;
+        display: grid;
+        justify-items: center;
+        align-self: center;
+
+        .mat-mdc-unelevated-button:not(:disabled) {
+            color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+            background-color: #005d52 !important;
+        }
+
+        .GuardarBtn{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+}
