@@ -177,5 +177,95 @@ describe('ConsultaVentasComponent', () => {
       req.flush({})
     });
 
+  describe('formatDate', () => {
+    it('should return the same string for valid YYYY-MM-DD format', () => {
+      const input = '2023-05-15';
+      const result = component.formatDate(input);
+      expect(result).toBe(input);
+
+      const req1 = httpMock.expectOne(apiUrlProducts);
+      const req2 = httpMock.expectOne(apiUrlProviders);
+  
+      req1.flush({});
+      req2.flush({});
+    });
+  
+    it('should format a Date object correctly', () => {
+      const input = new Date('2023-05-15T12:00:00');
+      const expected = '2023-05-15';
+      const result = component.formatDate(input);
+      expect(result).toBe(expected);
+
+      const req1 = httpMock.expectOne(apiUrlProducts);
+      const req2 = httpMock.expectOne(apiUrlProviders);
+  
+      req1.flush({});
+      req2.flush({});
+    });
+  
+    it('should format a valid date string (non-ISO) correctly', () => {
+      const input = 'May 15, 2023';
+      const expected = '2023-05-15';
+      const result = component.formatDate(input);
+      expect(result).toBe(expected);
+
+      const req1 = httpMock.expectOne(apiUrlProducts);
+      const req2 = httpMock.expectOne(apiUrlProviders);
+  
+      req1.flush({});
+      req2.flush({});
+    });
+  
+    it('should throw an error for invalid date string', () => {
+      const input = 'not-a-date';
+      expect(() => component.formatDate(input)).toThrowError('Invalid date');
+
+      const req1 = httpMock.expectOne(apiUrlProducts);
+      const req2 = httpMock.expectOne(apiUrlProviders);
+  
+      req1.flush({});
+      req2.flush({});
+    });
+  
+    it('should handle month and day padding correctly', () => {
+      const input = new Date(2023, 8, 5); // Septiembre 5 (El primer mes arranca en 0)
+      const expected = '2023-09-05';
+      const result = component.formatDate(input);
+      expect(result).toBe(expected);
+
+      const req1 = httpMock.expectOne(apiUrlProducts);
+      const req2 = httpMock.expectOne(apiUrlProviders);
+  
+      req1.flush({});
+      req2.flush({});
+    });
+  
+    it('should handle leap year date correctly', () => {
+      const input = new Date(2020, 1, 29); // Febrero 29, 2020
+      const expected = '2020-02-29';
+      const result = component.formatDate(input);
+      expect(result).toBe(expected);
+
+      const req1 = httpMock.expectOne(apiUrlProducts);
+      const req2 = httpMock.expectOne(apiUrlProviders);
+  
+      req1.flush({});
+      req2.flush({});
+    });
+  
+    it('should handle minimum date value', () => {
+      const input = new Date(-8640000000000000);
+      const result = component.formatDate(input);
+      expect(typeof result).toBe('string');
+      expect(result).toMatch(/^-?\d+-\d{2}-\d{2}$/);
+
+      const req1 = httpMock.expectOne(apiUrlProducts);
+      const req2 = httpMock.expectOne(apiUrlProviders);
+  
+      req1.flush({});
+      req2.flush({});
+    });
+  });
+
   });
 });

@@ -203,7 +203,7 @@ export class ConsultaVentasComponent implements OnInit {
     const day = String(d.getDate()).padStart(2, '0');
 
     return `${year}-${month}-${day}`;
-}
+  }
 
   private setupDateValidation(): void {
     this.consultaVentasForm.get('fieldDesde')?.valueChanges.subscribe(() => {
