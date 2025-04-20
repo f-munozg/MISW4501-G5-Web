@@ -73,8 +73,10 @@ export class CargaMasivaProductosComponent implements OnInit {
     this.errorMessage = '';
     const file: File = event.target.files[0];
     this.processSelectedFile(file);
-  }  
-    
+
+    event.target.value = '';
+  }
+
   private processSelectedFile(file: File | null): void {
     if (!file) {
       return;
@@ -155,14 +157,13 @@ export class CargaMasivaProductosComponent implements OnInit {
 
   clearAll(){
     this.cargaMasivaProductosForm.reset()
-
     this.selectedFile = null;
 
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     if (fileInput) {
       fileInput.value = '';
     }
-
+  
     this.errorMessage = '';
     this.isSubmitting = false;
   }
