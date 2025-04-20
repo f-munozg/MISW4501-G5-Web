@@ -20,7 +20,7 @@
     }
 
     .grid-item-cargaIndividualBtn{
-        grid-column: 7 / 9;
+        grid-column: 8 / 9;
         display: grid;
         justify-items: center;
         align-self: center;
@@ -68,6 +68,12 @@
         align-self: center;
 
         border: 2px solid #cccccc;
+
+        .grid-item-buscarArchivoBtn{
+            display: grid;
+            justify-items: center;
+            align-self: center;
+        }
     }
 
 }

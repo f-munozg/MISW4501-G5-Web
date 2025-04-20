@@ -8,7 +8,7 @@
         <button mat-flat-button class="CargaIndividualBtn" routerLink="/productos/carga_producto">Carga Individual</button>
       </div>
     </div>
-    <form [formGroup]="cargaMasivaProductosForm">
+    <form [formGroup]="cargaMasivaProductosForm" (ngSubmit)="onSubmit()">
       <div class="cargaMasivaProductosGrid">
         <div class="grid-item-fabricanteForm">
           <h3 class="fabricanteHeader">Fabricante:</h3>
@@ -24,19 +24,26 @@
         </div>  
         <div class="grid-item-cargaMasivaProductosDragDrop">
           <img class="grid-item-uploadIcon" src="../../../assets/icons/Upload_icon.png">
-          <h3>Arrastra tu archivo aquí</h3>
+          <h3>Sube tu archivo aquí</h3>
           <p>Aceptamos formatos CSV y Excel</p>
           <div class="grid-item-buscarArchivoBtn">
-            <button mat-flat-button class="BuscarArchivoBtn">Busque aquí</button>
+            <input  type="file" #fileInput 
+                (change)="onFileSelected($event)" 
+                accept=".csv,.xlsx,.xls"
+                style="display: none" >
+            <button mat-flat-button class="BuscarArchivoBtn" (click)="fileInput.click()">
+              {{ selectedFile ? selectedFile.name : 'Subir Archivo' }}
+            </button>
+            <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
           </div>
         </div>
       </div>
       <div class="cargaMasivaProductosBtnsGrid">
         <div class="grid-item-CancelarBtnDiv">
-          <button mat-flat-button type="button" class="CancelarBtn">Cancelar</button>
+          <button mat-flat-button type="button" class="CancelarBtn" (click)="clearAll()">Cancelar</button>
         </div>
         <div class="grid-item-GuardarBtnDiv">
-          <button mat-flat-button class="GuardarBtn">
+          <button mat-flat-button type="submit" [disabled]="!cargaMasivaProductosForm.valid" class="GuardarBtn">
             Guardar
           </button>
         </div>
