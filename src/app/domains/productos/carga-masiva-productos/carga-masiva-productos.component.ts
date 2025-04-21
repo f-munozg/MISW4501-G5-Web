@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CargaMasivaProductosService } from './carga-masiva-productos.service';
 import { Fabricante, FabricantesResponse } from '../producto.model';
 import { HttpEventType } from '@angular/common/http';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-carga-masiva-productos',
@@ -93,31 +94,58 @@ export class CargaMasivaProductosComponent implements OnInit {
   }
 
   async uploadFile(formData: { productsFile: File, fieldFabricante: string }) {
+    this.errorMessage = '';
+    this.isSubmitting = true;
+  
     try {
       const upload$ = this.apiService.postData(formData);
       
-      await new Promise((resolve, reject) => {
-        upload$.subscribe({
-          next: (event) => {
-            if (event.type === HttpEventType.Response) {
-              console.log('¡Carga exitosa!', event.body);
-              resolve(event.body);
-            }
-          },
-          error: (err) => {
-            this.errorMessage = 'La carga ha fallado: ' + err.message;
-            reject(err);
-          }
-        });
+      await lastValueFrom(upload$).catch(err => {
+        this.errorMessage = this.getErrorMessage(err, 'La carga ha fallado');
+        throw err;
       });
-    } catch (err) {
-      if (err instanceof Error) {
-        this.errorMessage = 'Error preparando la carga: ' + err.message;
-      } else {
-        this.errorMessage = 'Un error desconocido ha sucedido';
+    } catch (err: unknown) {
+      if (!this.errorMessage) {
+        this.errorMessage = this.getErrorMessage(err, 'Error preparando la carga');
       }
-      throw err; 
+      throw err;
+    } finally {
+      this.isSubmitting = false;
     }
+  }
+  
+  private getErrorMessage(error: unknown, prefix: string): string {
+    // 1. Handle Error instances
+    if (error instanceof Error) {
+      return `${prefix}: ${error.message}`;
+    }
+  
+    // 2. Handle objects with string message property
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      const message = (error as { message: unknown }).message;
+      if (typeof message === 'string') {
+        return `${prefix}: ${message}`;
+      }
+    }
+  
+    // 3. Handle objects with custom toString()
+    if (typeof error === 'object' && error !== null) {
+      // Skip plain objects - only use toString() for class instances or null prototypes
+      const isPlainObject = Object.getPrototypeOf(error) === Object.prototype;
+      if (!isPlainObject && 'toString' in error) {
+        try {
+          const str = error.toString();
+          if (str && str !== '[object Object]') {
+            return `${prefix}: ${str}`;
+          }
+        } catch {
+          // Ignore toString errors
+        }
+      }
+    }
+  
+    // 4. Default fallback
+    return `${prefix}: Error desconocido`;
   }
 
   async onSubmit() {
