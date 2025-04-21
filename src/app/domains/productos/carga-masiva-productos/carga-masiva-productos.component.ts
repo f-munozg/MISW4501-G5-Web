@@ -99,52 +99,59 @@ export class CargaMasivaProductosComponent implements OnInit {
   
     try {
       const upload$ = this.apiService.postData(formData);
-      
-      await lastValueFrom(upload$).catch(err => {
-        this.errorMessage = this.getErrorMessage(err, 'La carga ha fallado');
-        throw err;
-      });
+      await lastValueFrom(upload$);
     } catch (err: unknown) {
-      if (!this.errorMessage) {
-        this.errorMessage = this.getErrorMessage(err, 'Error preparando la carga');
-      }
-      throw err;
+      this.errorMessage = this.getErrorMessage(err, 'File upload failed');
+      throw err; // Re-throw para manejo adicional de error en onSubmit si es necesario
     } finally {
       this.isSubmitting = false;
     }
   }
   
   private getErrorMessage(error: unknown, prefix: string): string {
-    // 1. Handle Error instances
-    if (error instanceof Error) {
-      return `${prefix}: ${error.message}`;
-    }
-  
-    // 2. Handle objects with string message property
-    if (typeof error === 'object' && error !== null && 'message' in error) {
-      const message = (error as { message: unknown }).message;
-      if (typeof message === 'string') {
-        return `${prefix}: ${message}`;
-      }
-    }
-  
-    // 3. Handle objects with custom toString()
+    // 1. HTTP errors
     if (typeof error === 'object' && error !== null) {
-      // Skip plain objects - only use toString() for class instances or null prototypes
-      const isPlainObject = Object.getPrototypeOf(error) === Object.prototype;
-      if (!isPlainObject && 'toString' in error) {
-        try {
-          const str = error.toString();
-          if (str && str !== '[object Object]') {
-            return `${prefix}: ${str}`;
+      // Revisa la estructura del error estándar de HttpClient
+      if ('status' in error) {
+        const status = error.status as number;
+        const statusText = 'statusText' in error ? error.statusText as string : 'Error de servidor';
+        
+        // Muestra el error del servidor si es posible
+        let serverMessage = '';
+        if ('error' in error && typeof error.error === 'object' && error.error !== null) {
+          if ('message' in error.error) {
+            serverMessage = (error.error as {message: string}).message;
           }
-        } catch {
-          // Ignore toString errors
+        }
+  
+        return serverMessage 
+          ? `${prefix}: ${serverMessage} (HTTP ${status})`
+          : `${prefix}: HTTP ${status} - ${statusText}`;
+      }
+
+      // En caso de obtener el estado dentro de error.error
+      if ('error' in error && typeof error.error === 'object' && error.error !== null) {
+        if ('status' in error.error) {
+          const status = error.error.status as number;
+          const message = 'message' in error.error 
+            ? error.error.message as string 
+            : 'Error de servidor';
+          return `${prefix}: ${message} (HTTP ${status})`;
         }
       }
     }
   
-    // 4. Default fallback
+    // 2. Manejar instancias de Error (errores estándar de JavaScript)
+    if (error instanceof Error) {
+      return `${prefix}: ${error.message}`;
+    }
+  
+    // 3. Manejar errores de tipo string (algo raro)
+    if (typeof error === 'string') {
+      return `${prefix}: ${error}`;
+    }
+  
+    // 4. Por defecto
     return `${prefix}: Error desconocido`;
   }
 
@@ -152,34 +159,32 @@ export class CargaMasivaProductosComponent implements OnInit {
     if (this.cargaMasivaProductosForm.invalid) {
       return;
     }
-
+  
     if (!this.selectedFile) {
       this.errorMessage = 'Por favor seleccione un archivo.';
       return;
     }
-
+  
     if (!this.isSubmitting) {
       this.isSubmitting = true;
       this.errorMessage = '';
-  
+    
       try {
         const formData = {
           ...this.cargaMasivaProductosForm.value,
           productsFile: this.selectedFile
         };
-  
+    
         await this.uploadFile(formData);
         
         console.log('Proceso completado exitosamente');
+        this.selectedFile = null; // Limpia el input para que sea usado luego de dar submit.
         
       } catch (error) {
-        // Para garantizar la seguridad de los tipos.
-        this.errorMessage = error instanceof Error 
-        ? `Error: ${error.message}`
-        : 'Error desconocido';
+        this.errorMessage = this.getErrorMessage(error, 'Error cargando archivo');
       } finally {
         this.isSubmitting = false; 
-    }
+      }
     }
   }
 
