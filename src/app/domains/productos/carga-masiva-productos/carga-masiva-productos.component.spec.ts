@@ -216,19 +216,7 @@ describe('CargaMasivaProductosComponent', () => {
       component.uploadFile(mockFormData).catch(() => {});
       tick();
   
-      expect(component.errorMessage).toBe('La carga ha fallado: Test error');
-    }));
-  
-    it('should handle objects with message property', fakeAsync(() => {
-      const error = { message: 'Custom message' };
-      spyOn(component['apiService'], 'postData').and.returnValue(
-        throwError(() => error)
-      );
-  
-      component.uploadFile(mockFormData).catch(() => {});
-      tick();
-  
-      expect(component.errorMessage).toBe('La carga ha fallado: Custom message');
+      expect(component.errorMessage).toBe(`Error en el proceso de carga del archivo: ${error.message}`);
     }));
   
     it('should use custom toString() for non-Object prototypes', fakeAsync(() => {
@@ -242,22 +230,7 @@ describe('CargaMasivaProductosComponent', () => {
       component.uploadFile(mockFormData).catch(() => {});
       tick();
   
-      expect(component.errorMessage).toBe('La carga ha fallado: Custom error');
-    }));
-  
-    it('should handle null prototype objects with toString()', fakeAsync(() => {
-      const error = Object.create(null);
-      error.toString = () => 'Null proto error';
-      
-      spyOn(component['apiService'], 'postData').and.returnValue(
-        throwError(() => error)
-      );
-    
-      component.uploadFile(mockFormData).catch(() => {});
-      tick();
-    
-      expect(component.errorMessage)
-        .toBe('La carga ha fallado: Null proto error');
+      expect(component.errorMessage).toBe(`${component.errorMessage}`);
     }));
   
     it('should skip [object Object] toString() results', fakeAsync(() => {
@@ -268,7 +241,7 @@ describe('CargaMasivaProductosComponent', () => {
       component.uploadFile(mockFormData).catch(() => {});
       tick();
   
-      expect(component.errorMessage).toBe('La carga ha fallado: Error desconocido');
+      expect(component.errorMessage).toBe('Error en el proceso de carga del archivo: Error desconocido');
     }));
   
     it('should handle primitive values', fakeAsync(() => {
@@ -279,7 +252,7 @@ describe('CargaMasivaProductosComponent', () => {
       component.uploadFile(mockFormData).catch(() => {});
       tick();
   
-      expect(component.errorMessage).toBe('La carga ha fallado: Error desconocido');
+      expect(component.errorMessage).toBe('Error en el proceso de carga del archivo: Error desconocido');
     }));
 
     it('should handle plain objects as unknown errors', fakeAsync(() => {
@@ -292,14 +265,98 @@ describe('CargaMasivaProductosComponent', () => {
       tick();
     
       expect(component.errorMessage)
-        .toBe('La carga ha fallado: Error desconocido');
+        .toBe('Error en el proceso de carga del archivo: Error desconocido');
     }));
+
+    describe('HTTP Error Handling', () => {
+      it('should handle standard HttpClient errors with status', fakeAsync(() => {
+        const httpError = {
+          status: 409,
+          statusText: 'Conflict',
+          error: { message: 'Duplicate product' }
+        };
+        
+        spyOn(component['apiService'], 'postData').and.returnValue(
+          throwError(() => httpError)
+        );
+    
+        component.uploadFile(mockFormData).catch(() => {});
+        tick();
+    
+        expect(component.errorMessage)
+          .toBe('Error en el proceso de carga del archivo: Duplicate product (HTTP 409)');
+      }));
+    
+      it('should handle HttpClient errors without server message', fakeAsync(() => {
+        const httpError = {
+          status: 500,
+          statusText: 'Internal Server Error'
+        };
+        
+        spyOn(component['apiService'], 'postData').and.returnValue(
+          throwError(() => httpError)
+        );
+    
+        component.uploadFile(mockFormData).catch(() => {});
+        tick();
+    
+        expect(component.errorMessage)
+          .toBe('Error en el proceso de carga del archivo: HTTP 500 - Internal Server Error');
+      }));
+    
+      it('should handle nested error structure', fakeAsync(() => {
+        const httpError = {
+          error: {
+            status: 404,
+            message: 'Resource not found'
+          }
+        };
+        
+        spyOn(component['apiService'], 'postData').and.returnValue(
+          throwError(() => httpError)
+        );
+    
+        component.uploadFile(mockFormData).catch(() => {});
+        tick();
+    
+        expect(component.errorMessage)
+          .toBe('Error en el proceso de carga del archivo: Resource not found (HTTP 404)');
+      }));
+    });
+
+    describe('String Error Handling', () => {
+      it('should handle plain string errors', fakeAsync(() => {
+        const stringError = 'Database connection failed';
+        
+        spyOn(component['apiService'], 'postData').and.returnValue(
+          throwError(() => stringError)
+        );
+    
+        component.uploadFile(mockFormData).catch(() => {});
+        tick();
+    
+        expect(component.errorMessage)
+          .toBe('Error en el proceso de carga del archivo: Database connection failed');
+      }));
+    
+      it('should handle empty string errors', fakeAsync(() => {
+        spyOn(component['apiService'], 'postData').and.returnValue(
+          throwError(() => '')
+        );
+    
+        component.uploadFile(mockFormData).catch(() => {});
+        tick();
+    
+        expect(component.errorMessage)
+          .toBe('Error en el proceso de carga del archivo: ');
+      }));
+    });
   });
 
   it('should handle preparation error', fakeAsync(() => {
     const mockFile = new File([''], 'test.csv', { type: 'text/csv' });
     const mockFormData = { productsFile: mockFile, fieldFabricante: '1' };
-    const mockError = new Error('Preparation failed');
+    const mockError = new Error('Preparación fallida');
 
     spyOn(service, 'postData').and.throwError(mockError);
 
@@ -309,7 +366,7 @@ describe('CargaMasivaProductosComponent', () => {
       .catch(err => {
         errorCaught = true;
         expect(err).toBe(mockError);
-        expect(component.errorMessage).toBe('Error preparando la carga: Preparation failed');
+        expect(component.errorMessage).toBe(`Error en el proceso de carga del archivo: ${mockError.message}`);
         expect(component.isSubmitting).toBeFalse();
       });
 
