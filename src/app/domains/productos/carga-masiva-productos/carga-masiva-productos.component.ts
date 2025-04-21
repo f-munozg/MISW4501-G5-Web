@@ -101,7 +101,7 @@ export class CargaMasivaProductosComponent implements OnInit {
       const upload$ = this.apiService.postData(formData);
       await lastValueFrom(upload$);
     } catch (err: unknown) {
-      this.errorMessage = this.getErrorMessage(err, 'File upload failed');
+      this.errorMessage = this.getErrorMessage(err, 'Error en el proceso de carga del archivo');
       throw err; // Re-throw para manejo adicional de error en onSubmit si es necesario
     } finally {
       this.isSubmitting = false;
