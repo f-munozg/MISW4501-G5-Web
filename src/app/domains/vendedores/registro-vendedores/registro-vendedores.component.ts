@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ZonaType2LabelMapping, ZonaVendedor } from '../vendedores.model';
 
 @Component({
   selector: 'app-registro-vendedores',
@@ -7,6 +8,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./registro-vendedores.component.css']
 })
 export class RegistroVendedoresComponent implements OnInit {
+
+
+  public ZonaType2LabelMapping = ZonaType2LabelMapping;
+  public zonaTypes = Object.values(ZonaVendedor);
+
   tableData = [
 
   ]

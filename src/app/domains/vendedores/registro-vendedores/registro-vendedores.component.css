@@ -64,27 +64,11 @@
         }
     }
 
-    .grid-item-ciudadForm{
+    .grid-item-zonaForm{
         grid-column: 6 / 9;
         grid-row: 3;
 
-        .ciudadFormField{
-            width: 100% !important;
-            grid-column: 1 / -1 !important;
-        }
-    }
-
-}
-
-.registroVendedoresBtnsGrid{
-    display: grid;
-    grid-row: 5;
-    grid-template-columns: repeat(9, 1fr);
-
-    .grid-item-planVentasBtnDiv{
-        grid-column: 2 / 4;
-
-        .planVentasBtn{
+        .zonaFormField{
             width: 100% !important;
             grid-column: 1 / -1 !important;
         }
@@ -100,6 +84,11 @@
             flex: 1;
             min-width: 0;
 
+            .mat-mdc-unelevated-button:not(:disabled) {
+                color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+                background-color: #EC1C1C !important;
+            }
+
             .cancelarBtn{
                 width: 100% !important;
                 grid-column: 1 / -1 !important;
@@ -110,10 +99,37 @@
             flex: 1;
             min-width: 0;
             
+            .mat-mdc-unelevated-button:not(:disabled) {
+                color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+                background-color: #005d52 !important;
+            }
+
             .guardarBtn{
                 width: 100% !important;
                 grid-column: 1 / -1 !important;
             }
         }
     }
+
+}
+
+.registroVendedoresBtnsGrid{
+    display: grid;
+    grid-row: 5;
+    grid-template-columns: repeat(9, 1fr);
+
+    .grid-item-planVentasBtnDiv{
+        grid-column: 7 / 9;
+
+        .mat-mdc-unelevated-button:not(:disabled) {
+            color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+            background-color: #005d52 !important;
+        }
+
+        .planVentasBtn{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
 }
