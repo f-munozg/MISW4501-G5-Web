@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ZonaType2LabelMapping, ZonaVendedor } from '../vendedores.model';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegistroVendedoresService } from './registro-vendedores.service';
 
 @Component({
@@ -49,7 +49,7 @@ export class RegistroVendedoresComponent implements OnInit {
 
   ngOnInit() {
     this.registroVendedoresForm = this.formBuilder.group({
-      fieldNumeroIdentificacion: [''],
+      fieldNumeroIdentificacion: ['', Validators.required],
       fieldNombre: [ {value: '', disabled: true} ],
       fieldCorreoElectronico: [ {value: '', disabled: true} ],
       fieldDireccion: [ {value: '', disabled: true} ],
