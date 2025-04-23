@@ -9,18 +9,10 @@
       <div class="registroVendedoresGrid">
         <div class="grid-item-numeroIdentificacionForm">
           <h3>Número de Identificación</h3>
-
           <mat-form-field class="numeroIdentificacionFormField">
-            <mat-label>Identificación del Vendedor</mat-label>
-            <mat-select formControlName="fieldNumeroIdentificacion">
-              <mat-option>None</mat-option>
-              <!--
-              <mat-option *ngFor="let fabricante of listaFabricantes"
-                  [value]="fabricante.id">
-                  {{fabricante.name}}
-              </mat-option>
-              -->
-            </mat-select>
+            <mat-label>Número de Identificación</mat-label>
+            <input matInput formControlName="fieldNumeroIdentificacion" 
+                   placeholder="Número de Identificación">
           </mat-form-field>
         </div>
         <div class="grid-item-nombreForm">
@@ -64,7 +56,10 @@
             <button mat-flat-button class="cancelarBtn">Cancelar</button>
           </div>
           <div class="grid-item-guardarBtnDiv">
-            <button mat-flat-button class="guardarBtn">Guardar</button>
+            <button mat-flat-button class="guardarBtn" 
+                    type="submit" 
+                    [disabled]="registroVendedoresForm.invalid">Guardar
+            </button>
           </div>
         </div>
       </div>
