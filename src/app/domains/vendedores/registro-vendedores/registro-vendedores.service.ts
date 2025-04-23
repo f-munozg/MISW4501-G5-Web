@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { Vendedor, VendedorResponse } from '../vendedores.model';
+import { Vendedor, VendedoresResponse, VendedorResponse } from '../vendedores.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RegistroVendedoresService {
 
-  private apiUrl = environment.apiUrlSellers + `/sellers/add`;
+  private apiUrl = environment.apiUrlSellers + `/sellers`;
 
   constructor(private http: HttpClient) { }
 
@@ -30,6 +30,17 @@ export class RegistroVendedoresService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.post<any>(this.apiUrl, requestData, {headers});
+    return this.http.post<any>(this.apiUrl + `/add`, requestData, {headers});
+  };
+
+  getListaVendedores():
+  Observable<VendedoresResponse>{
+    return this.http.get<VendedoresResponse>(this.apiUrl);
+  }
+
+  getVendedor(id: string, user_id: string): Observable<VendedorResponse> {
+    return this.http.get<VendedorResponse>(`${this.apiUrl}/${id}`, {
+      params: { user_id }
+    });
   }
 }
