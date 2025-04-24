@@ -36,11 +36,5 @@ export class RegistroVendedoresService {
   getListaVendedores():
   Observable<VendedoresResponse>{
     return this.http.get<VendedoresResponse>(this.apiUrl);
-  }
-
-  getVendedor(id: string, user_id: string): Observable<VendedorResponse> {
-    return this.http.get<VendedorResponse>(`${this.apiUrl}/${id}`, {
-      params: { user_id }
-    });
-  }
+  };
 }
