@@ -86,18 +86,18 @@ export class RegistroVendedoresComponent implements OnInit {
   ngOnInit() {
     this.initializeForms();
     this.autoCompletar();
-    this.cargarVendedores();
-
-    this.route.queryParams.pipe(
-      distinctUntilChanged()
-    ).subscribe(params => {
-      this.idVendedorSeleccionado = params['id'] || null;
-      if (this.idVendedorSeleccionado) {
-        this.isInViewMode = true;
-        this.crearUrlConId();
-      } else {
-        this.isInViewMode = false;
-      }
+    this.cargarVendedores(() => {
+      this.route.queryParams.pipe(
+        distinctUntilChanged()
+      ).subscribe(params => {
+        this.idVendedorSeleccionado = params['id'] || null;
+        if (this.idVendedorSeleccionado) {
+          this.isInViewMode = true;
+          this.crearUrlConId();
+        } else {
+          this.isInViewMode = false;
+        }
+      });
     });
   }
 
@@ -105,7 +105,8 @@ export class RegistroVendedoresComponent implements OnInit {
     if (!this.idVendedorSeleccionado || !this.listaVendedores.length) return;
 
     const vendedor = this.listaVendedores.find(v => v.id === this.idVendedorSeleccionado);
-    if (vendedor) {
+    if (!vendedor) return
+    else {
       this.isInViewMode = true;
       this.consultaVendedoresForm.patchValue({
         fieldNumeroIdentificacion: vendedor.identification_number,
@@ -132,11 +133,14 @@ export class RegistroVendedoresComponent implements OnInit {
       .map(vendedor => vendedor.identification_number)
   }
 
-  private cargarVendedores(): void {
+  private cargarVendedores(callback?: () => void): void {
     this.isRefreshing = true;
 
     this.apiService.getListaVendedores().pipe(
-      finalize(() => this.isRefreshing = false)
+      finalize(() => {
+        this.isRefreshing = false
+        if (callback) callback();
+      })
     ).subscribe({
       next: (vendedores) => {
         this.listaVendedores = vendedores.sellers;
