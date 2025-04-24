@@ -1,69 +1,141 @@
 <app-default-window>
   <main class="registroVendedoresContainer">
     <div class="registroVendedoresHeaderGrid">
-      <h2 class="grid-item-registroVendedoresTitulo">
-        Registro de Vendedores
-      </h2>
-    </div>
-    <form [formGroup]="registroVendedoresForm" (ngSubmit)="onSubmit()">
-      <div class="registroVendedoresGrid">
-        <div class="grid-item-numeroIdentificacionForm">
-          <h3>Número de Identificación</h3>
-          <mat-form-field class="numeroIdentificacionFormField">
-            <mat-label>Número de Identificación</mat-label>
-            <input matInput formControlName="fieldNumeroIdentificacion" 
-                   placeholder="Número de Identificación">
-          </mat-form-field>
-        </div>
-        <div class="grid-item-nombreForm">
-          <h3>Nombre</h3>
-          <mat-form-field class="nombreFormField">
-            <input matInput formControlName="fieldNombre" placeholder="Nombre">
-          </mat-form-field>
-        </div>
-        <div class="grid-item-correoElectronicoForm">
-          <h3>Correo Electrónico</h3>
-          <mat-form-field class="correoElectronicoFormField">
-            <input matInput formControlName="fieldCorreoElectronico" placeholder="Email">
-          </mat-form-field>
-        </div>
-        <div class="grid-item-direccionForm">
-          <h3>Dirección</h3>
-          <mat-form-field class="direccionFormField">
-            <input matInput formControlName="fieldDireccion" placeholder="Dirección">
-          </mat-form-field>
-        </div>
-        <div class="grid-item-telefonoForm">
-          <h3>Teléfono</h3>
-          <mat-form-field class="telefonoFormField">
-            <input matInput formControlName="fieldTelefono" placeholder="Teléfono">
-          </mat-form-field>
-        </div>
-        <div class="grid-item-zonaForm">
-          <h3>Zona</h3>
-          <mat-form-field class="zonaFormField">
-            <mat-label>Escoja la Zona</mat-label>
-            <mat-select formControlName="fieldZona">
-              <mat-option *ngFor="let zonaType of zonaTypes"
-                  [value]="zonaType">
-                  {{ZonaType2LabelMapping[zonaType]}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="registroVendedoresBtnsContainer">
-          <div class="grid-item-cancelarBtnDiv">
-            <button mat-flat-button class="cancelarBtn">Cancelar</button>
-          </div>
-          <div class="grid-item-guardarBtnDiv">
-            <button mat-flat-button class="guardarBtn" 
-                    type="submit" 
-                    [disabled]="registroVendedoresForm.invalid">Guardar
-            </button>
-          </div>
-        </div>
+      <div class="registroVendedoresTitulo">
+        <h2 class="grid-item-registroVendedoresTitulo">
+          Registro de Vendedores
+        </h2>
       </div>
-    </form>
+      <div class="grid-item-switchViewModeGrid">
+        <button mat-raised-button class="switchViewBtn"
+                color="{{isInViewMode ? 'primary' : 'accent'}}" 
+                (click)="toggleMode()">
+          {{ isInViewMode ? '➕ Añadir Vendedor' : '🔍 Consultar Vendedor' }}
+        </button>
+      </div>
+    </div>
+    <div *ngIf="!isInViewMode">
+      <form [formGroup]="registroVendedoresForm" (ngSubmit)="onSubmit()">
+        <div class="registroVendedoresGrid">
+          <div class="grid-item-numeroIdentificacionForm">
+            <h3>Número de Identificación</h3>
+            <mat-form-field class="numeroIdentificacionFormField">
+              <mat-label>Número de Identificación</mat-label>
+              <input matInput formControlName="fieldNumeroIdentificacion" 
+                    placeholder="Número de Identificación">
+            </mat-form-field>
+          </div>
+          <div class="grid-item-nombreForm">
+            <h3>Nombre</h3>
+            <mat-form-field class="nombreFormField">
+              <input matInput formControlName="fieldNombre" placeholder="Nombre">
+            </mat-form-field>
+          </div>
+          <div class="grid-item-correoElectronicoForm">
+            <h3>Correo Electrónico</h3>
+            <mat-form-field class="correoElectronicoFormField">
+              <input matInput formControlName="fieldCorreoElectronico" placeholder="Email">
+            </mat-form-field>
+          </div>
+          <div class="grid-item-direccionForm">
+            <h3>Dirección</h3>
+            <mat-form-field class="direccionFormField">
+              <input matInput formControlName="fieldDireccion" placeholder="Dirección">
+            </mat-form-field>
+          </div>
+          <div class="grid-item-telefonoForm">
+            <h3>Teléfono</h3>
+            <mat-form-field class="telefonoFormField">
+              <input matInput formControlName="fieldTelefono" placeholder="Teléfono">
+            </mat-form-field>
+          </div>
+          <div class="grid-item-zonaForm">
+            <h3>Zona</h3>
+            <mat-form-field class="zonaFormField">
+              <mat-label>Escoja la Zona</mat-label>
+              <mat-select formControlName="fieldZona">
+                <mat-option *ngFor="let zonaType of zonaTypes"
+                    [value]="zonaType">
+                    {{ZonaType2LabelMapping[zonaType]}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="registroVendedoresBtnsContainer">
+            <div class="grid-item-cancelarBtnDiv">
+              <button mat-flat-button class="cancelarBtn">Cancelar</button>
+            </div>
+            <div class="grid-item-guardarBtnDiv">
+              <button mat-flat-button class="guardarBtn" 
+                      type="submit" 
+                      [disabled]="registroVendedoresForm.invalid">Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div *ngIf="isInViewMode">
+      <form [formGroup]="consultaVendedoresForm">
+        <div class="consultaVendedoresGrid">
+          <div class="grid-item-numeroIdentificacionForm">
+            <h3>Número de Identificación</h3>
+            <mat-form-field class="numeroIdentificacionFormField" appearance="fill">
+              <mat-label>Número de Identificación</mat-label>
+              <input 
+                type="text" 
+                matInput 
+                formControlName="fieldNumeroIdentificacion"
+                [matAutocomplete]="auto"
+              >
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="conNumeroIdentificacionSeleccionado($event.option.value)">
+                <mat-option *ngFor="let identification_number of numerosIdentificacionFiltrados | async" [value]="identification_number">
+                  {{ identification_number }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+
+
+          </div>
+          <div class="grid-item-nombreForm">
+            <h3>Nombre</h3>
+            <mat-form-field class="nombreFormField">
+              <input matInput formControlName="fieldNombre" placeholder="Nombre" readonly>
+            </mat-form-field>
+          </div>
+          <div class="grid-item-correoElectronicoForm">
+            <h3>Correo Electrónico</h3>
+            <mat-form-field class="correoElectronicoFormField">
+              <input matInput formControlName="fieldCorreoElectronico" placeholder="Email" readonly>
+            </mat-form-field>
+          </div>
+          <div class="grid-item-direccionForm">
+            <h3>Dirección</h3>
+            <mat-form-field class="direccionFormField">
+              <input matInput formControlName="fieldDireccion" placeholder="Dirección" readonly>
+            </mat-form-field>
+          </div>
+          <div class="grid-item-telefonoForm">
+            <h3>Teléfono</h3>
+            <mat-form-field class="telefonoFormField">
+              <input matInput formControlName="fieldTelefono" placeholder="Teléfono" readonly>
+            </mat-form-field>
+          </div>
+          <div class="grid-item-zonaForm">
+            <h3>Zona</h3>
+            <mat-form-field class="zonaFormField">
+              <mat-label>Escoja la Zona</mat-label>
+              <mat-select formControlName="fieldZona" readonly>
+                <mat-option *ngFor="let zonaType of zonaTypes"
+                    [value]="zonaType">
+                    {{ZonaType2LabelMapping[zonaType]}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </div>
     <div class="asignacionClientesHeaderGrid">
       <h2 class="grid-item-asignacionClientesDisponibles">
         Asignación de Clientes Disponibles
