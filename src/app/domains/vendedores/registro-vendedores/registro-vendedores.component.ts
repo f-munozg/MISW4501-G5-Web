@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Vendedor, VendedoresResponse, ZonaType2LabelMapping, ZonaVendedor } from '../vendedores.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegistroVendedoresService } from './registro-vendedores.service';
-import { map, Observable, startWith } from 'rxjs';
+import { catchError, finalize, map, Observable, of, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-registro-vendedores',
@@ -19,6 +19,8 @@ export class RegistroVendedoresComponent implements OnInit {
 
   creandoNuevoVendedor = true;
 
+  isSubmitting: boolean = true;
+  isRefreshing: boolean = true;
   isInViewMode: boolean = false;
 
   public ZonaType2LabelMapping = ZonaType2LabelMapping;
@@ -97,12 +99,17 @@ export class RegistroVendedoresComponent implements OnInit {
   }
 
   private cargarVendedores(): void {
-    this.apiService.getListaVendedores().subscribe({
-      next: (response: VendedoresResponse) => {
-        this.listaVendedores = response.sellers;
+    this.isRefreshing = true;
+
+    this.apiService.getListaVendedores().pipe(
+      finalize(() => this.isRefreshing = false)
+    ).subscribe({
+      next: (vendedores) => {
+        this.listaVendedores = vendedores.sellers;
+        this.consultaVendedoresForm.get('fieldNumeroIdentificacion')?.setValue('', { emitEvent: true});
       },
       error: (err) => {
-        console.error('Error loading sellers: ', err);
+        console.error('Failed to load sellers', err);
       }
     });
   }
@@ -123,21 +130,32 @@ export class RegistroVendedoresComponent implements OnInit {
   private crearNuevoVendedor(): void {
     const formData = this.registroVendedoresForm.value;
 
-    this.apiService.postData(formData).subscribe({
-      next: (response) => {
-        console.log('Vendedor creado:', response);
-        this.registroVendedoresForm.reset();
+    this.isSubmitting = true;
+
+    this.apiService.postData(formData).pipe(
+      finalize(() => this.isSubmitting = false)
+    ).subscribe({
+      next: () => {
+        this.clearAll();
+        this.cargarVendedores();
       },
-      error: (error) => {
-        console.error('Error creando vendedor:', error);
+      error: (err) => {
+        if (err.status === 409) {
+          this.registroVendedoresForm.get('fieldNumeroIdentificacion')?.reset();
+          this.registroVendedoresForm.get('fieldNumeroIdentificacion')?.setErrors(null);
+        } else {
+          console.error('Error creating seller')
+        }
       }
-    });
+    });  
   }
 
   toggleMode(): void {
     this.isInViewMode = !this.isInViewMode;
-    if (!this.isInViewMode) {
-      this.consultaVendedoresForm.reset(); // Clear view form when switching back to add mode
+    if (this.isInViewMode) {
+      this.cargarVendedores();
+    } else {
+      this.consultaVendedoresForm.reset();
     }
   }
 
@@ -150,6 +168,13 @@ export class RegistroVendedoresComponent implements OnInit {
     if (this.creandoNuevoVendedor) {
       this.crearNuevoVendedor()
     }
+  }
+
+  clearAll(){
+    this.registroVendedoresForm.reset();
+    this.registroVendedoresForm.markAsPristine();
+    this.registroVendedoresForm.markAsUntouched();
+    this.registroVendedoresForm.setErrors(null);
   }
 
 }
