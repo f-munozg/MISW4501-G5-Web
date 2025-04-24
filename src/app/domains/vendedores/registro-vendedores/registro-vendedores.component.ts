@@ -93,13 +93,16 @@ export class RegistroVendedoresComponent implements OnInit {
     ).subscribe(params => {
       this.idVendedorSeleccionado = params['id'] || null;
       if (this.idVendedorSeleccionado) {
+        this.isInViewMode = true;
         this.crearUrlConId();
+      } else {
+        this.isInViewMode = false;
       }
     });
   }
 
   private crearUrlConId(): void {
-    if (!this.listaVendedores.length) return;
+    if (!this.idVendedorSeleccionado || !this.listaVendedores.length) return;
 
     const vendedor = this.listaVendedores.find(v => v.id === this.idVendedorSeleccionado);
     if (vendedor) {
@@ -148,22 +151,13 @@ export class RegistroVendedoresComponent implements OnInit {
   conVendedorSeleccionado(numeroIdentificacionSeleccionado: number): void {
     const vendedor = this.listaVendedores.find(v => v.identification_number === numeroIdentificacionSeleccionado);
     
-    this.router.navigate(['./view'], {
+    this.router.navigate(['view'], {
       relativeTo: this.route,
       queryParams: {id: vendedor?.id},
       queryParamsHandling: 'merge',
       replaceUrl: true
     });
     
-    if (vendedor) {
-      this.consultaVendedoresForm.patchValue({
-        fieldNombre: vendedor.name,
-        fieldCorreoElectronico: vendedor.email,
-        fieldDireccion: vendedor.address,
-        fieldTelefono: vendedor.phone,
-        fieldZona: vendedor.zone
-      })
-    }
   }
 
   private crearNuevoVendedor(): void {
@@ -190,20 +184,26 @@ export class RegistroVendedoresComponent implements OnInit {
   }
 
   toggleMode(): void {
-    this.isInViewMode = !this.isInViewMode;
     if (this.isInViewMode) {
       this.cargarVendedores();
-    } else {
       this.limpiarUrlConId();
       this.consultaVendedoresForm.reset();
+    } else {
+      this.router.navigate(['view'], {
+        relativeTo: this.route,
+        queryParamsHandling: 'preserve'
+      })
     }
+
+    this.isInViewMode = !this.isInViewMode;
   }
 
   private limpiarUrlConId(): void {
     this.idVendedorSeleccionado = null;
-    this.router.navigate([], {
+    this.router.navigate(['.'], {
+      relativeTo: this.route,
       queryParams: {id: null},
-      queryParamsHandling: 'merge'
+      queryParamsHandling: 'merge',
     })
   }
 
