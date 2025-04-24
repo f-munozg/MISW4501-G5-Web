@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Vendedor, VendedoresResponse, ZonaType2LabelMapping, ZonaVendedor } from '../vendedores.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegistroVendedoresService } from './registro-vendedores.service';
-import { catchError, finalize, map, Observable, of, startWith } from 'rxjs';
+import { catchError, distinctUntilChanged, finalize, map, Observable, of, startWith } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-registro-vendedores',
@@ -22,6 +23,8 @@ export class RegistroVendedoresComponent implements OnInit {
   isSubmitting: boolean = true;
   isRefreshing: boolean = true;
   isInViewMode: boolean = false;
+
+  private idVendedorSeleccionado: string | null = null;
 
   public ZonaType2LabelMapping = ZonaType2LabelMapping;
   public zonaTypes = Object.values(ZonaVendedor);
@@ -55,7 +58,9 @@ export class RegistroVendedoresComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private apiService: RegistroVendedoresService
+    private apiService: RegistroVendedoresService,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   private initializeForms(): void {
@@ -82,6 +87,32 @@ export class RegistroVendedoresComponent implements OnInit {
     this.initializeForms();
     this.autoCompletar();
     this.cargarVendedores();
+
+    this.route.queryParams.pipe(
+      distinctUntilChanged()
+    ).subscribe(params => {
+      this.idVendedorSeleccionado = params['id'] || null;
+      if (this.idVendedorSeleccionado) {
+        this.crearUrlConId();
+      }
+    });
+  }
+
+  private crearUrlConId(): void {
+    if (!this.listaVendedores.length) return;
+
+    const vendedor = this.listaVendedores.find(v => v.id === this.idVendedorSeleccionado);
+    if (vendedor) {
+      this.isInViewMode = true;
+      this.consultaVendedoresForm.patchValue({
+        fieldNumeroIdentificacion: vendedor.identification_number,
+        fieldNombre: vendedor.name,
+        fieldCorreoElectronico: vendedor.email,
+        fieldDireccion: vendedor.address,
+        fieldTelefono: vendedor.phone,
+        fieldZona: vendedor.zone
+      });
+    }
   }
 
   private autoCompletar(): void {
@@ -114,8 +145,16 @@ export class RegistroVendedoresComponent implements OnInit {
     });
   }
 
-  conNumeroIdentificacionSeleccionado(numeroIdentificacionSeleccionado: number): void {
+  conVendedorSeleccionado(numeroIdentificacionSeleccionado: number): void {
     const vendedor = this.listaVendedores.find(v => v.identification_number === numeroIdentificacionSeleccionado);
+    
+    this.router.navigate(['./view'], {
+      relativeTo: this.route,
+      queryParams: {id: vendedor?.id},
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
+    
     if (vendedor) {
       this.consultaVendedoresForm.patchValue({
         fieldNombre: vendedor.name,
@@ -155,8 +194,17 @@ export class RegistroVendedoresComponent implements OnInit {
     if (this.isInViewMode) {
       this.cargarVendedores();
     } else {
+      this.limpiarUrlConId();
       this.consultaVendedoresForm.reset();
     }
+  }
+
+  private limpiarUrlConId(): void {
+    this.idVendedorSeleccionado = null;
+    this.router.navigate([], {
+      queryParams: {id: null},
+      queryParamsHandling: 'merge'
+    })
   }
 
   onSubmit(){

@@ -88,14 +88,12 @@
                 formControlName="fieldNumeroIdentificacion"
                 [matAutocomplete]="auto"
               >
-              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="conNumeroIdentificacionSeleccionado($event.option.value)">
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="conVendedorSeleccionado($event.option.value)">
                 <mat-option *ngFor="let identification_number of numerosIdentificacionFiltrados | async" [value]="identification_number">
                   {{ identification_number }}
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
-
-
           </div>
           <div class="grid-item-nombreForm">
             <h3>Nombre</h3>

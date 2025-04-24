@@ -35,7 +35,9 @@ const routes: Routes = [
   {path: 'inventario/consulta', component: ConsultaInventarioComponent},
   {path: 'ventas/consulta', component: ConsultaVentasComponent},
   {path: 'inventario/consulta_producto_bodega', component: ConsultaProductoBodegaComponent},
-  {path: 'vendedores/registro', component: RegistroVendedoresComponent}
+  {path: 'vendedores/registro', component: RegistroVendedoresComponent,
+    children: [{ path: 'view', component: RegistroVendedoresComponent }]
+  }
 ];
 
 @NgModule({
