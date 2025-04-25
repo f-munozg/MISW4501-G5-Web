@@ -1,9 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { Vendedor, VendedoresResponse, ZonaType2LabelMapping, ZonaVendedor } from '../vendedores.model';
+import { ClientesResponse, Vendedor, VendedoresResponse, ZonaType2LabelMapping, ZonaVendedor } from '../vendedores.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegistroVendedoresService } from './registro-vendedores.service';
 import { catchError, distinctUntilChanged, finalize, map, Observable, of, startWith } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+
+export interface TableRow{
+  id: string;
+  name: string;
+  identification_number: string;
+  observations: string;
+  user_id: string;
+  email: string;
+}
 
 @Component({
   selector: 'app-registro-vendedores',
@@ -29,29 +38,28 @@ export class RegistroVendedoresComponent implements OnInit {
   public ZonaType2LabelMapping = ZonaType2LabelMapping;
   public zonaTypes = Object.values(ZonaVendedor);
 
-  tableData = [
-
-  ]
+  tableData: TableRow[] = [];
 
   tableColumns = [
     { 
-      name: 'nombre_cliente', 
+      name: 'name', 
       header: 'Nombre de Cliente', 
-      cell: (item: any) => `${item.nombre_cliente}` 
+      cell: (item: any) => item.name.toString() 
     },
     { 
-      name: 'zona', 
-      header: 'Zona', 
-      cell: (item: any) => item.zona 
+      name: 'observations', 
+      header: 'Observaciones', 
+      cell: (item: any) => item.observations.toString() 
     },
   ];
 
-  visibleColumns = ['nombre_cliente', 'zona',];
+  visibleColumns = ['name', 'observations',];
 
   assignAction = [
     {
       icon: 'Asignar',
       tooltip: 'Asignar',
+      // action: (item: any) => this.asignarClienteAVendedor()   
       action: () => {}     
     }
   ];
@@ -162,6 +170,10 @@ export class RegistroVendedoresComponent implements OnInit {
       replaceUrl: true
     });
     
+    this.apiService.getClientesPorAsignar().subscribe(
+      (response: ClientesResponse) => {this.tableData = response.customers},
+      error => console.log(error)
+    )
   }
 
   crearNuevoVendedor(): void {

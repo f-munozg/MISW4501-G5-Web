@@ -127,3 +127,20 @@ export interface VendedorResponse{
 export interface VendedoresResponse{
     sellers: Vendedor[];
 }
+
+export interface Cliente{
+    id: string;
+    name: string;
+    identification_number: string;
+    observations: string;
+    user_id: string;
+    email: string;
+}
+
+export interface ClienteResponse{
+    customer: Cliente;
+}
+
+export interface ClientesResponse{
+    customers: Cliente[]
+}

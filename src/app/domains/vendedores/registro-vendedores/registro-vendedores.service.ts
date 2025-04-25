@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { Vendedor, VendedoresResponse, VendedorResponse } from '../vendedores.model';
+import { ClientesResponse, VendedoresResponse } from '../vendedores.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +10,7 @@ import { Vendedor, VendedoresResponse, VendedorResponse } from '../vendedores.mo
 export class RegistroVendedoresService {
 
   private apiUrl = environment.apiUrlSellers + `/sellers`;
+  private apiUrlCustomers = environment.apiUrlCustomers + `/customers?status=available`;
 
   constructor(private http: HttpClient) { }
 
@@ -37,4 +38,9 @@ export class RegistroVendedoresService {
   Observable<VendedoresResponse>{
     return this.http.get<VendedoresResponse>(this.apiUrl);
   };
+
+  getClientesPorAsignar():
+  Observable<ClientesResponse>{
+    return this.http.get<ClientesResponse>(this.apiUrlCustomers);
+  }
 }
