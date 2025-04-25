@@ -24,7 +24,7 @@ export class RegistroVendedoresComponent implements OnInit {
   isRefreshing: boolean = true;
   isInViewMode: boolean = false;
 
-  private idVendedorSeleccionado: string | null = null;
+  idVendedorSeleccionado: string | null = null;
 
   public ZonaType2LabelMapping = ZonaType2LabelMapping;
   public zonaTypes = Object.values(ZonaVendedor);
@@ -63,7 +63,7 @@ export class RegistroVendedoresComponent implements OnInit {
     private router: Router
   ) { }
 
-  private initializeForms(): void {
+  initializeForms(): void {
     this.registroVendedoresForm = this.formBuilder.group({
       fieldNumeroIdentificacion: ['', Validators.required],
       fieldNombre: [ '', Validators.required ],
@@ -101,7 +101,7 @@ export class RegistroVendedoresComponent implements OnInit {
     });
   }
 
-  private crearUrlConId(): void {
+  crearUrlConId(): void {
     if (!this.idVendedorSeleccionado || !this.listaVendedores.length) return;
 
     const vendedor = this.listaVendedores.find(v => v.id === this.idVendedorSeleccionado);
@@ -119,21 +119,21 @@ export class RegistroVendedoresComponent implements OnInit {
     }
   }
 
-  private autoCompletar(): void {
+  autoCompletar(): void {
     this.numerosIdentificacionFiltrados = this.consultaVendedoresForm.get('fieldNumeroIdentificacion')!.valueChanges.pipe(
       startWith(''),
       map(value => this._filtrarNumerosIdentificacion(value))
     )
   }
 
-  private _filtrarNumerosIdentificacion(value: string): number[] {
+  _filtrarNumerosIdentificacion(value: string): number[] {
     const valorFiltro = value?.toString().toLowerCase() || '';
     return this.listaVendedores
       .filter(vendedor => vendedor.identification_number.toString().includes(valorFiltro))
       .map(vendedor => vendedor.identification_number)
   }
 
-  private cargarVendedores(callback?: () => void): void {
+  cargarVendedores(callback?: () => void): void {
     this.isRefreshing = true;
 
     this.apiService.getListaVendedores().pipe(
@@ -164,7 +164,7 @@ export class RegistroVendedoresComponent implements OnInit {
     
   }
 
-  private crearNuevoVendedor(): void {
+  crearNuevoVendedor(): void {
     const formData = this.registroVendedoresForm.value;
 
     this.isSubmitting = true;
@@ -202,7 +202,7 @@ export class RegistroVendedoresComponent implements OnInit {
     this.isInViewMode = !this.isInViewMode;
   }
 
-  private limpiarUrlConId(): void {
+  limpiarUrlConId(): void {
     this.idVendedorSeleccionado = null;
     this.router.navigate(['.'], {
       relativeTo: this.route,

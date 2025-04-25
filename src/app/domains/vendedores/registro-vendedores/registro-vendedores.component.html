@@ -22,31 +22,32 @@
             <mat-form-field class="numeroIdentificacionFormField">
               <mat-label>Número de Identificación</mat-label>
               <input matInput formControlName="fieldNumeroIdentificacion" 
-                    placeholder="Número de Identificación">
+                    placeholder="Número de Identificación" id="registroVendedores-fieldNumeroIdentificacion">
             </mat-form-field>
           </div>
           <div class="grid-item-nombreForm">
             <h3>Nombre</h3>
             <mat-form-field class="nombreFormField">
-              <input matInput formControlName="fieldNombre" placeholder="Nombre">
+              <input matInput formControlName="fieldNombre" id="registroVendedores-fieldNombre" placeholder="Nombre">
             </mat-form-field>
           </div>
           <div class="grid-item-correoElectronicoForm">
             <h3>Correo Electrónico</h3>
             <mat-form-field class="correoElectronicoFormField">
-              <input matInput formControlName="fieldCorreoElectronico" placeholder="Email">
+              <input matInput formControlName="fieldCorreoElectronico" 
+                id="registroVendedores-fieldCorreoElectronico" placeholder="Email">
             </mat-form-field>
           </div>
           <div class="grid-item-direccionForm">
             <h3>Dirección</h3>
             <mat-form-field class="direccionFormField">
-              <input matInput formControlName="fieldDireccion" placeholder="Dirección">
+              <input matInput formControlName="fieldDireccion" id="registroVendedores-fieldDireccion" placeholder="Dirección">
             </mat-form-field>
           </div>
           <div class="grid-item-telefonoForm">
             <h3>Teléfono</h3>
             <mat-form-field class="telefonoFormField">
-              <input matInput formControlName="fieldTelefono" placeholder="Teléfono">
+              <input matInput formControlName="fieldTelefono" id="registroVendedores-fieldTelefono" placeholder="Teléfono">
             </mat-form-field>
           </div>
           <div class="grid-item-zonaForm">
@@ -84,7 +85,8 @@
               <mat-label>Número de Identificación</mat-label>
               <input 
                 type="text" 
-                matInput 
+                matInput
+                id="consultaVendedores-fieldNumeroIdentificacion" 
                 formControlName="fieldNumeroIdentificacion"
                 [matAutocomplete]="auto"
               >
@@ -98,32 +100,32 @@
           <div class="grid-item-nombreForm">
             <h3>Nombre</h3>
             <mat-form-field class="nombreFormField">
-              <input matInput formControlName="fieldNombre" placeholder="Nombre" readonly>
+              <input matInput formControlName="fieldNombre" placeholder="Nombre" id="consultaVendedores-fieldNombre" readonly>
             </mat-form-field>
           </div>
           <div class="grid-item-correoElectronicoForm">
             <h3>Correo Electrónico</h3>
             <mat-form-field class="correoElectronicoFormField">
-              <input matInput formControlName="fieldCorreoElectronico" placeholder="Email" readonly>
+              <input matInput formControlName="fieldCorreoElectronico" placeholder="Email" id="consultaVendedores-fieldCorreoElectronico"  readonly>
             </mat-form-field>
           </div>
           <div class="grid-item-direccionForm">
             <h3>Dirección</h3>
             <mat-form-field class="direccionFormField">
-              <input matInput formControlName="fieldDireccion" placeholder="Dirección" readonly>
+              <input matInput formControlName="fieldDireccion" placeholder="Dirección" id="consultaVendedores-fieldDireccion" readonly>
             </mat-form-field>
           </div>
           <div class="grid-item-telefonoForm">
             <h3>Teléfono</h3>
             <mat-form-field class="telefonoFormField">
-              <input matInput formControlName="fieldTelefono" placeholder="Teléfono" readonly>
+              <input matInput formControlName="fieldTelefono" placeholder="Teléfono" id="consultaVendedores-fieldTelefono" readonly>
             </mat-form-field>
           </div>
           <div class="grid-item-zonaForm">
             <h3>Zona</h3>
             <mat-form-field class="zonaFormField">
               <mat-label>Escoja la Zona</mat-label>
-              <mat-select formControlName="fieldZona" readonly>
+              <mat-select formControlName="fieldZona" id="consultaVendedores-fieldZona"  readonly>
                 <mat-option *ngFor="let zonaType of zonaTypes"
                     [value]="zonaType">
                     {{ZonaType2LabelMapping[zonaType]}}
