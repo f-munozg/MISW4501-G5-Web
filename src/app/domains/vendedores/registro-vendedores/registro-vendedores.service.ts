@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { Vendedor, VendedoresResponse, VendedorResponse } from '../vendedores.model';
+import { ClientesResponse, VendedoresResponse } from '../vendedores.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +10,7 @@ import { Vendedor, VendedoresResponse, VendedorResponse } from '../vendedores.mo
 export class RegistroVendedoresService {
 
   private apiUrl = environment.apiUrlSellers + `/sellers`;
+  private apiUrlCustomers = environment.apiUrlCustomers + `/customers`;
 
   constructor(private http: HttpClient) { }
 
@@ -36,11 +37,19 @@ export class RegistroVendedoresService {
   getListaVendedores():
   Observable<VendedoresResponse>{
     return this.http.get<VendedoresResponse>(this.apiUrl);
+  };
+
+  getClientesPorAsignar():
+  Observable<ClientesResponse>{
+    return this.http.get<ClientesResponse>(this.apiUrlCustomers + `?status=available`);
   }
 
-  getVendedor(id: string, user_id: string): Observable<VendedorResponse> {
-    return this.http.get<VendedorResponse>(`${this.apiUrl}/${id}`, {
-      params: { user_id }
-    });
-  }
+  postAsignarClienteAVendedor(seller_id: string, customer_id: string){
+    const payload = {
+      "customers": [customer_id],
+      "seller_id": seller_id
+    };
+
+    return this.http.post(this.apiUrlCustomers + `/assign_seller`, payload);
+  };
 }
