@@ -9,8 +9,9 @@ import { environment } from '../../../../environments/environment'
 import { RegistroVendedoresService } from './registro-vendedores.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Vendedor } from '../vendedores.model';
-import { of } from 'rxjs';
+import { ClientesResponse, Vendedor } from '../vendedores.model';
+import { of, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('RegistroVendedoresComponent', () => {
   let component: RegistroVendedoresComponent;
@@ -414,6 +415,176 @@ describe('RegistroVendedoresComponent', () => {
       const req = httpMock.expectOne(`${environment.apiUrlSellers}/sellers`);
       req.flush({});
     });
+  });
+
+  describe('assignCustomerToSeller', () => {
+    beforeEach(() => {
+      httpMock.match(req => {
+        console.log('Request made:', req.method, req.url);
+        return false; // No hace nada, solo log
+      });
+    });
+
+    afterEach(() => {
+      const unmatched = httpMock.match(req => true);
+      unmatched.forEach(req => console.warn('UNMATCHED REQUEST:', req.request.url));
+    });
+
+    it('should remove customer from tableData on success', fakeAsync(() => {
+      const mockCustomers = [{
+        id: "fd6472db-cf25-48b2-b4ab-5e9978c878d5",
+        user_id: "e5924f2e-0f3f-413d-89e1-b8ad058bca7d",
+        assigned_seller: null,
+        name: "Cliente 1",
+        identification_number: "12345",
+        observations: "none",
+        email: "test@test.com"
+      },
+      {
+        id: "48b2b4ab-cf25-48b2-b4ab-5e9978c878d5",
+        user_id: "b8ad058bca7d-0f3f-413d-89e1-e5924f2e",
+        assigned_seller: null,
+        name: "Cliente 2",
+        identification_number: "67890",
+        observations: "none",
+        email: "test2@test.com"
+      }];
+    
+      spyOn(component, 'cargarVendedores').and.callFake((callback: () => void) => {
+        component.tableData = [...mockCustomers];
+        if (callback) callback();
+      });
+    
+      spyOn(component['apiService'], 'getClientesPorAsignar').and.returnValue(
+        of({ customers: mockCustomers, success: true })
+      );
+    
+      const assignSpy = spyOn(component['apiService'], 'postAsignarClienteAVendedor')
+        .and.returnValue(of({ success: true }));
+    
+      component.ngOnInit();
+      fixture.detectChanges();
+      tick();
+    
+      console.log('Initial tableData:', component.tableData);
+      
+      const customerIdToRemove = 'fd6472db-cf25-48b2-b4ab-5e9978c878d5';
+      
+      component.asignarClienteAVendedor('seller-123', customerIdToRemove);
+    
+      console.log('tableData after optimistic update:', component.tableData);
+    
+      expect(component.tableData.length).withContext('Should have 1 customer after removal').toBe(1);
+      
+      expect(component.tableData.some(c => c.id === customerIdToRemove))
+        .withContext('Specific customer should no longer exist in tableData').toBeFalse();
+    
+      expect(assignSpy).toHaveBeenCalled();
+    }));
+    
+    it('should handle assignment error', fakeAsync(() => {
+      spyOn(console, 'error');
+      
+      const mockSellers = 'seller-123';
+      const mockCustomers = {
+        customers: [{
+          id: "fd6472db-cf25-48b2-b4ab-5e9978c878d5",
+          user_id: "e5924f2e-0f3f-413d-89e1-b8ad058bca7d",
+          assigned_seller: null,
+          name: "Cliente 1",
+          identification_number: "12345",
+          observations: "none",
+          email: "test@test.com"
+        },
+        {
+          id: "48b2b4ab-cf25-48b2-b4ab-5e9978c878d5",
+          user_id: "b8ad058bca7d-0f3f-413d-89e1-e5924f2e",
+          assigned_seller: null,
+          name: "Cliente 2",
+          identification_number: "67890",
+          observations: "none",
+          email: "test2@test.com"
+        }]
+      };
+
+      spyOn(component, 'cargarVendedores').and.callFake((callback: () => void) => {
+        component.tableData = [...mockCustomers.customers];
+        callback?.();
+      });
+
+      spyOn(component['apiService'], 'postAsignarClienteAVendedor').and.callFake(() => {
+        return of({ success: true });
+      });
+
+      component.ngOnInit();
+      fixture.detectChanges();
+      tick();
+
+      expect(component.tableData.length).toBe(2, 'Should start with 2 customers');
+
+      const initialTableData = component.tableData;
+
+      const customerIdToRemove = 'fd6472db-cf25-48b2-b4ab-5e9978c878d5';
+      component.asignarClienteAVendedor('seller-123', customerIdToRemove);
+      
+      expect(component.tableData.length)
+        .withContext('Should remove customer immediately').toBe(1);
+        
+      expect(component.tableData).not.toBe(initialTableData, 
+        'Should create new array reference');
+        
+      expect(component.tableData.some(c => c.id === customerIdToRemove))
+        .withContext('Specific customer should be gone').toBeFalse();
+
+      tick();
+      fixture.detectChanges();
+    }));
+  });
+
+  describe('refreshTableData', () => {
+    it('should update tableData with new data', () => {
+      const mockResponse: ClientesResponse = {
+        customers: [
+          { id: 'cust-3', name: 'Customer 3', identification_number: '1234', observations: 'none', email: 'test@test.com', user_id: '789' }
+        ]
+      };
+
+      component.refrescarTableData();
+      
+      const req = httpMock.expectOne(environment.apiUrlCustomers + `/customers?status=available`);
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+
+      expect(component.tableData).toEqual(mockResponse.customers);
+
+      const reqSellers = httpMock.expectOne(environment.apiUrlSellers + `/sellers`);
+      reqSellers.flush({});
+    });
+
+    it('should handle refresh error', fakeAsync(() => {
+      const consoleSpy = spyOn(console, 'error').and.callThrough();
+      const originalTableData = JSON.parse(JSON.stringify(component.tableData));
+      
+      httpMock.expectOne(`${environment.apiUrlSellers}/sellers`).flush([]);
+      
+      const errorResponse = new HttpErrorResponse({
+        error: 'Test error',
+        status: 500,
+        statusText: 'Internal Server Error'
+      });
+    
+      spyOn(component['apiService'], 'getClientesPorAsignar').and.returnValue(
+        throwError(errorResponse)
+      );
+    
+      component.refrescarTableData();
+      tick();
+      fixture.detectChanges();
+    
+      expect(consoleSpy).toHaveBeenCalledWith(jasmine.any(HttpErrorResponse));
+      expect(component.tableData).toEqual(originalTableData);
+      httpMock.verify();
+    }));
   });
 
   describe('onSubmit', () => {

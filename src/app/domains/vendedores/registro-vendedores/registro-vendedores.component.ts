@@ -209,23 +209,27 @@ export class RegistroVendedoresComponent implements OnInit {
   }
 
   asignarClienteAVendedor(user_id: string, customer_id: string) {
-    this.apiService.postAsignarClienteAVendedor(user_id, customer_id).subscribe(
-      (response) => {
-        this.tableData = this.tableData.filter(customer => customer.id !== customer_id);
-        console.log('Customer assigned successfully', response);
-        this.refrescarTableData();
+    console.log('Before optimistic update:', this.tableData);
+    this.tableData = [...this.tableData.filter(customer => customer.id !== customer_id)];
+    console.log('After optimistic update:', this.tableData);
+    
+    this.apiService.postAsignarClienteAVendedor(user_id, customer_id).subscribe({
+      next: (response) => {
+        console.log('Assignment successful', response);
       },
-      (error) => {
-        console.error('Failed to assign customer', error);
+      error: (error) => {
+        console.error('Assignment failed', error);
       }
-    );
+    });
   }
+   
 
   refrescarTableData() {
     const currentId = this.route.snapshot.queryParams['id'];
     this.apiService.getClientesPorAsignar().subscribe(
       (response: ClientesResponse) => {
         this.tableData = response.customers;
+        console.log('tableData after refresh:', this.tableData);
         this.router.navigate([], {
           relativeTo: this.route,
           queryParams: { id: currentId },
@@ -233,9 +237,10 @@ export class RegistroVendedoresComponent implements OnInit {
           replaceUrl: true
         });
       },
-      error => console.log(error)
+      error => console.error(error)
     );
   }
+  
 
   toggleMode(): void {
     if (this.isInViewMode) {
