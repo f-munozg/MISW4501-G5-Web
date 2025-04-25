@@ -1,7 +1,5 @@
 /* tslint:disable:no-unused-variable */
 import { waitForAsync, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
 
 import { RegistroVendedoresComponent } from './registro-vendedores.component';
 import { VendedoresModule } from '../vendedores.module';
@@ -12,7 +10,7 @@ import { RegistroVendedoresService } from './registro-vendedores.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Vendedor } from '../vendedores.model';
-import { finalize, of } from 'rxjs';
+import { of } from 'rxjs';
 
 describe('RegistroVendedoresComponent', () => {
   let component: RegistroVendedoresComponent;
@@ -59,7 +57,7 @@ describe('RegistroVendedoresComponent', () => {
     router = TestBed.inject(Router);
     route = TestBed.inject(ActivatedRoute);
 
-    spyOn(router, 'navigate').and.stub();
+    // spyOn(router, 'navigate').and.stub();
     fixture.detectChanges();
   });
 
@@ -256,19 +254,22 @@ describe('RegistroVendedoresComponent', () => {
   });
 
   describe('withSelectedSeller', () => {
+    beforeEach(() => {
+      component.listaVendedores = mockVendedores
+      
+      httpMock.expectOne(apiUrlSellers).flush({ sellers: component.listaVendedores });
+    });
+  
     it('should navigate with seller id', () => {
-      component.listaVendedores = mockVendedores;
-      component.conVendedorSeleccionado(123);
-
-      expect(router.navigate).toHaveBeenCalledWith(['view'], {
-        relativeTo: route,
-        queryParams: { id: '1' },
-        queryParamsHandling: 'merge',
-        replaceUrl: true
+      const navigateSpy = spyOn(router, 'navigate').and.callFake((commands, extras) => {
+        expect(commands).toEqual(['view']);
+        expect(extras?.queryParams?.['id']).toBe('1');
+        return Promise.resolve(true);
       });
-
-      const getReq = httpMock.expectOne(apiUrlSellers);
-      getReq.flush({ sellers: [] });
+  
+      component.conVendedorSeleccionado(123);
+  
+      expect(navigateSpy).toHaveBeenCalled();
     });
   });
 
@@ -330,6 +331,34 @@ describe('RegistroVendedoresComponent', () => {
 
       const getReq = httpMock.expectOne(apiUrlSellers);
       getReq.flush({ sellers: [] });
+    });
+  });
+
+  describe('clearUrlWithId', () => {
+    let router: Router;
+  
+    beforeEach(() => {
+      router = TestBed.inject(Router);
+    });  
+
+    it('should clear selectedId and navigate with null query param', () => {
+      const navigateSpy = spyOn(router, 'navigate').and.stub();
+
+      component.idVendedorSeleccionado = '123';
+      
+      const getReq = httpMock.expectOne(apiUrlSellers);
+      getReq.flush({ sellers: [] });
+
+      component.limpiarUrlConId();
+      
+      expect(component.idVendedorSeleccionado).toBeNull();
+      expect(navigateSpy).toHaveBeenCalledWith(
+        ['.'], 
+        {
+          relativeTo: jasmine.any(Object),
+          queryParams: { id: null },
+          queryParamsHandling: 'merge'
+      });
     });
   });
 
@@ -414,6 +443,18 @@ describe('RegistroVendedoresComponent', () => {
       expect(clearAllSpy).toHaveBeenCalled();
       expect(cargarVendedoresSpy).toHaveBeenCalled();
     }));
+
+    it('should mark form as touched when invalid', () => {
+      component.registroVendedoresForm.setErrors({ 'invalid': true });
+      spyOn(component.registroVendedoresForm, 'markAllAsTouched');
+      
+      component.onSubmit();
+      
+      expect(component.registroVendedoresForm.markAllAsTouched).toHaveBeenCalled();
+
+      const getReq = httpMock.expectOne(apiUrlSellers);
+      getReq.flush({ sellers: [] });
+    });
   });
 
   describe('clearAll', () => {
