@@ -123,4 +123,22 @@ describe('Service: RegistroVendedores', () => {
     });
 
   })
+
+  describe('postAssign', () => {
+    const mockSellerId = 'user-123';
+    const mockCustomerId = 'customer-456';
+    const expectedUrl = environment.apiUrlCustomers + `/customers/assign_seller`;
+    const expectedPayload = {
+      "customers": [mockCustomerId],
+      "seller_id": mockSellerId
+    };
+
+    it('shoudl sent a POST request to the backend', () => {
+      service.postAsignarClienteAVendedor(mockSellerId, mockCustomerId).subscribe();
+
+      const req = httpMock.expectOne(expectedUrl);
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual(expectedPayload);
+    })
+  });
 });

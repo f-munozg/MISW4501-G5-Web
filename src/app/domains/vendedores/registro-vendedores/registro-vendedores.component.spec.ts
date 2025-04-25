@@ -254,6 +254,8 @@ describe('RegistroVendedoresComponent', () => {
   });
 
   describe('withSelectedSeller', () => {
+    const apiUrlCustomers = environment.apiUrlCustomers + `/customers`;
+
     beforeEach(() => {
       component.listaVendedores = mockVendedores
       
@@ -270,6 +272,9 @@ describe('RegistroVendedoresComponent', () => {
       component.conVendedorSeleccionado(123);
   
       expect(navigateSpy).toHaveBeenCalled();
+
+      const getCustReq = httpMock.expectOne(apiUrlCustomers + `?status=available`)
+      getCustReq.flush({});
     });
   });
 
