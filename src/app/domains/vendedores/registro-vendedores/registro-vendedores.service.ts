@@ -10,7 +10,7 @@ import { ClientesResponse, VendedoresResponse } from '../vendedores.model';
 export class RegistroVendedoresService {
 
   private apiUrl = environment.apiUrlSellers + `/sellers`;
-  private apiUrlCustomers = environment.apiUrlCustomers + `/customers?status=available`;
+  private apiUrlCustomers = environment.apiUrlCustomers + `/customers`;
 
   constructor(private http: HttpClient) { }
 
@@ -41,6 +41,15 @@ export class RegistroVendedoresService {
 
   getClientesPorAsignar():
   Observable<ClientesResponse>{
-    return this.http.get<ClientesResponse>(this.apiUrlCustomers);
+    return this.http.get<ClientesResponse>(this.apiUrlCustomers + `?status=available`);
   }
+
+  postAsignarClienteAVendedor(seller_id: string, customer_id: string){
+    const payload = {
+      "customers": [customer_id],
+      "seller_id": seller_id
+    };
+
+    return this.http.post(this.apiUrlCustomers + `/assign_seller`, payload);
+  };
 }

@@ -59,8 +59,17 @@ export class RegistroVendedoresComponent implements OnInit {
     {
       icon: 'Asignar',
       tooltip: 'Asignar',
-      // action: (item: any) => this.asignarClienteAVendedor()   
-      action: () => {}     
+      action: (row: TableRow) => {
+      const selectedVendedorId = this.idVendedorSeleccionado;
+      
+      if (!selectedVendedorId) {
+        console.error('No vendedor selected');
+        return;
+      }
+      
+      this.asignarClienteAVendedor(selectedVendedorId, row.id);
+
+      }     
     }
   ];
 
@@ -197,6 +206,18 @@ export class RegistroVendedoresComponent implements OnInit {
         }
       }
     });  
+  }
+
+  asignarClienteAVendedor(user_id: string, customer_id: string) {
+    this.apiService.postAsignarClienteAVendedor(user_id, customer_id).subscribe(
+      (response) => {
+        console.log('Customer assigned successfully', response);
+        this.cargarVendedores();
+      },
+      (error) => {
+        console.error('Failed to assign customer', error);
+      }
+    );
   }
 
   toggleMode(): void {
