@@ -173,7 +173,7 @@ export class RegistroVendedoresComponent implements OnInit {
     this.apiService.getClientesPorAsignar().subscribe(
       (response: ClientesResponse) => {this.tableData = response.customers},
       error => console.log(error)
-    )
+    );
   }
 
   crearNuevoVendedor(): void {
@@ -204,6 +204,7 @@ export class RegistroVendedoresComponent implements OnInit {
       this.cargarVendedores();
       this.limpiarUrlConId();
       this.consultaVendedoresForm.reset();
+      this.tableData = [];
     } else {
       this.router.navigate(['view'], {
         relativeTo: this.route,
