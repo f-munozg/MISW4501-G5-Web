@@ -66,7 +66,7 @@ export class RegistroVendedoresComponent implements OnInit {
         console.error('No vendedor selected');
         return;
       }
-      
+
       this.asignarClienteAVendedor(selectedVendedorId, row.id);
 
       }     
@@ -211,12 +211,29 @@ export class RegistroVendedoresComponent implements OnInit {
   asignarClienteAVendedor(user_id: string, customer_id: string) {
     this.apiService.postAsignarClienteAVendedor(user_id, customer_id).subscribe(
       (response) => {
+        this.tableData = this.tableData.filter(customer => customer.id !== customer_id);
         console.log('Customer assigned successfully', response);
-        this.cargarVendedores();
+        this.refrescarTableData();
       },
       (error) => {
         console.error('Failed to assign customer', error);
       }
+    );
+  }
+
+  refrescarTableData() {
+    const currentId = this.route.snapshot.queryParams['id'];
+    this.apiService.getClientesPorAsignar().subscribe(
+      (response: ClientesResponse) => {
+        this.tableData = response.customers;
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: { id: currentId },
+          queryParamsHandling: 'merge',
+          replaceUrl: true
+        });
+      },
+      error => console.log(error)
     );
   }
 
