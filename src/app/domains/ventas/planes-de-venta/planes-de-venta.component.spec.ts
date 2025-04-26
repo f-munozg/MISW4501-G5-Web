@@ -4,6 +4,11 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { PlanesDeVentaComponent } from './planes-de-venta.component';
+import { VentasModule } from '../ventas.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { PlanesDeVentaService } from './planes-de-venta.service';
 
 describe('PlanesDeVentaComponent', () => {
   let component: PlanesDeVentaComponent;
@@ -11,7 +16,16 @@ describe('PlanesDeVentaComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PlanesDeVentaComponent ]
+      declarations: [ PlanesDeVentaComponent ],
+      imports: [
+        VentasModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        RouterTestingModule
+      ],
+      providers:[
+        PlanesDeVentaService
+      ]
     })
     .compileComponents();
   }));
