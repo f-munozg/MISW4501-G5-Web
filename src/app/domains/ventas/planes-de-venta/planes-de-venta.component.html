@@ -5,61 +5,69 @@
         Definición de Plan de Ventas
       </h2>
     </div>
-    <div class="definicionPlanDeVentasGrid">
-      <form>
-        <div class="grid-item-vendedorForm">
-          <h3>Vendedor</h3>
-          <mat-form-field>
-            <mat-label>Vendedor</mat-label>
-            <input 
-              type="text" 
-              matInput
-              >
-          </mat-form-field>
-        </div>
-        <div class="grid-item-vendedorForm">
-          <h3>Meta</h3>
-          <mat-form-field>
-            <mat-label>Ingresos a Obtener</mat-label>
-            <input 
-              type="number" 
-              matInput
-              >
-          </mat-form-field>
-        </div>
-        <div class="grid-item-vendedorForm">
-          <h3>Producto</h3>
-          <mat-form-field>
-            <mat-label>Seleccione Producto</mat-label>
-            <input 
-              type="text" 
-              matInput
-              >
-          </mat-form-field>
-        </div>
-        <div class="grid-item-vendedorForm">
-          <h3>Período</h3>
-          <mat-form-field>
-            <mat-label>Seleccione Período</mat-label>
-            <input 
-              type="text" 
-              matInput
-              >
-          </mat-form-field>
-        </div>
-        <div class="definicionPlanDeVentasBtnsContainer">
-          <div class="grid-item-cancelarBtnDiv">
-            <button mat-flat-button class="cancelarBtn">Cancelar</button>
+    <div class="definicionPlanVentasForm">
+      <form [formGroup]="definicionPlanDeVentasForm" (ngSubmit)="onSubmit()">
+        <div class="definicionPlanDeVentasGrid">  
+          <div class="grid-item-vendedorForm">
+            <h3>Vendedor</h3>
+            <mat-form-field class="vendedorFormField">
+              <mat-label>Vendedor</mat-label>
+              <input 
+                type="text" 
+                matInput
+                formControlName="fieldVendedor"
+                >
+            </mat-form-field>
           </div>
-          <div class="grid-item-guardarBtnDiv">
-            <button mat-flat-button class="guardarBtn" 
-                    type="submit">Guardar</button>
+          <div class="grid-item-metaForm">
+            <h3>Meta</h3>
+            <mat-form-field class="metaFormField">
+              <mat-label>Ingresos a Obtener</mat-label>
+              <input 
+                type="number" 
+                matInput
+                formControlName="fieldMeta"
+                >
+            </mat-form-field>
+          </div>
+          <div class="grid-item-productoForm">
+            <h3>Producto</h3>
+            <mat-form-field class="productoFormField">
+              <mat-label>Seleccione Producto</mat-label>
+              <input 
+                type="text" 
+                matInput
+                formControlName="fieldProducto"
+                >
+            </mat-form-field>
+          </div>
+          <div class="grid-item-periodoForm">
+            <h3>Período</h3>
+            <mat-form-field class="periodoFormField">
+              <mat-label>Seleccione Período</mat-label>
+              <input 
+                type="text" 
+                matInput
+                formControlName="fieldPeriodo"
+                >
+            </mat-form-field>
+          </div>
+          <div class="grid-item-definicionPlanDeVentasBtnsContainer">
+            <div class="grid-item-seguimientoVendedorBtnDiv">
+              <button mat-flat-button class="seguimientoVendedorBtn">Seguimiento a Vendedor</button>
+            </div>
+            <div class="grid-item-definicionPlanDeVentasFormBtns">
+              <div class="grid-item-cancelarBtnDiv">
+                <button mat-flat-button class="cancelarBtn">Cancelar</button>
+              </div>
+              <div class="grid-item-guardarBtnDiv">
+                <button mat-flat-button class="guardarBtn" 
+                        type="submit">Guardar</button>
+              </div>
+            </div>
           </div>
         </div>
       </form>
-      <div class="Seguimiento a Vendedor">
-        <button mat-flat-button class="seguimientoVendedorBtn">Seguimiento a Vendedor</button>
-      </div>
     </div>
   </main>
 </app-default-window>
