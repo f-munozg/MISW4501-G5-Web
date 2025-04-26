@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Vendedor } from '../../vendedores/vendedores.model';
-import { Observable } from 'rxjs';
+import { finalize, map, Observable, startWith } from 'rxjs';
 import { PeriodoPlanVentas, PeriodoType2LabelMapping, Producto } from '../ventas.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PlanesDeVentaService } from './planes-de-venta.service';
 
 
 @Component({
@@ -18,25 +19,39 @@ export class PlanesDeVentaComponent implements OnInit {
   listaVendedores: Vendedor[] = [];
   listaProductos: Producto[] = [];
 
-  vendedoresFiltrados!: Observable<string[]>; // Revisar si es string
-  productosFiltrados!: Observable<string[]>;  // Revisar si es string
+  vendedoresFiltrados!: Observable<number[]>;
+  productosFiltrados!: Observable<string[]>;
+
+  isSubmitting: boolean = true;
+  isRefreshing: boolean = true;
+
+  idVendedorSeleccionado: string | null = null;
+  idProductoSeleccionado: string | null = null;
 
   public PeriodoType2LabelMapping = PeriodoType2LabelMapping;
   public periodoTypes = Object.values(PeriodoPlanVentas);
 
   constructor(
     private formBuilder: FormBuilder,
-    // private apiService: PlanDeVentasService,
-    private route: ActivatedRoute,
-    private router: Router
+    private apiService: PlanesDeVentaService,
   ) { }
 
   ngOnInit() {
     this.initializeForm();
+    this.autoCompletarVendedor();
+    this.autoCompletarProductos();
+
+    this.cargarVendedores();
+    this.cargarProductos();
   }
 
   onSubmit() {
+    if (this.definicionPlanDeVentasForm.invalid) {
+      this.definicionPlanDeVentasForm.markAllAsTouched();
+      return;
+    }
 
+    this.crearPlanDeVentas();
   }
 
   initializeForm(): void {
@@ -48,28 +63,100 @@ export class PlanesDeVentaComponent implements OnInit {
     });
   }
 
-  autoCompletarVendedor(){
-
+  autoCompletarVendedor(): void{
+    this.vendedoresFiltrados = this.definicionPlanDeVentasForm.get('fieldVendedor')!.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filtrarNumerosIdentificacion(value))
+        )
   }
 
-  _filtrarNumerosIdentificacion(){
-
+  _filtrarNumerosIdentificacion(value: string): number[] {
+    const valorFiltro = value?.toString().toLowerCase() || '';
+    return this.listaVendedores
+      .filter(vendedor => vendedor.identification_number.toString().includes(valorFiltro))
+      .map(vendedor => vendedor.identification_number)
   }
 
-  cargarVendedores(){
+  cargarVendedores(callback?: () => void): void{
+    this.isRefreshing = true;
 
+    this.apiService.getListaVendedores().pipe(
+      finalize(() => {
+        this.isRefreshing = false;
+        if (callback) callback();
+      })
+    ).subscribe({
+      next: (vendedores) => {
+        this.listaVendedores = vendedores.sellers;
+        this.definicionPlanDeVentasForm.get('fieldVendedor')?.setValue('', {emitEvent: true})
+      },
+      error: (err) => {
+        console.error('Failed to load sellers', err);
+      }
+    })
   }
 
-  autoCompletarProductos(){
-
+  autoCompletarProductos(): void {
+    this.productosFiltrados = this.definicionPlanDeVentasForm.get('fieldProducto')!.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filtrarNombresProductos(value))
+        )
   }
 
-  _filtrarNombresProductos(){
-    
+  _filtrarNombresProductos(value: string): string[] {
+    const valorFiltro = value?.toString().toLowerCase() || '';
+    return this.listaProductos
+      .filter(producto => producto.name.toString().includes(valorFiltro))
+      .map(producto => producto.name)
   }
 
-  cargarProductos(){
+  cargarProductos(callback?: () => void): void{
+    this.isRefreshing = true;
 
+    this.apiService.getListaProductos().pipe(
+      finalize(() => {
+        this.isRefreshing = false;
+        if (callback) callback();
+      })
+    ).subscribe({
+        next: (productos) => {
+          this.listaProductos = productos.products;
+          this.definicionPlanDeVentasForm.get('fieldProducto')?.setValue('', {emitEvent: true})
+        },
+        error: (err) => {
+          console.error('Failed to load products', err);
+        }
+    })
+  }
+
+  crearPlanDeVentas(): void {
+    const vendedor = this.listaVendedores.find(v => v.id);
+    const producto = this.listaProductos.find(p => p.id);
+
+    const formData = {
+      seller_id: vendedor?.id,
+      target: this.definicionPlanDeVentasForm.get('fieldMeta')?.value,
+      product_id: producto?.id,
+      period: this.definicionPlanDeVentasForm.get('fieldPeriodo')?.value
+    }
+
+    this.isSubmitting = true;
+
+    this.apiService.postPlanVentas(formData).pipe(
+      finalize(() => this.isSubmitting = false)
+    ).subscribe({
+      next: () => {
+        this.clearAll();
+      },
+      error: (err) => {
+        if (err.status === 409 ) {
+          this.definicionPlanDeVentasForm.reset();
+          this.definicionPlanDeVentasForm.setErrors(null);
+        } else {
+          console.error('Error creating sales plan')
+        }
+      }
+    });
   }
 
   clearAll(): void {
