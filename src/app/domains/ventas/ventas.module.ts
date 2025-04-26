@@ -10,10 +10,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { ConsultaVentasComponent } from './consulta-ventas/consulta-ventas.component';
+import { PlanesDeVentaComponent } from './planes-de-venta/planes-de-venta.component';
 
 @NgModule({
   declarations: [
-    ConsultaVentasComponent
+    ConsultaVentasComponent,
+    PlanesDeVentaComponent
   ],
   imports: [
     CommonModule,
