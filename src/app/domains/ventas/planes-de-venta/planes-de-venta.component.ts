@@ -71,6 +71,8 @@ export class PlanesDeVentaComponent implements OnInit {
   }
 
   _filtrarNumerosIdentificacion(value: string): number[] {
+    if (!this.listaVendedores) return [];
+
     const valorFiltro = value?.toString().toLowerCase() || '';
     return this.listaVendedores
       .filter(vendedor => vendedor.identification_number.toString().includes(valorFiltro))
@@ -104,7 +106,9 @@ export class PlanesDeVentaComponent implements OnInit {
   }
 
   _filtrarNombresProductos(value: string): string[] {
-    const valorFiltro = value?.toString().toLowerCase() || '';
+    if (!this.listaProductos) return [];
+
+    const valorFiltro = value?.toString() || '';
     return this.listaProductos
       .filter(producto => producto.name.toString().includes(valorFiltro))
       .map(producto => producto.name)
