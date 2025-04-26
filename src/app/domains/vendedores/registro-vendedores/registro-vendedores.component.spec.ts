@@ -633,6 +633,50 @@ describe('RegistroVendedoresComponent', () => {
     });
   });
 
+  describe('assignAction', () => {
+    it('should have correct icon and tooltip', () => {
+      const actionConfig = component.assignAction[0];
+      expect(actionConfig.icon).toBe('Asignar');
+      expect(actionConfig.tooltip).toBe('Asignar');
+
+      const getReq = httpMock.expectOne(apiUrlSellers);
+      getReq.flush({ sellers: [] });
+    });
+
+    it('should call asignarClienteAVendedor when vendedor is selected', () => {
+      const mockRow = { id: '123', name: 'Cliente1', identification_number: '12345647890', observations: 'No', user_id: 'fd6472db-cf25-48b2-b4ab-5e9978c878d5', email: 'customer@testmail.com' };
+      const mockVendedorId = '456';
+      component.idVendedorSeleccionado = mockVendedorId;
+      
+      spyOn(component, 'asignarClienteAVendedor');
+      
+      const action = component.assignAction[0].action;
+      action(mockRow);
+      
+      expect(component.asignarClienteAVendedor).toHaveBeenCalledWith(mockVendedorId, mockRow.id);
+
+      const getReq = httpMock.expectOne(apiUrlSellers);
+      getReq.flush({ sellers: [] });
+    });
+
+    it('should not call asignarClienteAVendedor and log error when no vendedor selected', () => {
+      const mockRow = { id: '123', name: 'Cliente1', identification_number: '12345647890', observations: 'No', user_id: 'fd6472db-cf25-48b2-b4ab-5e9978c878d5', email: 'customer@testmail.com' };
+      component.idVendedorSeleccionado = null;
+      
+      spyOn(component, 'asignarClienteAVendedor');
+      spyOn(console, 'error');
+      
+      const action = component.assignAction[0].action;
+      action(mockRow);
+      
+      expect(component.asignarClienteAVendedor).not.toHaveBeenCalled();
+      expect(console.error).toHaveBeenCalledWith('No vendedor selected');
+
+      const getReq = httpMock.expectOne(apiUrlSellers);
+      getReq.flush({ sellers: [] });
+    });
+  });
+
   describe('clearAll', () => {
     it('should reset the registroVendedoresForm', () => {
       component.registroVendedoresForm.patchValue({
