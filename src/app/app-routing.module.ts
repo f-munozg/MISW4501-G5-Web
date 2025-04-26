@@ -18,6 +18,7 @@ import { ConsultaProductoBodegaComponent } from './domains/inventarios/consulta-
 // Ventas y Vendedores
 import { ConsultaVentasComponent } from './domains/ventas/consulta-ventas/consulta-ventas.component';
 import { RegistroVendedoresComponent } from './domains/vendedores/registro-vendedores/registro-vendedores.component';
+import { PlanesDeVentaComponent } from './domains/ventas/planes-de-venta/planes-de-venta.component';
 
 // Testing
 import { TableTemplateComponent } from './shared/table-template/table-template.component';
@@ -37,7 +38,8 @@ const routes: Routes = [
   {path: 'inventario/consulta_producto_bodega', component: ConsultaProductoBodegaComponent},
   {path: 'vendedores/registro', component: RegistroVendedoresComponent,
     children: [{ path: 'view', component: RegistroVendedoresComponent }]
-  }
+  },
+  {path: 'ventas/planes_de_venta', component: PlanesDeVentaComponent},
 ];
 
 @NgModule({
