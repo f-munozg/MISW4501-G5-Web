@@ -45,11 +45,13 @@
             <h3>Período</h3>
             <mat-form-field class="periodoFormField">
               <mat-label>Seleccione Período</mat-label>
-              <input 
-                type="text" 
-                matInput
-                formControlName="fieldPeriodo"
-                >
+                <mat-select formControlName="fieldPeriodo">
+                  <mat-option *ngFor="let periodoType of periodoTypes"
+                      [value]="periodoType">
+                      {{PeriodoType2LabelMapping[periodoType]}}
+                  </mat-option>
+                </mat-select>
+
             </mat-form-field>
           </div>
           <div class="grid-item-definicionPlanDeVentasBtnsContainer">
@@ -58,11 +60,12 @@
             </div>
             <div class="grid-item-definicionPlanDeVentasFormBtns">
               <div class="grid-item-cancelarBtnDiv">
-                <button mat-flat-button class="cancelarBtn">Cancelar</button>
+                <button mat-flat-button class="cancelarBtn" (click)="clearAll()">Cancelar</button>
               </div>
               <div class="grid-item-guardarBtnDiv">
                 <button mat-flat-button class="guardarBtn" 
-                        type="submit">Guardar</button>
+                        type="submit"
+                        [disabled]="definicionPlanDeVentasForm.invalid">Guardar</button>
               </div>
             </div>
           </div>

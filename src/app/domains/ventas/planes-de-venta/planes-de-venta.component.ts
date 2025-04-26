@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Vendedor } from '../../vendedores/vendedores.model';
 import { Observable } from 'rxjs';
-import { Producto } from '../ventas.model';
+import { PeriodoPlanVentas, PeriodoType2LabelMapping, Producto } from '../ventas.model';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
@@ -19,6 +19,10 @@ export class PlanesDeVentaComponent implements OnInit {
   listaProductos: Producto[] = [];
 
   vendedoresFiltrados!: Observable<string[]>; // Revisar si es string
+  productosFiltrados!: Observable<string[]>;  // Revisar si es string
+
+  public PeriodoType2LabelMapping = PeriodoType2LabelMapping;
+  public periodoTypes = Object.values(PeriodoPlanVentas);
 
   constructor(
     private formBuilder: FormBuilder,
@@ -44,4 +48,34 @@ export class PlanesDeVentaComponent implements OnInit {
     });
   }
 
+  autoCompletarVendedor(){
+
+  }
+
+  _filtrarNumerosIdentificacion(){
+
+  }
+
+  cargarVendedores(){
+
+  }
+
+  autoCompletarProductos(){
+
+  }
+
+  _filtrarNombresProductos(){
+    
+  }
+
+  cargarProductos(){
+
+  }
+
+  clearAll(): void {
+    this.definicionPlanDeVentasForm.reset();
+    this.definicionPlanDeVentasForm.markAsPristine();
+    this.definicionPlanDeVentasForm.markAsUntouched();
+    this.definicionPlanDeVentasForm.setErrors(null);
+  }
 }
