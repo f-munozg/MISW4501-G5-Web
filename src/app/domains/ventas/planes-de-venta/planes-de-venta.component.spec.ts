@@ -5,11 +5,14 @@ import { DebugElement } from '@angular/core';
 
 import { PlanesDeVentaComponent } from './planes-de-venta.component';
 import { VentasModule } from '../ventas.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment'
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlanesDeVentaService } from './planes-de-venta.service';
+import { Vendedor } from '../../vendedores/vendedores.model';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Producto } from '../ventas.model';
 
 describe('PlanesDeVentaComponent', () => {
   let component: PlanesDeVentaComponent;
@@ -99,6 +102,105 @@ describe('PlanesDeVentaComponent', () => {
     });
   });
 
+  describe('conVendedorSeleccionado', () => {
+    it('should set idVendedorSeleccionado and update form control value', () => {
+      const mockVendedor: Vendedor = { 
+        id: 'b8ad058bca7d-0f3f-413d-89e1-e5924f2e', 
+        name: 'Vendedor1',
+        identification_number: 1025485640,
+        email: 'testuser1@testmail.com',
+        address: 'Avenida Falsa 123',
+        phone: '7540563',
+        zone: 'NORTE',
+        user_id: 'fd6472db-cf25-48b2-b4ab-5e9978c878d5'
+      };
+      const mockEvent = { 
+        option: { value: mockVendedor } 
+      } as MatAutocompleteSelectedEvent;
+      
+      const formControl = component.definicionPlanDeVentasForm.get('fieldVendedor') as FormControl;
+      spyOn(formControl, 'setValue');
+
+      component.conVendedorSeleccionado(mockEvent);
+  
+      expect(component.idVendedorSeleccionado).toBe('b8ad058bca7d-0f3f-413d-89e1-e5924f2e');
+      expect(formControl.setValue).toHaveBeenCalledWith(1025485640);
+
+      const reqGetSellers = httpMock.expectOne(apiUrlSellers);
+      reqGetSellers.flush([]);
+  
+      const reqGetProducts = httpMock.expectOne(apiUrlProducts);
+      reqGetProducts.flush([]);
+    });
+  
+    it('should handle undefined option value safely', () => {
+      const mockEvent = { 
+        option: { value: null } 
+      } as MatAutocompleteSelectedEvent;
+  
+      component.conVendedorSeleccionado(mockEvent);
+  
+      expect(component.idVendedorSeleccionado).toBeNull();
+
+      const reqGetSellers = httpMock.expectOne(apiUrlSellers);
+      reqGetSellers.flush([]);
+  
+      const reqGetProducts = httpMock.expectOne(apiUrlProducts);
+      reqGetProducts.flush([]);
+    });
+  });
+
+  describe('conProductoSeleccionado', () => {
+    it('should set idProductoSeleccionado and update form control value', () => {
+      const mockProducto: Producto = { 
+        id: '48b2b4ab-cf25-48b2-b4ab-5e9978c878d5',
+        name: 'Test Product',
+        sku: 'sku1234',
+        unit_value: 1500,
+        storage_conditions: 'Prueba',
+        product_features: 'Prueba',
+        provider_id: 'e5924f2e-0f3f-413d-89e1-b8ad058bca7d', 
+        estimated_delivery_time: '2025-05-02', 
+        photo: 'zhzrdhdhw',
+        description: 'Prueba',
+        category: 'LIMPIEZA'
+      };
+      const mockEvent = { 
+        option: { value: mockProducto } 
+      } as MatAutocompleteSelectedEvent;
+      
+      const formControl = component.definicionPlanDeVentasForm.get('fieldProducto') as FormControl;
+      spyOn(formControl, 'setValue');
+
+      component.conProductoSeleccionado(mockEvent);
+  
+      expect(component.idProductoSeleccionado).toBe('48b2b4ab-cf25-48b2-b4ab-5e9978c878d5');
+      expect(formControl.setValue).toHaveBeenCalledWith('Test Product');
+
+      const reqGetSellers = httpMock.expectOne(apiUrlSellers);
+      reqGetSellers.flush([]);
+  
+      const reqGetProducts = httpMock.expectOne(apiUrlProducts);
+      reqGetProducts.flush([]);
+    });
+  
+    it('should handle undefined option value safely', () => {
+      const mockEvent = { 
+        option: { value: null } 
+      } as MatAutocompleteSelectedEvent;
+  
+      component.conProductoSeleccionado(mockEvent);
+  
+      expect(component.idProductoSeleccionado).toBeNull();
+
+      const reqGetSellers = httpMock.expectOne(apiUrlSellers);
+      reqGetSellers.flush([]);
+  
+      const reqGetProducts = httpMock.expectOne(apiUrlProducts);
+      reqGetProducts.flush([]);
+    });
+  });
+
   describe('crearPlanDeVentas', () => {
     it('should create sales plan successfully and clear form', () => {
       component.definicionPlanDeVentasForm.get('fieldMeta')?.setValue(1000);
@@ -123,8 +225,8 @@ describe('PlanesDeVentaComponent', () => {
         product_features: 'Prueba',
         provider_id: 'e5924f2e-0f3f-413d-89e1-b8ad058bca7d', 
         estimated_delivery_time: '2025-05-02', 
-        photo: 'zhzrdhdhw', 
-        description: 'Prueba', 
+        photo: 'zhzrdhdhw',
+        description: 'Prueba',
         category: 'LIMPIEZA'
       }];
       
@@ -135,9 +237,9 @@ describe('PlanesDeVentaComponent', () => {
       const req = httpMock.expectOne(environment.apiUrlSales + '/sales-plans/add');
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual({
-        seller_id: 'b8ad058bca7d-0f3f-413d-89e1-e5924f2e',
+        seller_id: component.idVendedorSeleccionado,
         target: 1000,
-        product_id: '48b2b4ab-cf25-48b2-b4ab-5e9978c878d5',
+        product_id: component.idProductoSeleccionado,
         period: 'ANUAL'
       });
       

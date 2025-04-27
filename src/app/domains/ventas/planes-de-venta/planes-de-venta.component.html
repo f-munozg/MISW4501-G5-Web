@@ -18,9 +18,9 @@
                 formControlName="fieldVendedor"
                 [matAutocomplete]="autoVendedor"
               >
-              <mat-autocomplete #autoVendedor="matAutocomplete">
-                <mat-option *ngFor="let identification_number of vendedoresFiltrados | async" [value]="identification_number">
-                  {{ identification_number }}
+              <mat-autocomplete #autoVendedor="matAutocomplete" (optionSelected)="conVendedorSeleccionado($event)">
+                <mat-option *ngFor="let vendedor of vendedoresFiltrados | async" [value]="vendedor">
+                  {{ vendedor.identification_number }}
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
@@ -46,9 +46,9 @@
                 formControlName="fieldProducto"
                 [matAutocomplete]="autoProducto"
               >
-              <mat-autocomplete #autoProducto="matAutocomplete">
-                <mat-option *ngFor="let name of productosFiltrados | async" [value]="name">
-                  {{ name }}
+              <mat-autocomplete #autoProducto="matAutocomplete" (optionSelected)="conProductoSeleccionado($event)">
+                <mat-option *ngFor="let producto of productosFiltrados | async" [value]="producto">
+                  {{ producto.name }}
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
