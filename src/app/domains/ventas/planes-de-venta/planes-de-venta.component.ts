@@ -5,6 +5,7 @@ import { finalize, map, Observable, startWith } from 'rxjs';
 import { PeriodoPlanVentas, PeriodoType2LabelMapping, Producto } from '../ventas.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlanesDeVentaService } from './planes-de-venta.service';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 
 @Component({
@@ -19,8 +20,8 @@ export class PlanesDeVentaComponent implements OnInit {
   listaVendedores: Vendedor[] = [];
   listaProductos: Producto[] = [];
 
-  vendedoresFiltrados!: Observable<number[]>;
-  productosFiltrados!: Observable<string[]>;
+  vendedoresFiltrados!: Observable<Vendedor[]>;
+  productosFiltrados!: Observable<Producto[]>;
 
   isSubmitting: boolean = true;
   isRefreshing: boolean = true;
@@ -70,15 +71,26 @@ export class PlanesDeVentaComponent implements OnInit {
         )
   }
 
-  _filtrarNumerosIdentificacion(value: string): number[] {
+  _filtrarNumerosIdentificacion(value: string): Vendedor[] {
     if (!this.listaVendedores) return [];
 
     const valorFiltro = value?.toString().toLowerCase() || '';
     return this.listaVendedores
       .filter(vendedor => vendedor.identification_number.toString().includes(valorFiltro))
-      .map(vendedor => vendedor.identification_number)
   }
 
+  conVendedorSeleccionado(event: MatAutocompleteSelectedEvent): void {
+    const vendedor = event.option?.value as Vendedor | undefined;
+    if (!vendedor) {
+      this.idVendedorSeleccionado = null;
+      this.definicionPlanDeVentasForm.get('fieldVendedor')?.setValue('');
+      return;
+    }
+    
+    this.idVendedorSeleccionado = vendedor.id;
+    this.definicionPlanDeVentasForm.get('fieldVendedor')?.setValue(vendedor.identification_number);
+  }
+  
   cargarVendedores(callback?: () => void): void{
     this.isRefreshing = true;
 
@@ -105,13 +117,24 @@ export class PlanesDeVentaComponent implements OnInit {
         )
   }
 
-  _filtrarNombresProductos(value: string): string[] {
+  _filtrarNombresProductos(value: string): Producto[] {
     if (!this.listaProductos) return [];
 
     const valorFiltro = value?.toString() || '';
     return this.listaProductos
       .filter(producto => producto.name.toString().includes(valorFiltro))
-      .map(producto => producto.name)
+  }
+
+  conProductoSeleccionado(event: MatAutocompleteSelectedEvent): void {
+    const producto = event.option?.value as Producto | undefined;
+    if (!producto) {
+      this.idProductoSeleccionado = null;
+      this.definicionPlanDeVentasForm.get('fieldProducto')?.setValue('');
+      return;
+    }
+    
+    this.idProductoSeleccionado = producto.id;
+    this.definicionPlanDeVentasForm.get('fieldProducto')?.setValue(producto.name);
   }
 
   cargarProductos(callback?: () => void): void{
@@ -134,13 +157,10 @@ export class PlanesDeVentaComponent implements OnInit {
   }
 
   crearPlanDeVentas(): void {
-    const vendedor = this.listaVendedores.find(v => v.id);
-    const producto = this.listaProductos.find(p => p.id);
-
     const formData = {
-      seller_id: vendedor?.id,
+      seller_id: this.idVendedorSeleccionado,
       target: this.definicionPlanDeVentasForm.get('fieldMeta')?.value,
-      product_id: producto?.id,
+      product_id: this.idProductoSeleccionado,
       period: this.definicionPlanDeVentasForm.get('fieldPeriodo')?.value
     }
 
