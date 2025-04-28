@@ -1,0 +1,57 @@
+<app-default-window>
+  <main class="cargaMasivaProductosContainer">
+    <div class="cargaMasivaProductosHeaderGrid">
+      <h2 class="grid-item-cargaMasivaProductosTitulo">
+        Registro Masivo de Productos
+      </h2>
+      <div class="grid-item-cargaIndividualBtn">
+        <button mat-flat-button class="CargaIndividualBtn" routerLink="/productos/carga_producto">Carga Individual</button>
+      </div>
+    </div>
+    <form [formGroup]="cargaMasivaProductosForm" (ngSubmit)="onSubmit()">
+      <div class="cargaMasivaProductosGrid">
+        <div class="grid-item-fabricanteForm">
+          <h3 class="fabricanteHeader">Fabricante:</h3>
+          <mat-form-field class="fabricanteFormField">
+            <mat-label>Escoja el Fabricante</mat-label>
+            <mat-select formControlName="fieldFabricante">
+              <mat-option *ngFor="let fabricante of listaFabricantes"
+                  [value]="fabricante.id">
+                  {{fabricante.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>  
+        <div class="grid-item-cargaMasivaProductosDragDrop"
+              [class.drag-over]="isDragOver"
+              (drop)="onDrop($event)"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)">
+          <img class="grid-item-uploadIcon" src="../../../assets/icons/Upload_icon.png">
+          <h3>Selecciona o arrastra tu archivo aquí</h3>
+          <p>Aceptamos formatos CSV y Excel</p>
+          <div class="grid-item-buscarArchivoBtn">
+            <input type="file" #fileInput 
+                    (change)="onFileSelected($event)" 
+                    accept=".csv,.xlsx,.xls"
+                    style="display: none">
+            <button mat-flat-button class="BuscarArchivoBtn" (click)="fileInput.click()">
+              {{ selectedFile ? selectedFile.name : 'Subir Archivo' }}
+            </button>
+            <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="cargaMasivaProductosBtnsGrid">
+        <div class="grid-item-CancelarBtnDiv">
+          <button mat-flat-button type="button" class="CancelarBtn" (click)="clearAll()">Cancelar</button>
+        </div>
+        <div class="grid-item-GuardarBtnDiv">
+          <button mat-flat-button type="submit" [disabled]="!cargaMasivaProductosForm.valid" class="GuardarBtn">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </form>
+  </main>
+</app-default-window>  

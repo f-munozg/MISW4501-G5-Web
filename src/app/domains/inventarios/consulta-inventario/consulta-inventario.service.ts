@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiResponse, InventoryItem, Fabricante, FabricantesResponse } from '../inventario.model';
-
+import { environment } from '../../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +12,13 @@ export class ConsultaInventarioService {
   constructor(private http: HttpClient) { }
 
   getListaFabricantes() {
-    return this.http.get<FabricantesResponse>('https://backend-providers-143596276526.us-central1.run.app/providers'); // Aquí va la URL del endpoint de Mateo G.
+    return this.http.get<FabricantesResponse>(environment.apiUrlProviders + `/providers`);
   }
 
   getData(formData: any):
   Observable<ApiResponse<InventoryItem>>{
-    let apiUrl = `https://backend-stock-143596276526.us-central1.run.app/stock/query`
+    let apiUrl = environment.apiUrlStock + `/stock/query`
+    const params = new URLSearchParams();
 
     let producto = formData.fieldProducto;
     let fabricante = formData.fieldFabricante;
@@ -27,17 +28,19 @@ export class ConsultaInventarioService {
       'Content-Type': 'application/json'
     });
 
-    apiUrl += `?product=${producto}`
-
-    if ( fabricante.value != ''){
-      apiUrl += `&provider=${fabricante}`
-    } 
-    
-    if ( categoria.value != '') {
-      apiUrl += `&category=${categoria}`
+    if (producto) {
+      params.append('product', producto);
     }
 
-    return this.http.get<ApiResponse<InventoryItem>>(apiUrl, {headers});
+    if (fabricante) {
+      params.append('provider', fabricante);
+    }
+
+    if (categoria) {
+      params.append('category', categoria);
+    }
+
+    return this.http.get<ApiResponse<InventoryItem>>(`${apiUrl}?${params.toString()}`, {headers});
   }
 
 }

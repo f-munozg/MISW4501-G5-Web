@@ -15,6 +15,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatSnackBarModule } from '@angular/material/snack-bar'
 
 const materialModules = [
   MatFormFieldModule,
@@ -30,7 +33,10 @@ const materialModules = [
   MatTableModule,
   MatPaginatorModule,
   MatTooltipModule,
-  MatSelectModule
+  MatSelectModule,
+  MatTabsModule,
+  MatAutocompleteModule,
+  MatSnackBarModule
 ]
 
 @NgModule({

@@ -1,11 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { of, throwError, Observable } from 'rxjs';
 import { CargaProductoService } from './carga-producto.service';
+import { environment } from '../../../../environments/environment'
 
 describe('Service Tests', () => {
   let service: CargaProductoService; 
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
-  let apiUrl = 'https://backend-products-143596276526.us-central1.run.app/products/add';
+  let apiUrl = environment.apiUrlProducts + `/products/add`;
 
   beforeEach(() => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);

@@ -23,15 +23,15 @@ export interface ProductInventoryItem {
 }
 
 export enum CategoriaProductos {
-    FARMACIA = "Farmacia",
-    ALIMENTACIÓN = "Alimentación",
-    LIMPIEZA = "Limpieza",
-    ELECTRÓNICA = "Electrónica",
-    ROPA = "Ropa",
-    HERRAMIENTAS = "Herramientas",
-    BELLEZA = "Belleza",
-    JUGUETE = "Juguete",
-    HOGAR = "Hogar",
+    FARMACIA = "FARMACIA",
+    ALIMENTACIÓN = "ALIMENTACIÓN",
+    LIMPIEZA = "LIMPIEZA",
+    ELECTRÓNICA = "ELECTRÓNICA",
+    ROPA = "ROPA",
+    HERRAMIENTAS = "HERRAMIENTAS",
+    BELLEZA = "BELLEZA",
+    JUGUETE = "JUGUETE",
+    HOGAR = "HOGAR",
 }
 
 // Record type annotation para garantizar que todos los valores 
@@ -64,4 +64,44 @@ export interface Bodega {
 
 export interface BodegasResponse{
   Warehouses: Bodega[];
+}
+
+export interface Producto {
+  id: string;
+  sku: string;
+  name: string;
+  unit_value: number;
+  storage_conditions: string;
+  product_features: string;
+  provider_id: string;
+  estimated_delivery_time: string;
+  photo: string;
+  description: string;
+  category: string;
+}
+
+export interface ProductosResponse{
+  products: Producto[];
+}
+
+export interface Venta {
+  id: string;
+  name: string;
+  total_quantity: number;
+  unit_value: number;
+  purchase_date: string;
+}
+
+export enum PeriodoPlanVentas {
+    TRIMESTRAL = "TRIMESTRAL",
+    SEMESTRAL = "SEMESTRAL",
+    ANUAL = "ANUAL",
+}
+
+// Record type annotation para garantizar que todos los valores 
+// del enum están presentes en el mapeo al dropdown
+export const PeriodoType2LabelMapping: Record<PeriodoPlanVentas, string> = {
+  [PeriodoPlanVentas.TRIMESTRAL]: "Trimestral",
+  [PeriodoPlanVentas.SEMESTRAL]: "Semestral",
+  [PeriodoPlanVentas.ANUAL]: "Anual",
 }
