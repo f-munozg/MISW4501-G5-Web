@@ -6,6 +6,7 @@ import { DefaultWindowComponent } from './shared/default-window/default-window.c
 
 // Fabricantes
 import { RegistroFabricantesComponent } from './domains/fabricantes/registro-fabricantes/registro-fabricantes.component';
+import { GestionPortafolioComponent } from './domains/fabricantes/gestion-portafolio/gestion-portafolio.component';
 
 // Productos
 import { CargaProductoComponent } from './domains/productos/carga-producto/carga-producto.component';
@@ -40,6 +41,7 @@ const routes: Routes = [
     children: [{ path: 'view', component: RegistroVendedoresComponent }]
   },
   {path: 'ventas/planes_de_venta', component: PlanesDeVentaComponent},
+  {path: 'fabricantes/portafolio', component: GestionPortafolioComponent},
 ];
 
 @NgModule({

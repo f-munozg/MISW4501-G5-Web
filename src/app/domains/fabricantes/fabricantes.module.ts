@@ -6,12 +6,15 @@ import { HttpClientModule } from '@angular/common/http'
 
 import { TableTemplateComponent } from 'src/app/shared/table-template/table-template.component';
 import { DefaultWindowComponent } from 'src/app/shared/default-window/default-window.component';
-import { RegistroFabricantesComponent } from './registro-fabricantes/registro-fabricantes.component';
 
+import { RegistroFabricantesComponent } from './registro-fabricantes/registro-fabricantes.component';
+import { GestionPortafolioComponent } from './gestion-portafolio/gestion-portafolio.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
-    RegistroFabricantesComponent
+    RegistroFabricantesComponent,
+    GestionPortafolioComponent
   ],
   imports: [
     CommonModule,
@@ -19,7 +22,8 @@ import { RegistroFabricantesComponent } from './registro-fabricantes/registro-fa
     DefaultWindowComponent,
     ReactiveFormsModule,
     TableTemplateComponent,
-    HttpClientModule
+    HttpClientModule,
+    RouterModule.forRoot([]),
   ]
 })
 export class FabricantesModule { }
