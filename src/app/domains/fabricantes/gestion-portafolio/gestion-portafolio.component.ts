@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GestionPortafolioService } from './gestion-portafolio.service';
 import { Fabricante, FabricantesResponse } from '../../productos/producto.model';
+import { Router, ActivatedRoute } from '@angular/router';
 
 export interface TableRow {
   id: string;
@@ -24,8 +24,8 @@ export interface TableRow {
   styleUrls: ['./gestion-portafolio.component.css']
 })
 export class GestionPortafolioComponent implements OnInit {
-  gestionPortafolioForm!: FormGroup;
   listaFabricantes: Fabricante[] = [];
+  idFabricanteSeleccionado: string = '';
 
   tableData: TableRow[] = [];
 
@@ -51,6 +51,11 @@ export class GestionPortafolioComponent implements OnInit {
 
     assignAction = [
       {
+        icon: 'Editar',
+        tooltip: 'Editar',
+        action: (row: TableRow) => {}
+      },
+      {
         icon: 'Eliminar',
         tooltip: 'Eliminar',
         action: (row: TableRow) => {}
@@ -58,15 +63,12 @@ export class GestionPortafolioComponent implements OnInit {
     ]
 
   constructor(
-    private formBuilder: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
     private apiService: GestionPortafolioService
   ) { }
 
   ngOnInit() {
-    this.gestionPortafolioForm = this.formBuilder.group({
-      fieldFabricante: ['', Validators.required]
-    });
-
     this.apiService.getListaFabricantes().subscribe({
       next: (response: FabricantesResponse) => {
         this.listaFabricantes = response.providers;
@@ -74,6 +76,19 @@ export class GestionPortafolioComponent implements OnInit {
       error: (err) => {
         console.error('Error loading providers:', err);
       }
+    });
+
+    this.route.queryParams.subscribe(params => {
+      if (params['provider_id']) {
+        this.idFabricanteSeleccionado = params['provider_id'];
+      }
+    })
+  }
+
+  conFabricanteSeleccionado(provider_id: string){
+    this.router.navigate([], {
+      queryParams: { provider_id },
+      queryParamsHandling: 'merge'
     });
   }
 
