@@ -65,3 +65,15 @@ export interface Bodega {
 export interface BodegasResponse{
   Warehouses: Bodega[];
 }
+
+export enum TipoMovimiento {
+  INGRESO = "INGRESO",
+  SALIDA = "SALIDA",
+}
+
+// Record type annotation para garantizar que todos los valores 
+// del enum están presentes en el mapeo al dropdown
+export const MovementType2LabelMapping: Record<TipoMovimiento, string> = {
+  [TipoMovimiento.INGRESO]: "Ingreso",
+  [TipoMovimiento.SALIDA]: "Salida",
+}

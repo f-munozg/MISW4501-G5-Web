@@ -14,6 +14,7 @@ import { CargaMasivaProductosComponent } from './domains/productos/carga-masiva-
 // Inventario
 import { ConsultaInventarioComponent } from './domains/inventarios/consulta-inventario/consulta-inventario.component';
 import { ConsultaProductoBodegaComponent } from './domains/inventarios/consulta-producto-bodega/consulta-producto-bodega.component';
+import { RegistroMovimientoInventarioComponent } from './domains/inventarios/registro-movimiento-inventario/registro-movimiento-inventario.component';
 
 // Ventas y Vendedores
 import { ConsultaVentasComponent } from './domains/ventas/consulta-ventas/consulta-ventas.component';
@@ -40,6 +41,7 @@ const routes: Routes = [
     children: [{ path: 'view', component: RegistroVendedoresComponent }]
   },
   {path: 'ventas/planes_de_venta', component: PlanesDeVentaComponent},
+  {path: 'inventario/movimientos', component: RegistroMovimientoInventarioComponent},
 ];
 
 @NgModule({
