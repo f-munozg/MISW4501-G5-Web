@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Bodega, MovementType2LabelMapping, TipoMovimiento } from '../inventario.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Producto } from '../../ventas/ventas.model';
+import { RegistroMovimientoInventarioService } from './registro-movimiento-inventario.service';
+import { Router } from '@angular/router';
 
 export interface TableRow{
   product_id: string,
@@ -18,7 +22,10 @@ export interface TableRow{
   styleUrls: ['./registro-movimiento-inventario.component.css']
 })
 export class RegistroMovimientoInventarioComponent implements OnInit {
+  registroMovimientoInventarioForm!: FormGroup;
 
+  listaUsuarios: any[] = [];
+  listaProductos: Producto[] = [];
   listaBodegas: Bodega[] = [];
 
   public MovementType2LabelMapping = MovementType2LabelMapping;
@@ -57,13 +64,35 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
       header: 'Responsable', 
       cell: (item: any) => item.user.toString() 
     }
-  ]
+  ];
 
   visibleColumns = ['timestamp','product_id','warehouse_id','movement_type','number','user'];
 
-  constructor() { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private apiService: RegistroMovimientoInventarioService,
+    private router: Router,
+  ) { }
 
-  ngOnInit() {
+  initializeForms(): void {
+    this.registroMovimientoInventarioForm = this.formBuilder.group({
+      fieldProducto: ['', Validators.required],
+      fieldBodega: ['', Validators.required],
+      fieldCantidad: ['', [Validators.required, Validators.min(1)]],
+      fieldTipoMovimiento: ['', Validators.required],
+      fieldResponsable: ['', Validators.required],
+    });
   }
 
+  ngOnInit() {
+    this.initializeForms();
+  }
+
+  onSubmit() {
+    
+  }
+
+  clearAll() {
+
+  }
 }

@@ -5,65 +5,88 @@
         Movimientos de Inventarios
       </h2>
     </div>
-    <form>
-      <div class="grid-item-productoForm">
-        <h3>Número de Identificación</h3>
-        <mat-form-field class="productoFormField" appearance="fill">
-          <mat-label>Número de Identificación</mat-label>
-          <input 
-            type="text" 
-            matInput
-            id="consultaVendedores-fieldproducto" 
-            [matAutocomplete]="auto"
-          >
-          <mat-autocomplete #auto="matAutocomplete" >
-            <mat-option>
-
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-      </div>
-      <div class="grid-item-cantidadForm">
-        <h3>Cantidad</h3>
-        <mat-form-field class="cantidadFormField">
-          <mat-label>Unidades movidas</mat-label>
-          <input 
-            type="number" 
-            matInput
+    <form [formGroup]="registroMovimientoInventarioForm" (ngSubmit)="onSubmit()">
+      <div class="registroMovimientoInventarioGrid">
+        <div class="grid-item-productoForm">
+          <h3>Producto</h3>
+          <mat-form-field class="productoFormField" appearance="fill">
+            <mat-label>Escoja el producto</mat-label>
+            <input 
+              type="text" 
+              matInput
+              formControlName="fieldProducto"
+              id="consultaVendedores-fieldproducto" 
+              [matAutocomplete]="auto"
             >
-        </mat-form-field>
-      </div>
-      <!-- Aquí va div de Responsable -->
-      <div class="grid-item-bodegaForm">
-        <h3>Bodega</h3>
-        <mat-form-field class="bodegaFormField">
-          <mat-label>Escoja la Bodega</mat-label>
-          <mat-select>
-            <mat-option *ngFor="let bodega of listaBodegas" 
-              [value]="bodega.id">
-              {{ bodega.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="grid-item-tipoMovimientoForm">
-        <h3>Tipo de Movimiento</h3>
-        <mat-form-field class="tipoMovimientoFormField">
-          <mat-label>Escoja la Zona</mat-label>
-          <mat-select>
-            <mat-option *ngFor="let tipoMovimiento of tiposMovimiento"
-                [value]="tipoMovimiento">
-                {{MovementType2LabelMapping[tipoMovimiento]}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="tipoMovimientoBtnsContainer">
-        <div class="grid-item-guardarBtnDiv">
-          <button mat-flat-button class="guardarBtn" 
-                  type="submit" 
-                  >Guardar
-          </button>
+            <mat-autocomplete #auto="matAutocomplete" >
+              <mat-option *ngFor="let producto of listaProductos"
+                [value]="producto.id">
+                {{producto.name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-item-bodegaForm">
+          <h3>Bodega</h3>
+          <mat-form-field class="bodegaFormField">
+            <mat-label>Escoja la Bodega</mat-label>
+            <mat-select formControlName="fieldBodega">
+              <mat-option *ngFor="let bodega of listaBodegas" 
+                [value]="bodega.id">
+                {{ bodega.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-item-cantidadForm">
+          <h3>Cantidad</h3>
+          <mat-form-field class="cantidadFormField">
+            <mat-label>Unidades movidas</mat-label>
+            <input 
+              type="number"
+              formControlName="fieldCantidad" 
+              matInput
+              >
+          </mat-form-field>
+        </div> 
+
+        <div class="grid-item-tipoMovimientoForm">
+          <h3>Tipo de Movimiento</h3>
+          <mat-form-field class="tipoMovimientoFormField">
+            <mat-label>Escoja la Zona</mat-label>
+            <mat-select formControlName="fieldTipoMovimiento">
+              <mat-option *ngFor="let tipoMovimiento of tiposMovimiento"
+                  [value]="tipoMovimiento">
+                  {{MovementType2LabelMapping[tipoMovimiento]}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-item-responsableForm">
+          <h3>Responsable</h3>
+          <mat-form-field class="responsableFormField">
+            <mat-label>Escoja el Responsable</mat-label>
+            <mat-select formControlName="fieldResponsable">
+              <mat-option *ngFor="let user of listaUsuarios" 
+                [value]="user.id">
+                {{ user.username }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="registroMovimientoInventarioFormBtnsContainer">
+          <div class="grid-item-cancelarBtnDiv">
+            <button mat-flat-button class="cancelarBtn" (click)="clearAll()">Cancelar</button>
+          </div>
+          <div class="grid-item-guardarBtnDiv">
+            <button mat-flat-button class="guardarBtn" 
+                    type="submit" 
+                    >Guardar
+            </button>
+          </div>
         </div>
       </div>
     </form>
@@ -71,6 +94,11 @@
       <div class="grid-item-trazabilidadAuditoriaBtnDiv">
         <button mat-flat-button class="trazabilidadAuditoriaBtn">Trazabilidad y Auditoría</button>
       </div>
+    </div>
+    <div class="movimientosRecientesTableHeader">
+      <h2 class="grid-item-movimientosRecientesTableHeader">
+        Movimientos de Inventarios
+      </h2>
     </div>
     <div class="movimientosRecientesTableGrid">
       <app-table-template
