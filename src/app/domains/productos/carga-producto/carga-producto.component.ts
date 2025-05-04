@@ -28,7 +28,7 @@ export class CargaProductoComponent implements OnInit {
     this.cargaProductoForm = this.formBuilder.group({
       fieldCodigo: ['', Validators.required],
       fieldFabricante: ['', Validators.required],
-      fieldValor: ['', Validators.required],
+      fieldValor: ['', [Validators.required, Validators.min(0)]],
       fieldFechaVencimiento: [null, Validators.required],
       fieldCondicionesAlmacenamiento: ['', Validators.required],
       fieldCategoria: ['', Validators.required],
