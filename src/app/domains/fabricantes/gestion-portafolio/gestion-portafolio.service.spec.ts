@@ -11,10 +11,6 @@ describe('Service: GestionPortafolio', () => {
   let service: GestionPortafolioService;
   let httpMock: HttpTestingController;
 
-  const apiUrl = environment.apiUrlSales + `/sales-plans/add`;
-  const apiUrlSellers = environment.apiUrlSellers + `/sellers`;
-  const apiUrlProducts = environment.apiUrlProducts + `/products`;
-
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule, HttpClientTestingModule],
@@ -31,5 +27,6 @@ describe('Service: GestionPortafolio', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+
   });
 });

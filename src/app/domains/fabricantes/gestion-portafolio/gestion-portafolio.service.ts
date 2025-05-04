@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FabricantePortafolioResponse, FabricantesResponse } from '../../fabricantes/fabricantes.model';
 import { environment } from '../../../../environments/environment'
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,8 @@ export class GestionPortafolioService {
 
   constructor(private http: HttpClient) { }
 
-  getListaFabricantes() {
+  getListaFabricantes():
+  Observable<FabricantesResponse> {
     return this.http.get<FabricantesResponse>(environment.apiUrlProviders + `/providers`);
   }
 
