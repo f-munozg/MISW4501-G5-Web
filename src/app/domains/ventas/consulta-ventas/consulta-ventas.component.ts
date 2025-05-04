@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FileType2LabelMapping, CategoriaProductos, Fabricante, FabricantesResponse, Producto, ProductosResponse, Venta } from '../ventas.model';
+import { FileType2LabelMapping, CategoriaProductos, Producto, ProductosResponse } from '../../productos/producto.model';
+import { Fabricante, FabricantesResponse } from '../../fabricantes/fabricantes.model';
+import { Venta } from '../ventas.model';
 import { ConsultaVentasService } from './consulta-ventas.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { timestamp } from 'rxjs';
 
 export interface TableRow {
   id: string;

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiResponse, Bodega, BodegasResponse, ProductInventoryItem } from '../inventario.model'
+import { ApiResponse, ProductInventoryItem } from '../inventario.model'
+import { Bodega, BodegasResponse } from '../../bodegas/bodegas.model';
 import { ConsultaProductoBodegaService } from './consulta-producto-bodega.service';
 import { ActivatedRoute, Router } from '@angular/router';
 

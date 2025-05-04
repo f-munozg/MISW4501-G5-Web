@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CargaProductoService } from './carga-producto.service';
-import { FileType2LabelMapping, CategoriaProductos, Fabricante, FabricantesResponse } from '../producto.model';
+import { FileType2LabelMapping, CategoriaProductos } from '../producto.model';
+import { Fabricante, FabricantesResponse } from '../../fabricantes/fabricantes.model';
 
 @Component({
   selector: 'app-carga-producto',

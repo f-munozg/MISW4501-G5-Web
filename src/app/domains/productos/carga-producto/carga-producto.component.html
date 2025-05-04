@@ -86,7 +86,7 @@
                 (change)="onFileSelected($event)" 
                 accept="image/*" 
                 style="display: none">
-        <button mat-flat-button class="AdjuntarFotoBtn" (click)="fileInput.click()">
+        <button mat-flat-button type="button" class="AdjuntarFotoBtn" (click)="fileInput.click()">
           {{ selectedFile ? selectedFile.name : 'Subir Imagen' }}
         </button>
       </div>

@@ -8,7 +8,7 @@ import { InventariosModule } from '../inventarios.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { CategoriaProductos } from '../inventario.model';
+import { CategoriaProductos } from '../../productos/producto.model';
 import { ConsultaInventarioService } from './consulta-inventario.service';
 import { environment } from '../../../../environments/environment'
 

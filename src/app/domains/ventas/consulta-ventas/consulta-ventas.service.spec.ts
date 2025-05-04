@@ -4,7 +4,8 @@ import { TestBed, waitForAsync, inject } from '@angular/core/testing';
 import { ConsultaVentasService } from './consulta-ventas.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { environment } from '../../../../environments/environment'
-import { CategoriaProductos, Venta } from '../ventas.model';
+import { Venta } from '../ventas.model';
+import { CategoriaProductos } from '../../productos/producto.model';
 
 describe('Service: ConsultaVentas', () => {
   let service: ConsultaVentasService;

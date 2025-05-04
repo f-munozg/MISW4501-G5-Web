@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ApiResponse, BodegasResponse, ProductInventoryItem } from '../inventario.model';
+import { ApiResponse, ProductInventoryItem } from '../inventario.model';
+import { BodegasResponse } from '../../bodegas/bodegas.model';
 import { environment } from '../../../../environments/environment'
 
 @Injectable({

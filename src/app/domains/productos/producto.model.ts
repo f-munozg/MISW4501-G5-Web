@@ -24,11 +24,20 @@ export const FileType2LabelMapping: Record<CategoriaProductos, string> = {
     [CategoriaProductos.HOGAR]: "Hogar",
 }
 
-export interface Fabricante {
+export interface Producto {
     id: string;
+    sku: string;
     name: string;
+    unit_value: number;
+    storage_conditions: string;
+    product_features: string;
+    provider_id: string;
+    estimated_delivery_time: string;
+    photo: string;
+    description: string;
+    category: string;
 }
 
-export interface FabricantesResponse {
-    providers: Fabricante[];
+export interface ProductosResponse{
+    products: Producto[];
 }
