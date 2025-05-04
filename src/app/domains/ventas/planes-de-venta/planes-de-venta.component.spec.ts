@@ -12,7 +12,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { PlanesDeVentaService } from './planes-de-venta.service';
 import { Vendedor } from '../../vendedores/vendedores.model';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { Producto } from '../ventas.model';
+import { Producto } from '../../productos/producto.model';
 
 describe('PlanesDeVentaComponent', () => {
   let component: PlanesDeVentaComponent;

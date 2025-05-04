@@ -3,7 +3,7 @@ import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { VendedoresResponse } from '../../vendedores/vendedores.model';
-import { ProductosResponse } from '../ventas.model';
+import { ProductosResponse } from '../../productos/producto.model';
 
 @Injectable({
   providedIn: 'root'

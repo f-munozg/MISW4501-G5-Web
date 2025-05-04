@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FileType2LabelMapping, CategoriaProductos, ApiResponse, InventoryItem, Fabricante, FabricantesResponse } from '../inventario.model';
+import { ApiResponse, InventoryItem } from '../inventario.model';
+import { FileType2LabelMapping, CategoriaProductos } from '../../productos/producto.model';
+import { Fabricante, FabricantesResponse } from '../../fabricantes/fabricantes.model';
 import { ConsultaInventarioService } from './consulta-inventario.service';
 import { ActivatedRoute, Router } from '@angular/router';
 

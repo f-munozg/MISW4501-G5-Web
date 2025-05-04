@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GestionPortafolioService } from './gestion-portafolio.service';
-import { Fabricante, FabricantesResponse } from '../../productos/producto.model';
+import { Fabricante, FabricantesResponse } from '../../fabricantes/fabricantes.model';
 import { Router, ActivatedRoute } from '@angular/router';
 
 export interface TableRow {

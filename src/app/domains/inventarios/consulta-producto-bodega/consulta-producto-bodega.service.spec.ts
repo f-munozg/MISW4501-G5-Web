@@ -3,7 +3,7 @@
 import { TestBed, waitForAsync, inject } from '@angular/core/testing';
 import { ConsultaProductoBodegaService } from './consulta-producto-bodega.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { BodegasResponse } from '../inventario.model';
+import { BodegasResponse } from '../../bodegas/bodegas.model';
 import { environment } from '../../../../environments/environment'
 
 describe('Service: ConsultaProductoBodega', () => {
