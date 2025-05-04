@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GestionPortafolioService } from './gestion-portafolio.service';
-import { Fabricante, FabricantesResponse } from '../../fabricantes/fabricantes.model';
+import { Fabricante, FabricantePortafolioResponse, FabricantesResponse } from '../../fabricantes/fabricantes.model';
 import { Router, ActivatedRoute } from '@angular/router';
 
 export interface TableRow {
@@ -83,9 +83,16 @@ export class GestionPortafolioComponent implements OnInit {
         this.idFabricanteSeleccionado = params['provider_id'];
       }
     })
+
+    this.conFabricanteSeleccionado(this.idFabricanteSeleccionado);
   }
 
   conFabricanteSeleccionado(provider_id: string){
+    this.apiService.getPortafolio(provider_id).subscribe(
+      (response: FabricantePortafolioResponse) => { this.tableData = response.portfolio },
+      error => console.log(error)
+    )
+    
     this.router.navigate([], {
       queryParams: { provider_id },
       queryParamsHandling: 'merge'

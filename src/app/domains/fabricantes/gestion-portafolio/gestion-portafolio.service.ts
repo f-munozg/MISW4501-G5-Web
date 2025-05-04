@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { FabricantesResponse } from '../../fabricantes/fabricantes.model';
+import { FabricantePortafolioResponse, FabricantesResponse } from '../../fabricantes/fabricantes.model';
 import { environment } from '../../../../environments/environment'
 
 @Injectable({
@@ -12,6 +12,10 @@ export class GestionPortafolioService {
 
   getListaFabricantes() {
     return this.http.get<FabricantesResponse>(environment.apiUrlProviders + `/providers`);
+  }
+
+  getPortafolio(provider_id: string) {
+    return this.http.get<FabricantePortafolioResponse>(environment.apiUrlProviders + `/providers/${provider_id}`);
   }
 
 }

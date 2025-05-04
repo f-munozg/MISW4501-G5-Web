@@ -47,8 +47,15 @@
         background-color: #A4E0A4 !important;
       }
 
-    .mat-mdc-button:not(:disabled) {
+    /* Primer botón: asociado a agregar o editar */
+    .mat-mdc-button:not(:disabled):nth-child(1) {
         color: white;
         background-color: #005d52 !important;
+    }
+
+    /* Segundo botón: asociado a eliminar o cancelar */
+    .mat-mdc-button:not(:disabled):nth-child(2) {
+        color: white;
+        background-color: #EC1C1C !important; 
     }
 }
