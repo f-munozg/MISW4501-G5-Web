@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FabricantePortafolioResponse, FabricantesResponse } from '../../fabricantes/fabricantes.model';
+import { Producto } from '../../productos/producto.model';
 import { environment } from '../../../../environments/environment'
 import { Observable } from 'rxjs';
 
@@ -20,4 +21,7 @@ export class GestionPortafolioService {
     return this.http.get<FabricantePortafolioResponse>(environment.apiUrlProviders + `/providers/${provider_id}`);
   }
 
+  eliminarProducto(product_id: string) {
+    return this.http.delete<Producto>(environment.apiUrlProducts + `/products/${product_id}`);
+  }
 }
