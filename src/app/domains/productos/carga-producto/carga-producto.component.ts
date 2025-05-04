@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CargaProductoService } from './carga-producto.service';
 import { FileType2LabelMapping, CategoriaProductos } from '../producto.model';
 import { Fabricante, FabricantesResponse } from '../../fabricantes/fabricantes.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-carga-producto',
@@ -13,18 +14,30 @@ import { Fabricante, FabricantesResponse } from '../../fabricantes/fabricantes.m
 export class CargaProductoComponent implements OnInit {
   cargaProductoForm!: FormGroup;
   selectedFile: File | null = null;
-  isSubmitting = false;
   listaFabricantes: Fabricante[] = [];
+
+  isSubmitting: boolean = false;
+  isEditMode: boolean = false;
+
+  originalFormValues: any;
+  idProducto: string | null = null;
+  currentImageUrl: string | null = null;
 
   public FileType2LabelMapping = FileType2LabelMapping;
   public fileTypes = Object.values(CategoriaProductos);
 
   constructor(
     private formBuilder: FormBuilder,
-    private apiService: CargaProductoService
+    private apiService: CargaProductoService,
+    private route: ActivatedRoute,
+    private router: Router,
   ) { }
 
   ngOnInit() {
+    // Se comprueba si el componente está en modo edición
+    this.idProducto = this.route.snapshot.paramMap.get('id');
+    this.isEditMode = !!this.idProducto;
+
     this.cargaProductoForm = this.formBuilder.group({
       fieldCodigo: ['', Validators.required],
       fieldFabricante: ['', Validators.required],
@@ -38,6 +51,10 @@ export class CargaProductoComponent implements OnInit {
       }
     );
 
+    if(this.isEditMode){
+      this.cargarInformacionProducto();
+    }
+
     this.apiService.getListaFabricantes().subscribe({
       next: (response: FabricantesResponse) => {
         this.listaFabricantes = response.providers;
@@ -46,8 +63,10 @@ export class CargaProductoComponent implements OnInit {
         console.error('Error loading providers:', err);
       }
     });
+  }
 
-  
+  cargarInformacionProducto(): void {
+      
   }
 
   onFileSelected(event: Event): void {

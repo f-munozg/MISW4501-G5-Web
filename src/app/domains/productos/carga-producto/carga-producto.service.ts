@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FabricantesResponse } from '../../fabricantes/fabricantes.model';
 import { environment } from '../../../../environments/environment'
+import { ProductosResponse } from '../producto.model';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,10 @@ export class CargaProductoService {
         reject(error);
       }
     });    
+  }
+
+  getProductos(): Observable<ProductosResponse> {
+    return this.http.get<ProductosResponse>(`${environment.apiUrlProducts}/products`);
   }
 
   fileToBase64(file: File): Promise<string> {
