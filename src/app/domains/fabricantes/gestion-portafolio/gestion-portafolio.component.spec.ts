@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { GestionPortafolioComponent, TableRow } from './gestion-portafolio.component';
 import { GestionPortafolioService } from './gestion-portafolio.service';
 import { FabricantesModule } from '../fabricantes.module';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { FabricantePortafolioResponse, FabricantesResponse } from '../fabricantes.model';
 import { Producto } from '../../productos/producto.model';
 import { TableTemplateComponent } from 'src/app/shared/table-template/table-template.component';
@@ -373,6 +373,113 @@ describe('GestionPortafolioComponent', () => {
       expect(tableComponent.columns).toEqual(component.tableColumns);
       expect(tableComponent.displayedColumns).toEqual(component.visibleColumns);
       expect(tableComponent.actions).toEqual(component.assignAction);
+    });
+  });
+
+  describe('error handling', () => {
+    it('should handle error when loading fabricantes fails', () => {
+      spyOn(console, 'error');
+      
+      const mockFabricantes: FabricantesResponse = {
+        providers: [
+          { id: '1', name: 'Fabricante 1' },
+          { id: '2', name: 'Fabricante 2' }
+        ]
+      };
+    
+      const req1 = httpMock.expectOne(`${environment.apiUrlProviders}/providers`);
+      req1.flush(mockFabricantes);
+    
+      const req2 = httpMock.expectOne(`${environment.apiUrlProviders}/providers/test-provider`);
+      req2.flush({ portfolio: [] });
+
+      component.ngOnInit();
+      
+      const req3 = httpMock.expectOne(`${environment.apiUrlProviders}/providers`);
+      req3.flush(null, { status: 500, statusText: 'Server Error' });
+
+      const req4 = httpMock.expectOne(`${environment.apiUrlProviders}/providers/test-provider`);
+      req4.flush(null, { status: 500, statusText: 'Server Error' });
+      
+      expect(console.error).toHaveBeenCalledWith('Error loading providers:', jasmine.any(Object));
+    });
+  
+    it('should handle error when loading portafolio fails', () => {
+      spyOn(console, 'log');
+
+      const mockFabricantes: FabricantesResponse = {
+        providers: [
+          { id: '1', name: 'Fabricante 1' },
+          { id: '2', name: 'Fabricante 2' }
+        ]
+      };
+    
+      const req1 = httpMock.expectOne(`${environment.apiUrlProviders}/providers`);
+      req1.flush(mockFabricantes);
+    
+      const req2 = httpMock.expectOne(`${environment.apiUrlProviders}/providers/test-provider`);
+      req2.flush({ portfolio: [] });
+      
+      const providerId = 'test-provider';
+      component.conFabricanteSeleccionado(providerId);
+      
+      const req = httpMock.expectOne(`${environment.apiUrlProviders}/providers/${providerId}`);
+      req.flush(null, { status: 404, statusText: 'Not Found' });
+      
+      expect(console.log).toHaveBeenCalledWith(jasmine.any(Object));
+    });
+  
+    it('should handle error when deleting product fails', () => {
+      const productId = '123';
+      spyOn(console, 'error');
+      spyOn(service, 'eliminarProducto').and.returnValue(
+        throwError(() => new Error('Delete failed'))
+      );
+
+      const mockFabricantes: FabricantesResponse = {
+        providers: [
+          { id: '1', name: 'Fabricante 1' },
+          { id: '2', name: 'Fabricante 2' }
+        ]
+      };
+    
+      const req1 = httpMock.expectOne(`${environment.apiUrlProviders}/providers`);
+      req1.flush(mockFabricantes);
+    
+      const req2 = httpMock.expectOne(`${environment.apiUrlProviders}/providers/test-provider`);
+      req2.flush({ portfolio: [] });
+      
+      component.eliminarProducto(productId);
+
+      const req = httpMock.expectOne(`${environment.apiUrlProviders}/providers/test-provider`);
+      req.flush({ portfolio: [] });
+      
+      expect(console.error).toHaveBeenCalledWith('Error during deletion', jasmine.any(Error));
+    });
+  
+    it('should handle error when refreshing table data fails', () => {
+      const currentId = 'test-provider';
+      spyOn(console, 'error');
+      
+      const mockFabricantes: FabricantesResponse = {
+        providers: [
+          { id: '1', name: 'Fabricante 1' },
+          { id: '2', name: 'Fabricante 2' }
+        ]
+      };
+    
+      const req1 = httpMock.expectOne(`${environment.apiUrlProviders}/providers`);
+      req1.flush(mockFabricantes);
+    
+      const req2 = httpMock.expectOne(`${environment.apiUrlProviders}/providers/test-provider`);
+      req2.flush({ portfolio: [] });
+
+      component.refrescarTableData();
+      
+      const req = httpMock.expectOne(`${environment.apiUrlProviders}/providers/${currentId}`);
+      req.flush(null, { status: 500, statusText: 'Server Error' });
+      
+      expect(console.error).toHaveBeenCalledWith(jasmine.any(Object));
     });
   });
 
