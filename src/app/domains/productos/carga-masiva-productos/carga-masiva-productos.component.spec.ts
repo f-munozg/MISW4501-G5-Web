@@ -9,7 +9,7 @@ import { CargaMasivaProductosService } from './carga-masiva-productos.service';
 import { environment } from '../../../../environments/environment'
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductosModule } from '../productos.module';
-import { FabricantesResponse } from '../producto.model';
+import { FabricantesResponse } from '../../fabricantes/fabricantes.model';
 import { of, throwError } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 

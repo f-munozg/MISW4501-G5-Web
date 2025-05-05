@@ -1,0 +1,34 @@
+<app-default-window>
+  <main class="gestionPortafolioContainer">
+    <div class="gestionPortafolioHeader">
+      <h2>Gestión Portafolio</h2>
+    </div>
+    <div class="gestionPortafolioForm">
+      <div class="grid-item-fabricanteForm">
+        <h3 class="fabricanteHeader">Fabricante:</h3>
+        <mat-form-field class="fabricanteFormField">
+          <mat-label>Escoja el Fabricante</mat-label>
+          <mat-select 
+                [(value)]="idFabricanteSeleccionado"
+                (selectionChange)="conFabricanteSeleccionado($event.value)">
+            <mat-option *ngFor="let fabricante of listaFabricantes"
+                [value]="fabricante.id">
+                {{fabricante.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="grid-item-adicionNuevoProductoBtnDiv">
+        <button mat-flat-button class="adicionProductoBtn" routerLink="/productos/carga_producto">Añadir Nuevo Producto</button>
+      </div> 
+    </div>
+    <div class="detallesPortafolioGrid">
+      <app-table-template
+        [data]="tableData"
+        [columns]="tableColumns"
+        [displayedColumns]="visibleColumns"
+        [actions]="assignAction">
+      </app-table-template>
+    </div>
+  </main>
+</app-default-window>

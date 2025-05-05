@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CargaProductoService } from './carga-producto.service';
-import { FileType2LabelMapping, CategoriaProductos, Fabricante, FabricantesResponse } from '../producto.model';
+import { FileType2LabelMapping, CategoriaProductos } from '../producto.model';
+import { Fabricante, FabricantesResponse } from '../../fabricantes/fabricantes.model';
 
 @Component({
   selector: 'app-carga-producto',
@@ -27,7 +28,7 @@ export class CargaProductoComponent implements OnInit {
     this.cargaProductoForm = this.formBuilder.group({
       fieldCodigo: ['', Validators.required],
       fieldFabricante: ['', Validators.required],
-      fieldValor: ['', Validators.required],
+      fieldValor: ['', [Validators.required, Validators.min(0)]],
       fieldFechaVencimiento: [null, Validators.required],
       fieldCondicionesAlmacenamiento: ['', Validators.required],
       fieldCategoria: ['', Validators.required],

@@ -4,7 +4,8 @@ import { TestBed, waitForAsync, inject } from '@angular/core/testing';
 import { ConsultaInventarioService } from './consulta-inventario.service';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { FabricantesResponse,ApiResponse, InventoryItem, CategoriaProductos } from '../inventario.model';
+import { CategoriaProductos } from '../../productos/producto.model';
+import { FabricantesResponse } from '../../fabricantes/fabricantes.model';
 import { environment } from '../../../../environments/environment'
 
 describe('Service: ConsultaInventario', () => {

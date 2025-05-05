@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CargaMasivaProductosService } from './carga-masiva-productos.service';
-import { Fabricante, FabricantesResponse } from '../producto.model';
+import { Fabricante, FabricantesResponse } from '../../fabricantes/fabricantes.model';
 import { HttpEventType } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 
