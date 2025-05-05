@@ -134,7 +134,7 @@ export class CargaProductoComponent implements OnInit {
             alert(`Producto ${this.isEditMode ? 'actualizado': 'creado'} correctamente!`);
           },
           error: (err) => {
-            console.error('API error: ', err);
+            console.error('API Error:', err);
             this.isSubmitting = false;
             alert('Error al procesar la solicitud');
           }
