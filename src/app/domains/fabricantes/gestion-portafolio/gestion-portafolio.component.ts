@@ -53,7 +53,9 @@ export class GestionPortafolioComponent implements OnInit {
       {
         icon: 'Editar',
         tooltip: 'Editar',
-        action: (row: TableRow) => {}
+        action: (row: TableRow) => {
+          this.editarProducto(row.id);
+        }
       },
       {
         icon: 'Eliminar',
@@ -99,6 +101,10 @@ export class GestionPortafolioComponent implements OnInit {
       queryParams: { provider_id },
       queryParamsHandling: 'merge'
     });
+  }
+
+  editarProducto(idProducto: string) {
+    this.router.navigate(['/productos/editar', idProducto]);
   }
 
   eliminarProducto(product_id: string): void {
