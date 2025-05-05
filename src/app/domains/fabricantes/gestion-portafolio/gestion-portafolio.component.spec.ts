@@ -16,11 +16,8 @@ describe('GestionPortafolioComponent', () => {
   let service: GestionPortafolioService;
   let httpMock: HttpTestingController;
 
-  let apiUrlSellers = environment.apiUrlSellers + `/sellers`;
-  let apiUrlProducts = environment.apiUrlProducts + `/products`;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(waitForAsync(async() => {
+    await TestBed.configureTestingModule({
       declarations: [ GestionPortafolioComponent ],
       imports: [
         FabricantesModule,
@@ -31,13 +28,14 @@ describe('GestionPortafolioComponent', () => {
       ]
     })
     .compileComponents();
+
+    service = TestBed.inject(GestionPortafolioService);
+    httpMock = TestBed.inject(HttpTestingController);
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GestionPortafolioComponent);
     component = fixture.componentInstance;
-    service = TestBed.inject(GestionPortafolioService);
-    httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
   });
 
@@ -48,7 +46,10 @@ describe('GestionPortafolioComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
 
-    const req = httpMock.expectOne(`${environment.apiUrlProviders}/providers`);
-    req.flush({});
+    const req1 = httpMock.expectOne(`${environment.apiUrlProviders}/providers`);
+    req1.flush({});
+
+    const req2 = httpMock.expectOne(`${environment.apiUrlProviders}/providers/${component.idFabricanteSeleccionado}`);
+    req2.flush({});
   });
 });

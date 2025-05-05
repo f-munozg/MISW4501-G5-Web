@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GestionPortafolioService } from './gestion-portafolio.service';
-import { Fabricante, FabricantesResponse } from '../../fabricantes/fabricantes.model';
+import { Fabricante, FabricantePortafolioResponse, FabricantesResponse } from '../../fabricantes/fabricantes.model';
 import { Router, ActivatedRoute } from '@angular/router';
 
 export interface TableRow {
@@ -58,7 +58,9 @@ export class GestionPortafolioComponent implements OnInit {
       {
         icon: 'Eliminar',
         tooltip: 'Eliminar',
-        action: (row: TableRow) => {}
+        action: (row: TableRow) => {
+          this.eliminarProducto(row.id);
+        }
       }
     ]
 
@@ -83,13 +85,50 @@ export class GestionPortafolioComponent implements OnInit {
         this.idFabricanteSeleccionado = params['provider_id'];
       }
     })
+
+    this.conFabricanteSeleccionado(this.idFabricanteSeleccionado);
   }
 
   conFabricanteSeleccionado(provider_id: string){
+    this.apiService.getPortafolio(provider_id).subscribe(
+      (response: FabricantePortafolioResponse) => { this.tableData = response.portfolio },
+      error => console.log(error)
+    )
+    
     this.router.navigate([], {
       queryParams: { provider_id },
       queryParamsHandling: 'merge'
     });
+  }
+
+  eliminarProducto(product_id: string): void {
+    this.apiService.eliminarProducto(product_id).subscribe({
+      next: (response) => {
+        console.log("Delete successful", response);
+      },
+      error: (err) => {
+        console.error("Error during deletion", err);
+      }
+    });
+
+    this.refrescarTableData();
+  }
+
+  refrescarTableData(): void {
+    const currentId = this.route.snapshot.queryParams['provider_id'];
+    this.apiService.getPortafolio(currentId).subscribe(
+      (response: FabricantePortafolioResponse) => {
+        this.tableData = response.portfolio;
+        console.log('tableData after refresh:', this.tableData);
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: { provider_id: currentId },
+          queryParamsHandling: 'merge',
+          replaceUrl: true
+        });
+      },
+      error => console.error(error)
+    );
   }
 
 }
