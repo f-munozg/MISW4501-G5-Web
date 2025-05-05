@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CargaProductoService } from './carga-producto.service';
-import { FileType2LabelMapping, CategoriaProductos } from '../producto.model';
+import { FileType2LabelMapping, CategoriaProductos, ProductosResponse, Producto } from '../producto.model';
 import { Fabricante, FabricantesResponse } from '../../fabricantes/fabricantes.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-carga-producto',
@@ -21,7 +22,7 @@ export class CargaProductoComponent implements OnInit {
 
   originalFormValues: any;
   idProducto: string | null = null;
-  currentImageUrl: string | null = null;
+  productoSeleccionado: string | null = null;
 
   public FileType2LabelMapping = FileType2LabelMapping;
   public fileTypes = Object.values(CategoriaProductos);
@@ -66,7 +67,37 @@ export class CargaProductoComponent implements OnInit {
   }
 
   cargarInformacionProducto(): void {
+      this.apiService.getProductos().pipe(
+        map((productos: ProductosResponse) => productos.products.find((p: Producto) => p.id === this.idProducto)))
+        .subscribe({
+          next: (producto) => {
+            if (!producto) {
+              console.error("Product not found");
+              return ;
+            }
+
+            this.originalFormValues = {
+              ...producto,
+            };
+
+            this.cargaProductoForm.patchValue({
+              fieldCodigo: producto.sku,
+              fieldFabricante: producto.provider_id,
+              fieldValor: producto.unit_value,
+              fieldFechaVencimiento: new Date(producto.estimated_delivery_time),
+              fieldCondicionesAlmacenamiento: producto.storage_conditions,
+              fieldCategoria: producto.category.charAt(0).toUpperCase() + producto.category.slice(1).toLowerCase(),
+              fieldCaracteristicas: producto.product_features,
+              fieldDescripcion: producto.description,
+              fieldNombre: producto.name
+            });
       
+            this.selectedFile = null;
+          },
+          error: (err) => {
+            console.error("Error loading product:", err);
+          }
+        });
   }
 
   onFileSelected(event: Event): void {
@@ -82,42 +113,55 @@ export class CargaProductoComponent implements OnInit {
 
       const formData = {
         ...this.cargaProductoForm.value,
-        imageFile: this.selectedFile
+        imageFile: this.selectedFile,
+        id: this.idProducto
       }
 
       if (formData.fieldFechaVencimiento) {
         formData.fieldFechaVencimiento = this.formatDateToISOWithTime(formData.fieldFechaVencimiento);
       }
 
-      this.apiService.postData(formData)
-      .then(apiObservable$ => {
+      const apiCall$ = this.isEditMode
+        ? this.apiService.updateProducto(formData)
+        : this.apiService.postData(formData);
+
+      apiCall$.then(apiObservable$ => {
         apiObservable$.subscribe({
           next: (response) => {
-            console.log('Success!', response);
+            console.log("Success!", response);
             this.isSubmitting = false;
+
+            alert(`Producto ${this.isEditMode ? 'actualizado': 'creado'} correctamente!`);
           },
           error: (err) => {
-            console.error('API Error:', err);
+            console.error('API error: ', err);
             this.isSubmitting = false;
+            alert('Error al procesar la solicitud');
           }
         });
       })
       .catch(error => {
         console.error('Image processing error:', error);
         this.isSubmitting = false;
+        alert('Error procesando la imagen cargada')
       });
     }
   }
 
   clearAll(){
-    this.cargaProductoForm.reset()
-
-    this.selectedFile = null;
+    if (this.isEditMode && this.originalFormValues) {
+      this.cargaProductoForm.patchValue({
+      });
+      this.selectedFile = null;
+    } else {
+      this.cargaProductoForm.reset();
+      this.selectedFile = null;
+    }
 
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     if (fileInput) {
       fileInput.value = '';
-  }
+    }
   }
 
   formatDateToISOWithTime(date: Date | string): string {
