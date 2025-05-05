@@ -31,6 +31,7 @@ const routes: Routes = [
   {path: 'menu', component: DefaultWindowComponent},
   {path: 'fabricantes/registro', component: RegistroFabricantesComponent},
   {path: 'productos/carga_producto', component: CargaProductoComponent},
+  {path: 'productos/editar/:id', component: CargaProductoComponent},
   {path: 'productos/carga_masiva_productos', component: CargaMasivaProductosComponent},
   {path: 'tabla/container', component: TableTemplateComponent}, // Testing
   {path: 'tabla/demo', component: TableDemoComponent}, // Testing
