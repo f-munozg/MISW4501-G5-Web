@@ -82,7 +82,6 @@ export class CargaProductoService {
           'Content-Type': 'application/json'
         });
   
-        // Use PUT instead of POST for updates
         resolve(this.http.put<any>(`${environment.apiUrlProducts}/products/${formData.id}`, requestData, { headers }));
       } catch (error) {
         reject(error);
