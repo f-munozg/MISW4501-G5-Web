@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Observable, of, throwError } from 'rxjs';
 import { ProductosModule } from '../productos.module';
 import { environment } from '../../../../environments/environment'
+import { ProductosResponse } from '../producto.model';
 
 describe('CargaProductoComponent', () => {
   let component: CargaProductoComponent;
@@ -303,5 +304,83 @@ describe('CargaProductoComponent', () => {
     req.flush({});
   });
 
+  describe('cargarInformacionProducto', () => {
+    it('should load product information in edit mode', fakeAsync(() => {
+      component.isEditMode = true;
+      component.idProducto = 'test-product-id';
+      
+      const mockProduct = {
+        id: 'test-product-id',
+        sku: 'TEST-SKU',
+        provider_id: 'test-provider-id',
+        unit_value: 100,
+        estimated_delivery_time: '2025-12-31T00:00:00',
+        storage_conditions: 'Dry place',
+        category: 'alimentación',
+        product_features: 'Test features',
+        description: 'Test description',
+        name: 'Test Product'
+      };
+    
+      spyOn(service, 'getProductos').and.returnValue(of({
+        products: [mockProduct]
+      } as ProductosResponse));
+    
+      component.cargarInformacionProducto();
+      tick();
+    
+      expect(component.cargaProductoForm.value).toEqual({
+        fieldCodigo: 'TEST-SKU',
+        fieldFabricante: 'test-provider-id',
+        fieldValor: 100,
+        fieldFechaVencimiento: new Date('2025-12-31T00:00:00'),
+        fieldCondicionesAlmacenamiento: 'Dry place',
+        fieldCategoria: 'Alimentación',
+        fieldCaracteristicas: 'Test features',
+        fieldDescripcion: 'Test description',
+        fieldNombre: 'Test Product'
+      });
+    
+      expect(component.originalFormValues).toEqual(mockProduct);
+    
+      const req = httpMock.expectOne(environment.apiUrlProviders + `/providers`);
+      req.flush({});
+    }));
+    
+    it('should handle error when loading product information', fakeAsync(() => {
+      component.isEditMode = true;
+      component.idProducto = 'test-product-id';
+      
+      const errorResponse = new Error('Failed to load product');
+      spyOn(service, 'getProductos').and.returnValue(throwError(() => errorResponse));
+      spyOn(console, 'error');
+    
+      component.cargarInformacionProducto();
+      tick();
+    
+      expect(console.error).toHaveBeenCalledWith('Error loading product:', errorResponse);
+    
+      const req = httpMock.expectOne(environment.apiUrlProviders + `/providers`);
+      req.flush({});
+    }));
+    
+    it('should handle case when product is not found', fakeAsync(() => {
+      component.isEditMode = true;
+      component.idProducto = 'non-existent-id';
+      
+      spyOn(service, 'getProductos').and.returnValue(of({
+        products: []
+      } as ProductosResponse));
+      spyOn(console, 'error');
+    
+      component.cargarInformacionProducto();
+      tick();
+    
+      expect(console.error).toHaveBeenCalledWith('Product not found');
+    
+      const req = httpMock.expectOne(environment.apiUrlProviders + `/providers`);
+      req.flush({});
+    }));
+  })
 
 });
