@@ -151,6 +151,16 @@ export class CargaProductoComponent implements OnInit {
   clearAll(){
     if (this.isEditMode && this.originalFormValues) {
       this.cargaProductoForm.patchValue({
+        fieldCodigo: this.originalFormValues.sku,
+        fieldFabricante: this.originalFormValues.provider_id,
+        fieldValor: this.originalFormValues.unit_value,
+        fieldFechaVencimiento: new Date(this.originalFormValues.estimated_delivery_time),
+        fieldCondicionesAlmacenamiento: this.originalFormValues.storage_conditions,
+        fieldCategoria: this.originalFormValues.category.charAt(0).toUpperCase() 
+                        + this.originalFormValues.category.slice(1).toLowerCase(), 
+        fieldCaracteristicas: this.originalFormValues.product_features,
+        fieldDescripcion: this.originalFormValues.description,
+        fieldNombre: this.originalFormValues.name
       });
       this.selectedFile = null;
     } else {
