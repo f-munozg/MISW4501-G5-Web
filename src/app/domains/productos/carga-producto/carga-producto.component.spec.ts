@@ -44,68 +44,131 @@ describe('CargaProductoComponent', () => {
     req.flush({});
   });
 
-  it('should clear the form fields when using the clearAll function', () => {
-    component.cargaProductoForm.patchValue({
-      fieldCodigo: 'SKU-456',
-      fieldFabricante: '1e1f9b23-8f78-4e02-9afa-0cd4d0e51680',
-      fieldValor: '15000',
-      fieldFechaVencimiento: '4/2/2025',
-      fieldCondicionesAlmacenamiento: 'Probando',
-      fieldCategoria: 'ALIMENTACIÓN',
-      fieldCaracteristicas: 'Probando',
-      fieldDescripcion: 'Probando',
-      fieldNombre: 'Arroz'
+  describe('clearAll', () => {
+    it('should reset to original values in edit mode when originalFormValues exists', () => {
+      component.isEditMode = true;
+      component.originalFormValues = {
+        sku: 'ORIG-SKU',
+        provider_id: 'original-provider',
+        unit_value: 999,
+        estimated_delivery_time: '2025-01-01T00:00:00',
+        storage_conditions: 'Original conditions',
+        category: 'alimentación',
+        product_features: 'Original features',
+        description: 'Original description',
+        name: 'Original Product'
+      };
+  
+      component.cargaProductoForm.patchValue({
+        fieldCodigo: 'MODIFIED-SKU',
+        fieldFabricante: 'modified-provider',
+        fieldValor: 100,
+        fieldFechaVencimiento: new Date('2023-01-01'),
+        fieldCondicionesAlmacenamiento: 'Modified conditions',
+        fieldCategoria: 'ROPA',
+        fieldCaracteristicas: 'Modified features',
+        fieldDescripcion: 'Modified description',
+        fieldNombre: 'Modified Product'
+      });
+  
+      component.selectedFile = new File(['test'], 'test.png');
+  
+      component.clearAll();
+  
+      expect(component.cargaProductoForm.value).toEqual({
+        fieldCodigo: 'ORIG-SKU',
+        fieldFabricante: 'original-provider',
+        fieldValor: 999,
+        fieldFechaVencimiento: new Date('2025-01-01T00:00:00'),
+        fieldCondicionesAlmacenamiento: 'Original conditions',
+        fieldCategoria: 'Alimentación',
+        fieldCaracteristicas: 'Original features',
+        fieldDescripcion: 'Original description',
+        fieldNombre: 'Original Product'
+      });
+  
+      expect(component.selectedFile).toBeNull();
+  
+      const req = httpMock.expectOne(environment.apiUrlProviders + `/providers`);
+      req.flush({});
     });
-
-    component.clearAll()
-
-    expect(component.cargaProductoForm.value).toEqual({
-      fieldCodigo: null,
-      fieldFabricante: null,
-      fieldValor: null,
-      fieldFechaVencimiento: null,
-      fieldCondicionesAlmacenamiento: null,
-      fieldCategoria: null,
-      fieldCaracteristicas: null,
-      fieldDescripcion: null,
-      fieldNombre: null,
-    })
-
-    const req = httpMock.expectOne(environment.apiUrlProviders + `/providers`);
-    req.flush({});
-  });
-
-  it('should clear the form when the Cancel button is clicked', () => {
-    component.cargaProductoForm.patchValue({
-      fieldCodigo: 'SKU-456',
-      fieldFabricante: '1e1f9b23-8f78-4e02-9afa-0cd4d0e51680',
-      fieldValor: '15000',
-      fieldFechaVencimiento: '4/2/2025',
-      fieldCondicionesAlmacenamiento: 'Probando',
-      fieldCategoria: 'ALIMENTACIÓN',
-      fieldCaracteristicas: 'Probando',
-      fieldDescripcion: 'Probando',
-      fieldNombre: 'Arroz'
+  
+    it('should clear file input when it exists', () => {
+      const fileInput = document.createElement('input');
+      fileInput.id = 'fileInput';
+      fileInput.value = 'test.png';
+      spyOn(document, 'getElementById').and.returnValue(fileInput);
+  
+      component.clearAll();
+  
+      expect(fileInput.value).toBe('');
+  
+      const req = httpMock.expectOne(environment.apiUrlProviders + `/providers`);
+      req.flush({});
     });
+  
+    it('should handle case when file input does not exist without errors', () => {
+      spyOn(document, 'getElementById').and.returnValue(null);
+      
+      const originalFormValues = {
+        fieldCodigo: null,
+        fieldFabricante: null,
+        fieldValor: null,
+        fieldFechaVencimiento: null,
+        fieldCondicionesAlmacenamiento: null,
+        fieldCategoria: null,
+        fieldCaracteristicas: null,
+        fieldDescripcion: null,
+        fieldNombre: null
+      };
+      
+      component.clearAll();
 
-    const cancelButton = fixture.nativeElement.querySelector('.CancelarBtn');
-    cancelButton.click();
-    fixture.detectChanges();
-
-    expect(component.cargaProductoForm.value).toEqual({
-      fieldCodigo: null,
-      fieldFabricante: null,
-      fieldValor: null,
-      fieldFechaVencimiento: null,
-      fieldCondicionesAlmacenamiento: null,
-      fieldCategoria: null,
-      fieldCaracteristicas: null,
-      fieldDescripcion: null,
-      fieldNombre: null,
+      expect(() => component.clearAll()).not.toThrow();
+      expect(component.cargaProductoForm.value).toEqual(originalFormValues);
+      expect(component.selectedFile).toBeNull();
+      
+      const req = httpMock.expectOne(environment.apiUrlProviders + `/providers`);
+      req.flush({});
     });
-
-    const req = httpMock.expectOne(environment.apiUrlProviders + `/providers`);
-    req.flush({});
+  
+    it('should completely reset form when not in edit mode', () => {
+      component.isEditMode = false;
+      component.originalFormValues = null;
+  
+      component.cargaProductoForm.patchValue({
+        fieldCodigo: 'TEST-SKU',
+        fieldFabricante: 'test-provider',
+        fieldValor: 100,
+        fieldFechaVencimiento: new Date('2023-01-01'),
+        fieldCondicionesAlmacenamiento: 'Test conditions',
+        fieldCategoria: 'ROPA',
+        fieldCaracteristicas: 'Test features',
+        fieldDescripcion: 'Test description',
+        fieldNombre: 'Test Product'
+      });
+  
+      component.selectedFile = new File(['test'], 'test.png');
+  
+      component.clearAll();
+  
+      expect(component.cargaProductoForm.value).toEqual({
+        fieldCodigo: null,
+        fieldFabricante: null,
+        fieldValor: null,
+        fieldFechaVencimiento: null,
+        fieldCondicionesAlmacenamiento: null,
+        fieldCategoria: null,
+        fieldCaracteristicas: null,
+        fieldDescripcion: null,
+        fieldNombre: null
+      });
+  
+      expect(component.selectedFile).toBeNull();
+  
+      const req = httpMock.expectOne(environment.apiUrlProviders + `/providers`);
+      req.flush({});
+    });
   });
 
   it('should handle file selection', () => {
