@@ -14,6 +14,7 @@ import { FabricantesModule } from '../fabricantes.module';
 import { of } from 'rxjs';
 import { FabricantePortafolioResponse, FabricantesResponse } from '../fabricantes.model';
 import { Producto } from '../../productos/producto.model';
+import { TableTemplateComponent } from 'src/app/shared/table-template/table-template.component';
 
 describe('GestionPortafolioComponent', () => {
   let component: GestionPortafolioComponent;
@@ -283,6 +284,95 @@ describe('GestionPortafolioComponent', () => {
         queryParamsHandling: 'merge',
         replaceUrl: true
       });
+    });
+  });
+
+  describe('table configuration', () => {
+    it('should have correct table columns configuration', () => {
+      const mockFabricantes: FabricantesResponse = {
+        providers: [
+          { id: '1', name: 'Fabricante 1' },
+          { id: '2', name: 'Fabricante 2' }
+        ]
+      };
+
+      const req1 = httpMock.expectOne(`${environment.apiUrlProviders}/providers`);
+      req1.flush(mockFabricantes);
+
+      const req2 = httpMock.expectOne(`${environment.apiUrlProviders}/providers/test-provider`);
+      req2.flush({ portfolio: [] });
+
+      expect(component.tableColumns).toBeDefined();
+      expect(component.tableColumns.length).toBe(3);
+  
+      expect(component.tableColumns[0].name).toBe('name');
+      expect(component.tableColumns[0].header).toBe('Producto');
+      expect(component.tableColumns[0].cell({ name: 'Test Product' } as TableRow)).toBe('Test Product');
+  
+      expect(component.tableColumns[1].name).toBe('category');
+      expect(component.tableColumns[1].header).toBe('Categoría');
+      expect(component.tableColumns[1].cell({ category: 'Test Category' } as TableRow)).toBe('Test Category');
+  
+      expect(component.tableColumns[2].name).toBe('description');
+      expect(component.tableColumns[2].header).toBe('Descripción');
+      expect(component.tableColumns[2].cell({ description: 'Test Description' } as TableRow)).toBe('Test Description');
+    });
+  
+    it('should have correct visible columns', () => {
+      const mockFabricantes: FabricantesResponse = {
+        providers: [
+          { id: '1', name: 'Fabricante 1' },
+          { id: '2', name: 'Fabricante 2' }
+        ]
+      };
+
+      const req1 = httpMock.expectOne(`${environment.apiUrlProviders}/providers`);
+      req1.flush(mockFabricantes);
+
+      const req2 = httpMock.expectOne(`${environment.apiUrlProviders}/providers/test-provider`);
+      req2.flush({ portfolio: [] });
+
+      expect(component.visibleColumns).toEqual(['name', 'category', 'description']);
+    });
+  
+    it('should render table columns correctly', () => {
+      const mockTableData = [{
+        id: '1',
+        name: 'Test Product',
+        category: 'Test Category',
+        description: 'Test Description',
+        sku: '',
+        unit_value: 0,
+        storage_conditions: '',
+        product_features: '',
+        provider_id: '',
+        estimated_delivery_time: '',
+        photo: '',
+      }];
+
+      const mockFabricantes: FabricantesResponse = {
+        providers: [
+          { id: '1', name: 'Fabricante 1' },
+          { id: '2', name: 'Fabricante 2' }
+        ]
+      };
+    
+      const req1 = httpMock.expectOne(`${environment.apiUrlProviders}/providers`);
+      req1.flush(mockFabricantes);
+    
+      const req2 = httpMock.expectOne(`${environment.apiUrlProviders}/providers/test-provider`);
+      req2.flush({ portfolio: mockTableData });
+    
+      fixture.detectChanges();
+    
+      const tableTemplate = fixture.debugElement.query(By.directive(TableTemplateComponent));
+      expect(tableTemplate).toBeTruthy();
+    
+      const tableComponent = tableTemplate.componentInstance;
+      expect(tableComponent.data).toEqual(mockTableData);
+      expect(tableComponent.columns).toEqual(component.tableColumns);
+      expect(tableComponent.displayedColumns).toEqual(component.visibleColumns);
+      expect(tableComponent.actions).toEqual(component.assignAction);
     });
   });
 
