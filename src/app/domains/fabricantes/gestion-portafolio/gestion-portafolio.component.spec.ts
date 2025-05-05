@@ -165,6 +165,19 @@ describe('GestionPortafolioComponent', () => {
       const productId = '123';
       spyOn(router, 'navigate');
 
+      const mockFabricantes: FabricantesResponse = {
+        providers: [
+          { id: '1', name: 'Fabricante 1' },
+          { id: '2', name: 'Fabricante 2' }
+        ]
+      };
+
+      const req1 = httpMock.expectOne(`${environment.apiUrlProviders}/providers`);
+      req1.flush(mockFabricantes);
+
+      const req2 = httpMock.expectOne(`${environment.apiUrlProviders}/providers/test-provider`);
+      req2.flush({ portfolio: [] });
+
       component.editarProducto(productId);
 
       expect(router.navigate).toHaveBeenCalledWith(['/productos/editar', productId]);
@@ -188,6 +201,19 @@ describe('GestionPortafolioComponent', () => {
         category: ''
       };
       
+      const mockFabricantes: FabricantesResponse = {
+        providers: [
+          { id: '1', name: 'Fabricante 1' },
+          { id: '2', name: 'Fabricante 2' }
+        ]
+      };
+
+      const req1 = httpMock.expectOne(`${environment.apiUrlProviders}/providers`);
+      req1.flush(mockFabricantes);
+
+      const req2 = httpMock.expectOne(`${environment.apiUrlProviders}/providers/test-provider`);
+      req2.flush({ portfolio: [] });
+
       spyOn(service, 'eliminarProducto').and.returnValue(of(mockDeletedProduct));
       spyOn(component, 'refrescarTableData');
   
@@ -232,6 +258,19 @@ describe('GestionPortafolioComponent', () => {
 
       spyOn(router, 'navigate');
 
+      const mockFabricantes: FabricantesResponse = {
+        providers: [
+          { id: '1', name: 'Fabricante 1' },
+          { id: '2', name: 'Fabricante 2' }
+        ]
+      };
+
+      const req1 = httpMock.expectOne(`${environment.apiUrlProviders}/providers`);
+      req1.flush(mockFabricantes);
+
+      const req2 = httpMock.expectOne(`${environment.apiUrlProviders}/providers/test-provider`);
+      req2.flush({ portfolio: [] });
+
       component.refrescarTableData();
 
       const req = httpMock.expectOne(`${environment.apiUrlProviders}/providers/${currentId}`);
@@ -262,6 +301,19 @@ describe('GestionPortafolioComponent', () => {
         description: 'Description',
         category: 'Category'
       };
+
+      const mockFabricantes: FabricantesResponse = {
+        providers: [
+          { id: '1', name: 'Fabricante 1' },
+          { id: '2', name: 'Fabricante 2' }
+        ]
+      };
+
+      const req1 = httpMock.expectOne(`${environment.apiUrlProviders}/providers`);
+      req1.flush(mockFabricantes);
+
+      const req2 = httpMock.expectOne(`${environment.apiUrlProviders}/providers/test-provider`);
+      req2.flush({ portfolio: [] });
       
       spyOn(component, 'editarProducto');
       
@@ -285,6 +337,19 @@ describe('GestionPortafolioComponent', () => {
         description: 'Description',
         category: 'Category'
       };
+
+      const mockFabricantes: FabricantesResponse = {
+        providers: [
+          { id: '1', name: 'Fabricante 1' },
+          { id: '2', name: 'Fabricante 2' }
+        ]
+      };
+
+      const req1 = httpMock.expectOne(`${environment.apiUrlProviders}/providers`);
+      req1.flush(mockFabricantes);
+
+      const req2 = httpMock.expectOne(`${environment.apiUrlProviders}/providers/test-provider`);
+      req2.flush({ portfolio: [] });
       
       spyOn(component, 'eliminarProducto');
       
