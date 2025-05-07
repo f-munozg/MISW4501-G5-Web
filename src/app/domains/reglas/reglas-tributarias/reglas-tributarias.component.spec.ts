@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { ReglasTributariasComponent } from './reglas-tributarias.component';
+import { ReglasModule } from '../reglas.module';
 
 describe('ReglasTributariasComponent', () => {
   let component: ReglasTributariasComponent;
@@ -11,7 +12,8 @@ describe('ReglasTributariasComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ReglasTributariasComponent ]
+      declarations: [ ReglasTributariasComponent ],
+      imports: [ ReglasModule ]
     })
     .compileComponents();
   }));

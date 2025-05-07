@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { ReglasMenuComponent } from './reglas-menu.component';
+import { ReglasModule } from '../reglas.module';
 
 describe('ReglasMenuComponent', () => {
   let component: ReglasMenuComponent;
@@ -11,7 +12,8 @@ describe('ReglasMenuComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ReglasMenuComponent ]
+      declarations: [ ReglasMenuComponent ],
+      imports: [ ReglasModule ]
     })
     .compileComponents();
   }));

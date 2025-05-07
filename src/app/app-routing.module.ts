@@ -51,11 +51,14 @@ const routes: Routes = [
   {path: 'productos/carga_masiva_productos', component: CargaMasivaProductosComponent},
 
   /* Reglas */
-  {path: 'reglas', component: ReglasMenuComponent, 
-    children: [ {path: 'legales', component: ReglasLegalesComponent},
-                {path: 'tributarias', component: ReglasTributariasComponent},
-                {path: 'comerciales', component: ReglasComercialesComponent}
-              ]
+  {
+    path: 'reglas',
+    children: [
+      { path: '', pathMatch: 'full', component: ReglasMenuComponent },
+      { path: 'legales', component: ReglasLegalesComponent },
+      { path: 'tributarias', component: ReglasTributariasComponent },
+      { path: 'comerciales', component: ReglasComercialesComponent }
+    ]
   },
 
   /* Vendedores */
