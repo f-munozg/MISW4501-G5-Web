@@ -1,0 +1,26 @@
+<app-default-window>
+  <main class="reglasMenuContainer">
+    <div class="reglasMenuHeaderGrid">
+      <div class="grid-item-reglasMenuHeaderTitulo">
+        <h2>Definición de Reglas</h2>
+      </div>
+    </div>
+
+    <div class="reglasMenuDropdown">
+      <div class="grid-item-reglasMenuDropdownDescription">
+        <p>Seleccione el tipo de reglas a generar:</p>
+      </div>
+      <div class="grid-item-reglasMenuDropdownForm">
+        <mat-form-field class="fieldReglas">
+          <mat-label>Tipo de Regla</mat-label>
+          <mat-select>
+            <mat-option value="regla_legal" routerLink="/reglas/legales">Regla Legal</mat-option>
+            <mat-option value="regla_tributaria" routerLink="/reglas/tributarias">Regla Tributaria</mat-option>
+            <mat-option value="regla_comercial" routerLink="/reglas/comerciales">Regla Comercial</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+  </main> 
+</app-default-window>
