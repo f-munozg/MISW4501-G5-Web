@@ -11,12 +11,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CategoriaProductos } from '../../productos/producto.model';
 import { ConsultaVentasService } from './consulta-ventas.service';
 import { environment } from '../../../../environments/environment';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject, of } from 'rxjs';
 
 describe('ConsultaVentasComponent', () => {
   let component: ConsultaVentasComponent;
   let fixture: ComponentFixture<ConsultaVentasComponent>;
   let service: ConsultaVentasService;
   let httpMock: HttpTestingController;
+  let router: Router;
+  let route: ActivatedRoute
 
   let apiUrlProviders = environment.apiUrlProviders + `/providers`;
   let apiUrlProducts = environment.apiUrlProducts + `/products`;
@@ -267,5 +271,150 @@ describe('ConsultaVentasComponent', () => {
     });
   });
 
+  describe('Error handling tests', () => {
+    it('should handle error when loading products', () => {
+      const consoleSpy = spyOn(console, 'error');
+      const errorEvent = new ErrorEvent('Network error');
+      
+      const req1a = httpMock.expectOne(apiUrlProducts);
+      req1a.error(errorEvent);
+
+      const req2a = httpMock.expectOne(apiUrlProviders);
+      req2a.flush({});
+
+      component.ngOnInit();
+      
+      const req1 = httpMock.expectOne(apiUrlProducts);
+      req1.error(errorEvent);
+      
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Error loading products: ', 
+        jasmine.objectContaining({
+          error: errorEvent,
+          status: 0,
+          statusText: 'Unknown Error',
+          url: apiUrlProducts
+        })
+      );
+      
+      const req2 = httpMock.expectOne(apiUrlProviders);
+      req2.flush({});
+    });
+  
+    it('should handle error when loading providers', () => {
+      const consoleSpy = spyOn(console, 'error');
+      const errorEvent = new ErrorEvent('Network error');
+      
+      const req1a = httpMock.expectOne(apiUrlProducts);
+      req1a.flush({});
+      
+      const req2a = httpMock.expectOne(apiUrlProviders);
+      req2a.error(errorEvent);
+
+      component.ngOnInit();
+      
+      const req1 = httpMock.expectOne(apiUrlProducts);
+      req1.flush({});
+      
+      const req2 = httpMock.expectOne(apiUrlProviders);
+      req2.error(errorEvent);
+      
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Error loading providers: ', 
+        jasmine.objectContaining({
+          error: errorEvent,
+          status: 0,
+          statusText: 'Unknown Error',
+          url: apiUrlProviders
+        })
+      );
+    });  
+  
+    it('should handle error when submitting form', () => {
+      const consoleSpy = spyOn(console, 'log');
+      const errorEvent = new ErrorEvent('Network error');
+      const testData = {
+        fieldProducto: '1', 
+        fieldFabricante: '', 
+        fieldCategoria: '', 
+        fieldDesde: '', 
+        fieldHasta: ''
+      };
+
+      const req1 = httpMock.expectOne(apiUrlProducts);
+      req1.flush({});
+      
+      const req2 = httpMock.expectOne(apiUrlProviders);
+      req2.flush({});
+      
+      component.consultaVentasForm.setValue(testData);
+      component.onSubmit();
+      
+      const req3 = httpMock.expectOne(`${apiUrlSales}/sales?product=1`);
+      req3.error(errorEvent);
+      
+      expect(consoleSpy).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          error: errorEvent,
+          status: 0,
+          statusText: 'Unknown Error',
+          url: `${apiUrlSales}/sales?product=1`
+        })
+      );
+    });
+  });
+  
+  describe('Date validation tests', () => {
+    it('should set error when initial date is after final date through form changes', () => {
+      const req1 = httpMock.expectOne(apiUrlProducts);
+      const req2 = httpMock.expectOne(apiUrlProviders);
+      req1.flush({products: []});
+      req2.flush({providers: []});
+    
+      component.consultaVentasForm.setValue({
+        fieldProducto: '',
+        fieldFabricante: '',
+        fieldCategoria: '',
+        fieldDesde: '2023-05-10',
+        fieldHasta: '2023-05-11'
+      });
+    
+      expect(component.consultaVentasForm.get('fieldHasta')?.errors).toBeNull();
+
+      component.consultaVentasForm.get('fieldDesde')?.setValue('2023-05-12');
+
+      expect(component.consultaVentasForm.get('fieldHasta')?.errors).toEqual({ invalidDate: true });
+    });
+  
+    it('should handle date formatting for non-string dates through onSubmit', () => {
+      const date = new Date(2025, 4, 10); // Mayo 10, 2025 
+      
+      const testData = {
+        fieldProducto: '',
+        fieldFabricante: '',
+        fieldCategoria: '',
+        fieldDesde: date,
+        fieldHasta: date
+      };
+      
+      const req1 = httpMock.expectOne(apiUrlProducts);
+      const req2 = httpMock.expectOne(apiUrlProviders);
+      req1.flush({products: []});
+      req2.flush({providers: []});
+    
+      spyOn(component, 'formatDate').and.callThrough();
+      component.consultaVentasForm.setValue(testData);
+      component.onSubmit();
+      
+      expect(component.formatDate).toHaveBeenCalledWith(date);
+      
+      const formattedDate = component.formatDate(date);
+      
+      const salesReq = httpMock.expectOne(
+        `${apiUrlSales}/sales?initial_date=${formattedDate}&final_date=${formattedDate}`
+      );
+      salesReq.flush([]);
+    });
+  });
   });
 });
