@@ -1,12 +1,14 @@
 .reglasTributariasContainer{
     display: grid;
     gap: 20px;
-    background-color: #e4e4e4;
+    /* background-color: #e4e4e4; */
 }
 
+/*
 [class^='grid-item']{
     outline: 3px dashed #f90;
 }
+*/
 
 .reglasTributariasHeaderGrid{
     display: grid;

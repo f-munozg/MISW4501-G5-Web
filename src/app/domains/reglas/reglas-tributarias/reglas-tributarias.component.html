@@ -4,33 +4,33 @@
       <h2 class="grid-item-reglasTributariasTitulo">Definición de Reglas Tributarias</h2>
     </div>
     <div class="reglasTributariasSeleccionFormGrid">
-        <div class="grid-item-paisFormField">
-          <h3>País</h3>
-          <mat-form-field class="paisFormField">
-            <mat-label>Escoja el País</mat-label>
-            <mat-select>
-              <mat-option *ngFor="let pais of listaPaises" [value]="pais">
-                {{PaisesType2LabelMapping[pais]}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+      <div class="grid-item-paisFormField">
+        <h3>País</h3>
+        <mat-form-field class="paisFormField">
+          <mat-label>Escoja el País</mat-label>
+          <mat-select>
+            <mat-option *ngFor="let pais of listaPaises" [value]="pais">
+              {{PaisesType2LabelMapping[pais]}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="grid-item-tipoImpuestoFormField">
+        <h3>Tipo de Impuesto</h3>
+        <mat-form-field class="tipoImpuestoFormField">
+          <mat-label>Escoja el Tipo de Impuesto</mat-label>
+          <mat-select>
+            <mat-option *ngFor="let tipoImpuesto of listaTiposImpuestos" [value]="tipoImpuesto">
+              {{TipoImpuesto2LabelMapping[tipoImpuesto]}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="grid-item-buscarBtnForm">
+        <div class="grid-item-buscarBtnDiv">
+          <button mat-flat-button class="buscarBtn">Buscar</button>
         </div>
-        <div class="grid-item-tipoImpuestoFormField">
-          <h3>Tipo de Impuesto</h3>
-          <mat-form-field class="tipoImpuestoFormField">
-            <mat-label>Escoja el Tipo de Impuesto</mat-label>
-            <mat-select>
-              <mat-option *ngFor="let tipoImpuesto of listaTiposImpuestos" [value]="tipoImpuesto">
-                {{TipoImpuesto2LabelMapping[tipoImpuesto]}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="grid-item-buscarBtnForm">
-          <div class="grid-item-buscarBtnDiv">
-            <button mat-flat-button class="buscarBtn">Buscar</button>
-          </div>
-        </div>
+      </div>
     </div>
     <!-- 
         Zona para notificaciones/mensajes 
@@ -50,30 +50,32 @@
     <div class="reglasTributariasAgregarReglaHeaderGrid">
       <h3 class="grid-item-reglasTributariasAgregarReglaTitulo">Agregar Regla Tributaria</h3>
     </div>
-    <div class="reglasTributariasAgregarReglaForm">
-      <div class="grid-item-descripcionField">
-        <h3>Descripción del tributo</h3>
-        <mat-form-field class="descripcionFormField">
-          <input matInput placeholder="Descripción">
-        </mat-form-field>
-      </div>
-      <div class="grid-item-valorField">
-        <h3>Valor del tributo</h3>
-        <mat-form-field class="valorFormField">
-          <input type="number" matInput placeholder="Valor en %">
-        </mat-form-field>
-      </div>
-      <div class="reglasTributariasAgregarReglaBtnsContainer">
-        <div class="grid-item-cancelarBtnDiv">
-          <button mat-flat-button class="cancelarBtn">Cancelar</button>
+    <form [formGroup]="agregarReglaTributariaForm" (ngSubmit)="onSubmit()">
+      <div class="reglasTributariasAgregarReglaForm">
+        <div class="grid-item-descripcionField">
+          <h3>Descripción del tributo</h3>
+          <mat-form-field class="descripcionFormField">
+            <input matInput formControlName="fieldDescripcion" placeholder="Descripción">
+          </mat-form-field>
         </div>
-        <div class="grid-item-guardarBtnDiv">
-          <button mat-flat-button class="guardarBtn" 
-                  type="submit" 
-                  >Guardar
-          </button>
+        <div class="grid-item-valorField">
+          <h3>Valor del tributo</h3>
+          <mat-form-field class="valorFormField">
+            <input type="number" formControlName="fieldValor" matInput placeholder="Valor">
+          </mat-form-field>
+        </div>
+        <div class="reglasTributariasAgregarReglaBtnsContainer">
+          <div class="grid-item-cancelarBtnDiv">
+            <button mat-flat-button class="cancelarBtn">Cancelar</button>
+          </div>
+          <div class="grid-item-guardarBtnDiv">
+            <button mat-flat-button class="guardarBtn" 
+                    type="submit" 
+                    >Guardar
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </form>    
   </main>
 </app-default-window>

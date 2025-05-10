@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Paises, PaisesType2LabelMapping, TipoImpuesto, TipoImpuesto2LabelMapping } from '../reglas.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export interface TableRow {
   id: string;
@@ -16,7 +18,7 @@ export interface TableRow {
   styleUrls: ['./reglas-tributarias.component.css']
 })
 export class ReglasTributariasComponent implements OnInit {
-  
+  agregarReglaTributariaForm!: FormGroup;
 
   public PaisesType2LabelMapping = PaisesType2LabelMapping;
   public listaPaises = Object.values(Paises); 
@@ -59,9 +61,24 @@ export class ReglasTributariasComponent implements OnInit {
     }
   ]
 
-  constructor() { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+  ) { }
 
-  ngOnInit() {
+  initializeForm(): void {
+    this.agregarReglaTributariaForm = this.formBuilder.group({
+      fieldDescripcion: ['', Validators.required],
+      fieldValor: ['', [Validators.required, Validators.min(0)]],
+    });
   }
 
+  ngOnInit() {
+    this.initializeForm();
+  }
+
+  onSubmit(){
+
+  }
 }
