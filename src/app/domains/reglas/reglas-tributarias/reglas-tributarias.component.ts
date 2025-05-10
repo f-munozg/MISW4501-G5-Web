@@ -63,7 +63,9 @@ export class ReglasTributariasComponent implements OnInit {
     {
       icon: 'Eliminar',
       tooltip: 'Eliminar',
-      action: (row: any) => {}
+      action: (row: TableRow) => {
+        this.eliminarTributo(row.id);
+      }
     }
   ]
 
@@ -135,6 +137,19 @@ export class ReglasTributariasComponent implements OnInit {
   }
 
   cambioValoresFiltros(): void {
+    this.cargarReglas();
+  }
+
+  eliminarTributo(regla_id: string): void {
+    this.apiService.eliminarTributo(regla_id).subscribe({
+      next: (response) => {
+        console.log("Delete successful", response);
+      },
+      error: (err) => {
+        console.error("Error during deletion", err);
+      }
+    })
+
     this.cargarReglas();
   }
 
