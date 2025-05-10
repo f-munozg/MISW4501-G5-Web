@@ -29,6 +29,10 @@ export class ReglasTributariasComponent implements OnInit {
   filtroTipoImpuesto: string = "";
   reglasFiltradas: ReglaTributaria[] = [];
 
+  esModoEdicion: boolean = false;
+
+  idTributo: string | null = null;
+
   public PaisesType2LabelMapping = PaisesType2LabelMapping;
   public listaPaises = Object.values(Paises); 
 
@@ -97,6 +101,9 @@ export class ReglasTributariasComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.idTributo = this.route.snapshot.paramMap.get('id');
+    this.esModoEdicion = !!this.idTributo;
+
     this.initializeForm();
     this.cargarReglas();
   }
@@ -150,8 +157,25 @@ export class ReglasTributariasComponent implements OnInit {
            this.fieldTipoImpuesto?.value != null && this.fieldTipoImpuesto?.value != undefined && this.fieldTipoImpuesto?.value != "";
   }
 
-  editarTributo(regla_id: string): void {
+  cargarInformacionRegla(): void {
 
+  }
+
+  editarTributo(regla_id: string): void {
+    const regla = this.reglasFiltradas.find(r => r.id === regla_id);
+  
+    if (regla) {
+      this.idTributo = regla_id;
+      this.esModoEdicion = true;
+      
+      this.agregarReglaTributariaForm.patchValue({
+        fieldDescripcion: regla.descripcion,
+        fieldValor: regla.valor
+      });
+      
+      this.fieldPais.writeValue(regla.pais);
+      this.fieldTipoImpuesto.writeValue(regla.tipo_impuesto);
+    }
   }
 
   eliminarTributo(regla_id: string): void {
@@ -175,17 +199,42 @@ export class ReglasTributariasComponent implements OnInit {
           fieldTipoImpuesto: this.fieldTipoImpuesto.value
         }
 
-      this.apiService.postData(formData).subscribe(
-        response => {
-          this.cargarReglas();
-          this.agregarReglaTributariaForm.reset();
-          console.log('Success!', response);
-        },
-        error => {
-          console.error('Error!', error);
-        }
-      )
+      if (this.esModoEdicion && this.idTributo) {
+        // Acá se actualiza una regla tributaria existente
+        formData.id = this.idTributo;
+        this.apiService.updateTributo(formData).subscribe(
+          response => {
+            this.limpiarEdicion();
+            console.log('Update successful', response);
+          },
+          error => {
+            console.error('Error updating:', error)
+          }
+        );
+      } else {
+          // Acá se crea una nueva regla tributaria
+          this.apiService.postData(formData).subscribe(
+            response => {
+              this.cargarReglas();
+              this.agregarReglaTributariaForm.reset();
+              console.log('Success!', response);
+            },
+            error => {
+              console.error('Error!', error);
+            }
+          )
+      }
     }
   }
 
+  limpiarEdicion(): void {
+    this.agregarReglaTributariaForm.reset();
+    this.esModoEdicion = false;
+    this.idTributo = null;
+    this.cargarReglas();
+  }
+
+  clearAll(): void {
+    
+  }
 }

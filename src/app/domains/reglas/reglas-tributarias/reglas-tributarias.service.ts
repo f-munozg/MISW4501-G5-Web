@@ -27,6 +27,22 @@ constructor(private http: HttpClient) { }
     return this.http.post<any>(`${environment.apiUrlProviders}/rules/tax/add`, requestData, {headers});
   }
 
+  updateTributo(formData: any):
+  Observable<any> {
+      const requestData = {
+        country: formData.fieldPais,
+        type_tax: formData.fieldTipoImpuesto,
+        value_tax: formData.fieldValor,
+        description: formData.fieldDescripcion
+      };
+
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json'
+      });
+
+      return this.http.put<any>(`${environment.apiUrlProviders}/rules/tax/update/${formData.id}`, requestData, {headers});
+  }
+
   getListaTributos():
   Observable<ReglaTributariaResponse>{
     return this.http.get<ReglaTributariaResponse>(`${environment.apiUrlProviders}/rules/tax/get`);
