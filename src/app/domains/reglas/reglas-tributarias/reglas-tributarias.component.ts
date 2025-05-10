@@ -222,7 +222,7 @@ export class ReglasTributariasComponent implements OnInit {
         },
         error: (err) => {
           console.error("Error during deletion", err);
-          this.mostrarMensajeError('Error creando la regla tributaria');
+          this.mostrarMensajeError('Error eliminando la regla tributaria');
           this.cargando = false;
         }
       });
