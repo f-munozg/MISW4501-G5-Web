@@ -123,3 +123,15 @@ export const TipoReglaComercial2LabelMapping: Record<TipoReglaComercial, string>
     [TipoReglaComercial.PEDIDO_MINIMO]: "Pedido Mínimo",
     [TipoReglaComercial.OTRO]: "Otro",
 }
+
+export interface ReglaTributaria{
+    id: string;
+    pais: Paises;
+    tipo_impuesto: TipoImpuesto;
+    valor: number;
+    descripcion: string;
+}
+
+export interface ReglaTributariaResponse{
+    rules: ReglaTributaria[]
+}

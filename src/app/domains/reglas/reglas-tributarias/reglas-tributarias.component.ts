@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Paises, PaisesType2LabelMapping, TipoImpuesto, TipoImpuesto2LabelMapping } from '../reglas.model';
+import { Paises, PaisesType2LabelMapping, TipoImpuesto, TipoImpuesto2LabelMapping, ReglaTributariaResponse, ReglaTributaria } from '../reglas.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ReglasTributariasService } from './reglas-tributarias.service';
+import { map } from 'rxjs';
 
 export interface TableRow {
   id: string;
@@ -19,6 +21,10 @@ export interface TableRow {
 })
 export class ReglasTributariasComponent implements OnInit {
   agregarReglaTributariaForm!: FormGroup;
+
+  filtroPais: string = '';
+  filtroTipoImpuesto: string = "";
+  reglasFiltradas: ReglaTributaria[] = [];
 
   public PaisesType2LabelMapping = PaisesType2LabelMapping;
   public listaPaises = Object.values(Paises); 
@@ -65,7 +71,13 @@ export class ReglasTributariasComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-  ) { }
+    private apiService: ReglasTributariasService,
+  ) {
+    this.route.queryParams.subscribe(params => {
+      this.filtroPais = params['pais'] || '';
+      this.filtroTipoImpuesto = params['tipo_impuesto'] || '';
+    });
+   }
 
   initializeForm(): void {
     this.agregarReglaTributariaForm = this.formBuilder.group({
@@ -76,6 +88,32 @@ export class ReglasTributariasComponent implements OnInit {
 
   ngOnInit() {
     this.initializeForm();
+  }
+
+  cargarReglas(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        pais: this.filtroPais || null,
+        tipo_impuesto: this.filtroTipoImpuesto || null,
+      },
+      queryParamsHandling: 'merge'
+    });
+
+    this.apiService.getListaTributos().pipe(
+      map(reglas => this.filtrarReglas(reglas.rules))
+    ).subscribe(filtrados => {
+      this.reglasFiltradas = filtrados;
+    })
+  }
+
+  private filtrarReglas(reglas: ReglaTributaria[]): ReglaTributaria[] {
+    return reglas.filter(regla => {
+      const tipoImpuestoMatch = !this.filtroTipoImpuesto || regla.tipo_impuesto;
+      const paisMatch = !this.filtroPais || regla.pais;
+
+      return tipoImpuestoMatch && paisMatch;
+    });
   }
 
   onSubmit(){
