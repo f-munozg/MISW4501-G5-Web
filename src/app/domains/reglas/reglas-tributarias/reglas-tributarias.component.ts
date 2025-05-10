@@ -72,7 +72,7 @@ export class ReglasTributariasComponent implements OnInit {
       icon: 'Editar',
       tooltip: 'Editar',
       action: (row: TableRow) => {
-        if (this.sonFiltrosValidos()) {  // Reuse your existing validation method
+        if (this.sonFiltrosValidos()) {
           this.editarTributo(row.id);
         } else {
           this.mostrarAlertaFiltros();
@@ -149,7 +149,7 @@ export class ReglasTributariasComponent implements OnInit {
     });
   }
 
-  private filtrarReglas(reglas: ReglaTributaria[]): ReglaTributaria[] {
+  filtrarReglas(reglas: ReglaTributaria[]): ReglaTributaria[] {
     return reglas.filter(regla => {
       const tipoImpuestoMatch = !this.filtroTipoImpuesto || regla.tipo_impuesto.toString() === this.filtroTipoImpuesto;
       const paisMatch = !this.filtroPais || regla.pais.toString() === this.filtroPais;
@@ -158,7 +158,7 @@ export class ReglasTributariasComponent implements OnInit {
     });
   }
 
-  private actualizarTabla(reglas: ReglaTributaria[]): void {
+  actualizarTabla(reglas: ReglaTributaria[]): void {
     this.tableData = reglas.map(regla => ({
       id: regla.id,
       pais: regla.pais,
@@ -204,10 +204,15 @@ export class ReglasTributariasComponent implements OnInit {
   }
 
   puedeEditar(): boolean {
-    return this.fieldPais?.value && 
-           this.fieldTipoImpuesto?.value &&
-           this.fieldPais.value !== '' && 
-           this.fieldTipoImpuesto.value !== '';
+    const hasPais = this.fieldPais?.value !== null && 
+                   this.fieldPais?.value !== undefined && 
+                   this.fieldPais?.value !== '';
+    
+    const hasTipoImpuesto = this.fieldTipoImpuesto?.value !== null && 
+                           this.fieldTipoImpuesto?.value !== undefined && 
+                           this.fieldTipoImpuesto?.value !== '';
+  
+    return hasPais && hasTipoImpuesto;
   }
 
   eliminarTributo(regla_id: string): void {
@@ -321,7 +326,7 @@ export class ReglasTributariasComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  private mostrarMensajeExito(mensaje: string): void {
+  mostrarMensajeExito(mensaje: string): void {
     this.mensajeExito = mensaje;
     this.messageBox.open(mensaje, 'Cerrar', {
       duration: 5000,
@@ -330,7 +335,7 @@ export class ReglasTributariasComponent implements OnInit {
     setTimeout(() => this.mensajeExito = null, 5000);
   }
 
-  private mostrarMensajeError(mensaje: string): void {
+  mostrarMensajeError(mensaje: string): void {
     this.mensajeError = mensaje;
     this.messageBox.open(mensaje, 'Cerrar', {
       duration: 5000,
@@ -338,7 +343,7 @@ export class ReglasTributariasComponent implements OnInit {
     });
   }
 
-  private mostrarAlertaFiltros(): void {
+  mostrarAlertaFiltros(): void {
     this.messageBox.open(
       'Seleccione País y Tipo de Impuesto antes de editar', 
       'Cerrar', 
