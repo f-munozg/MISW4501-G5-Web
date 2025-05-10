@@ -63,7 +63,11 @@
         </div>
         <div class="reglasTributariasAgregarReglaBtnsContainer">
           <div class="grid-item-cancelarBtnDiv">
-            <button mat-flat-button class="cancelarBtn">Cancelar</button>
+            <button mat-flat-button class="cancelarBtn"
+                    (click)="clearAll()"
+                    [disabled]="enviando">
+                    Cancelar
+            </button>
           </div>
           <div class="grid-item-guardarBtnDiv">
             <button mat-flat-button class="guardarBtn" 
