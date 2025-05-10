@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Paises, PaisesType2LabelMapping, TipoImpuesto, TipoImpuesto2LabelMapping, ReglaTributariaResponse, ReglaTributaria } from '../reglas.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReglasTributariasService } from './reglas-tributarias.service';
 import { map } from 'rxjs';
+import { MatSelect } from '@angular/material/select';
 
 export interface TableRow {
   id: string;
@@ -21,6 +22,8 @@ export interface TableRow {
 })
 export class ReglasTributariasComponent implements OnInit {
   agregarReglaTributariaForm!: FormGroup;
+  @ViewChild('fieldPais') fieldPais!: MatSelect;
+  @ViewChild('fieldTipoImpuesto') fieldTipoImpuesto!: MatSelect;
 
   filtroPais: string = '';
   filtroTipoImpuesto: string = "";
@@ -58,7 +61,9 @@ export class ReglasTributariasComponent implements OnInit {
     {
       icon: 'Editar',
       tooltip: 'Editar',
-      action: (row: any) => {}
+      action: (row: TableRow) => {
+        this.editarTributo(row.id)
+      }
     },
     {
       icon: 'Eliminar',
@@ -140,20 +145,47 @@ export class ReglasTributariasComponent implements OnInit {
     this.cargarReglas();
   }
 
+  sonFiltrosValidos(): boolean{
+    return this.fieldPais?.value != null && this.fieldPais?.value != undefined && this.fieldPais?.value != "" && 
+           this.fieldTipoImpuesto?.value != null && this.fieldTipoImpuesto?.value != undefined && this.fieldTipoImpuesto?.value != "";
+  }
+
+  editarTributo(regla_id: string): void {
+
+  }
+
   eliminarTributo(regla_id: string): void {
     this.apiService.eliminarTributo(regla_id).subscribe({
       next: (response) => {
+        this.cargarReglas();
         console.log("Delete successful", response);
       },
       error: (err) => {
         console.error("Error during deletion", err);
       }
     })
-
-    this.cargarReglas();
   }
 
   onSubmit(){
+    if (this.agregarReglaTributariaForm.valid && 
+      this.filtroPais != '' && this.filtroTipoImpuesto != '' ){
+        const formData = {
+          ...this.agregarReglaTributariaForm.value,
+          fieldPais: this.fieldPais.value,
+          fieldTipoImpuesto: this.fieldTipoImpuesto.value
+        }
 
+      this.apiService.postData(formData).subscribe(
+        response => {
+          this.cargarReglas();
+          this.agregarReglaTributariaForm.reset();
+          console.log('Success!', response);
+        },
+        error => {
+          console.error('Error!', error);
+        }
+      )
+    }
   }
+
 }

@@ -8,7 +8,8 @@
         <h3>País</h3>
         <mat-form-field class="paisFormField">
           <mat-label>Escoja el País</mat-label>
-          <mat-select [(value)]="filtroPais" (selectionChange)="cambioValoresFiltros()">
+          <mat-select [(value)]="filtroPais" #fieldPais required 
+            (selectionChange)="cambioValoresFiltros()">
             <mat-option *ngFor="let pais of listaPaises" [value]="pais">
               {{PaisesType2LabelMapping[pais]}}
             </mat-option>
@@ -19,7 +20,8 @@
         <h3>Tipo de Impuesto</h3>
         <mat-form-field class="tipoImpuestoFormField">
           <mat-label>Escoja el Tipo de Impuesto</mat-label>
-          <mat-select [(value)]="filtroTipoImpuesto" (selectionChange)="cambioValoresFiltros()">
+          <mat-select [(value)]="filtroTipoImpuesto" #fieldTipoImpuesto required 
+            (selectionChange)="cambioValoresFiltros()">
             <mat-option *ngFor="let tipoImpuesto of listaTiposImpuestos" [value]="tipoImpuesto">
               {{TipoImpuesto2LabelMapping[tipoImpuesto]}}
             </mat-option>
@@ -66,6 +68,7 @@
           <div class="grid-item-guardarBtnDiv">
             <button mat-flat-button class="guardarBtn" 
                     type="submit" 
+                    [disabled]="!sonFiltrosValidos() || agregarReglaTributariaForm.invalid"
                     >Guardar
             </button>
           </div>

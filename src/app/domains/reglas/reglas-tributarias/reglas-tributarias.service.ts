@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../../environments/environment'
 import { ReglaTributaria, ReglaTributariaResponse } from '../reglas.model';
 import { Observable } from 'rxjs';
@@ -10,6 +10,22 @@ import { Observable } from 'rxjs';
 export class ReglasTributariasService {
 
 constructor(private http: HttpClient) { }
+
+  postData(formData: any):
+  Observable<any>{
+    const requestData = {
+      country: formData.fieldPais,
+      type_tax: formData.fieldTipoImpuesto,
+      value_tax: formData.fieldValor,
+      description: formData.fieldDescripcion
+    }
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post<any>(`${environment.apiUrlProviders}/rules/tax/add`, requestData, {headers});
+  }
 
   getListaTributos():
   Observable<ReglaTributariaResponse>{
