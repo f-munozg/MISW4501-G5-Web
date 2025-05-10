@@ -76,6 +76,9 @@ export class ReglasTributariasComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.filtroPais = params['pais'] || '';
       this.filtroTipoImpuesto = params['tipo_impuesto'] || '';
+      if (this.filtroPais || this.filtroTipoImpuesto){
+        this.cargarReglas();
+      }
     });
    }
 
@@ -88,6 +91,7 @@ export class ReglasTributariasComponent implements OnInit {
 
   ngOnInit() {
     this.initializeForm();
+    this.cargarReglas();
   }
 
   cargarReglas(): void {
@@ -102,18 +106,36 @@ export class ReglasTributariasComponent implements OnInit {
 
     this.apiService.getListaTributos().pipe(
       map(reglas => this.filtrarReglas(reglas.rules))
-    ).subscribe(filtrados => {
-      this.reglasFiltradas = filtrados;
-    })
+    ).subscribe({
+      next: (filtrados) => {
+        this.reglasFiltradas = filtrados;
+        this.actualizarTabla(filtrados);
+      },
+      error: (err) => console.error('Error loading rules:', err)
+    });
   }
 
   private filtrarReglas(reglas: ReglaTributaria[]): ReglaTributaria[] {
     return reglas.filter(regla => {
-      const tipoImpuestoMatch = !this.filtroTipoImpuesto || regla.tipo_impuesto;
-      const paisMatch = !this.filtroPais || regla.pais;
+      const tipoImpuestoMatch = !this.filtroTipoImpuesto || regla.tipo_impuesto.toString() === this.filtroTipoImpuesto;
+      const paisMatch = !this.filtroPais || regla.pais.toString() === this.filtroPais;
 
       return tipoImpuestoMatch && paisMatch;
     });
+  }
+
+  private actualizarTabla(reglas: ReglaTributaria[]): void {
+    this.tableData = reglas.map(regla => ({
+      id: regla.id,
+      pais: regla.pais,
+      tipo_impuesto: regla.tipo_impuesto,
+      valor: regla.valor,
+      descripcion: regla.descripcion,
+    }));
+  }
+
+  cambioValoresFiltros(): void {
+    this.cargarReglas();
   }
 
   onSubmit(){

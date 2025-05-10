@@ -44,22 +44,6 @@
             grid-column: 1 / -1 !important;
         }
     }
-
-    .grid-item-buscarBtnForm{
-        grid-column: 7 / 9;
-        align-content: center;
-        align-self: center;
-
-        .mat-mdc-unelevated-button:not(:disabled) {
-            color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
-            background-color: #005d52 !important;
-        }
-
-        .buscarBtn{
-            width: 100% !important;
-            grid-column: 1 / -1 !important;
-        }
-    }
 }
 
 .reglasTributariasTablaHeaderGrid{
