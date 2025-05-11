@@ -15,7 +15,7 @@ constructor(private http: HttpClient) { }
   Observable<any>{
     const requestData = {
       country: formData.fieldPais,
-      category_producto: formData.fieldCategoriaProducto,
+      category_product: formData.fieldCategoriaProducto,
       description: formData.fieldDescripcion
     }
 
@@ -23,14 +23,14 @@ constructor(private http: HttpClient) { }
       'Content-Type': 'application/json'
     });
 
-    return this.http.post<any>(`${environment.apiUrlProviders}/rules/commercial/add`, requestData, {headers});
+    return this.http.post<any>(`${environment.apiUrlProviders}/rules/legal/add`, requestData, {headers});
   }
 
   updateReglaComercial(formData: any):
   Observable<any>{
     const requestData = {
       country: formData.fieldPais,
-      category_producto: formData.fieldCategoriaProducto,
+      category_product: formData.fieldCategoriaProducto,
       description: formData.fieldDescripcion
     }
 
@@ -38,7 +38,7 @@ constructor(private http: HttpClient) { }
       'Content-Type': 'application/json'
     });
 
-    return this.http.put<any>(`${environment.apiUrlProviders}/rules/commercial/update/${formData.id}`, requestData, {headers});
+    return this.http.put<any>(`${environment.apiUrlProviders}/rules/legal/update/${formData.id}`, requestData, {headers});
   }
 
   getListaReglasLegales():

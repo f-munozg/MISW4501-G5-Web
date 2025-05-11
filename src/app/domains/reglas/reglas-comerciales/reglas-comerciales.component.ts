@@ -214,7 +214,7 @@ export class ReglasComercialesComponent implements OnInit {
   }
 
   eliminarReglaComercial(regla_id: string): void {
-    if (confirm('¿Está segudo de querer eliminar la regla comercial')) {
+    if (confirm('¿Está seguro de querer eliminar la regla comercial?')) {
       this.cargando = true;
       this.apiService.eliminarReglaComercial(regla_id).subscribe({
         next: (response) => {
@@ -344,7 +344,7 @@ export class ReglasComercialesComponent implements OnInit {
 
   mostrarAlertaFiltros(): void {
     this.messageBox.open(
-      'Seleccione País y Tipo de Impuesto antes de editar', 
+      'Seleccione País y Tipo de Regla Comercial antes de editar', 
       'Cerrar', 
       { duration: 3000, panelClass: ['snackbar-warning'] }
     );

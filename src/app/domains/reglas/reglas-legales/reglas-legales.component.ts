@@ -72,12 +72,20 @@ export class ReglasLegalesComponent implements OnInit {
     {
       icon: 'Editar',
       tooltip: 'Editar',
-      action: (row: TableRow) => {}
+      action: (row: TableRow) => {
+        if (this.sonFiltrosValidos()) {
+          this.editarReglaLegal(row.id);
+        } else {
+          this.mostrarAlertaFiltros();
+        }  
+      }
     },
     {
       icon: 'Eliminar',
       tooltip: 'Eliminar',
-      action: (row: TableRow) => {}
+      action: (row: TableRow) => {
+        this.eliminarReglaLegal(row.id);
+      }
     }
   ]
 
@@ -206,7 +214,7 @@ export class ReglasLegalesComponent implements OnInit {
   }
 
   eliminarReglaLegal(regla_id: string): void {
-    if (confirm('¿Está segudo de querer eliminar la regla legal')) {
+    if (confirm('¿Está seguro de querer eliminar la regla legal?')) {
       this.cargando = true;
       this.apiService.eliminarReglaLegal(regla_id).subscribe({
         next: (response) => {
@@ -235,7 +243,7 @@ export class ReglasLegalesComponent implements OnInit {
           const formData = {
             ...this.agregarReglaLegalForm.value,
             fieldPais: this.fieldPais.value,
-            fieldTipoReglaComercial: this.fieldCategoriaProducto.value
+            fieldCategoriaProducto: this.fieldCategoriaProducto.value
           }
 
           if (this.esModoEdicion && this.idReglaLegal) {
@@ -335,7 +343,7 @@ export class ReglasLegalesComponent implements OnInit {
 
   mostrarAlertaFiltros(): void {
     this.messageBox.open(
-      'Seleccione País y Tipo de Impuesto antes de editar', 
+      'Seleccione País y Categoría de Producto antes de editar', 
       'Cerrar', 
       { duration: 3000, panelClass: ['snackbar-warning'] }
     );
