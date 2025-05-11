@@ -1,3 +1,79 @@
 <app-default-window>
-
+  <main class="reporteRotacionInventarioContainer">
+    <div class="reporteRotacionInventarioHeaderGrid">
+      <h2 class="grid-item-reporteRotacionInventarioTitulo">
+        Generación de Reporte de Rotación de Inventario
+      </h2>
+    </div>
+    <!-- Aquí va el form-->
+      <div class="reporteRotacionInventarioFormGrid">
+        <div class="grid-item-fechasForm">
+          <div class="grid-item-desdeForm">
+            <h3>Desde</h3>
+            <mat-form-field class="desdeFormField">
+              <mat-label>MM/DD/YYYY</mat-label>
+              <input matInput [matDatepicker]="picker1"> <!-- formControlName="fieldDesde" -->
+              <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="grid-item-hastaForm">
+            <h3>Hasta</h3>
+            <mat-form-field class="hastaFormField">
+              <mat-label>MM/DD/YYYY</mat-label>
+              <input matInput [matDatepicker]="picker2"> <!-- formControlName="fieldHasta" -->
+              <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+              <mat-error > <!-- *ngIf="consultaVentasForm.get('fieldHasta')?.hasError('invalidDate')" -->
+                Fecha inválida
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="grid-item-productoForm">
+          <h3>Producto</h3>
+          <mat-form-field class="productoFormField" appeareance="fill">
+            <mat-label>Seleccione Producto</mat-label>
+            <input 
+              type="text" 
+              matInput
+              formControlName="fieldProducto"
+              [matAutocomplete]="autoProducto"
+            >
+            <mat-autocomplete #autoProducto="matAutocomplete" > <!-- (optionSelected)="conProductoSeleccionado($event)" -->
+              <mat-option > <!-- *ngFor="let producto of productosFiltrados | async" [value]="producto" --> <!-- {{ producto.name }} -->
+                
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+        <div class="grid-item-generarReporteBtnForm">
+          <button mat-flat-button class="generarReporteBtn">Generar Reporte</button>
+        </div>
+      </div>
+    <!-- Aquí acaba el form-->
+    <div class="reporteRotacionInventarioBoxGrid">
+      <div class="grid-item-reporteRotacionInventarioStockInicialBox">
+        <h3>Stock Inicial</h3>
+      </div>
+      <div class="grid-item-reporteRotacionInventarioStockFinalBox">
+        <h3>Stock Final</h3>
+      </div>
+      <div class="grid-item-reporteRotacionInventarioRotaciónBox">
+        <h3>Rotación</h3>
+      </div>
+    </div>
+    <div class="reporteRotacionInventarioTablaHeaderGrid">
+      <h3 class="grid-item-reporteRotacionInventarioTablaTitulo">
+        Movimientos de Inventario
+      </h3>
+    </div>
+    <div class="reporteRotacionInventarioTableGrid">
+      <app-table-template
+        [data]="tableData"
+        [columns]="tableColumns"
+        [displayedColumns]="visibleColumns">
+      </app-table-template>
+    </div>
+  </main>
 </app-default-window>
