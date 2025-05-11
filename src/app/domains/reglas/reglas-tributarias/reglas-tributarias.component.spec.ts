@@ -1,7 +1,6 @@
 /* tslint:disable:no-unused-variable */
 import { waitForAsync, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { ChangeDetectorRef, DebugElement } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { of, throwError } from 'rxjs';
 
 import { ReglasTributariasComponent, TableRow } from './reglas-tributarias.component';
@@ -13,7 +12,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Paises, ReglaTributaria, TipoImpuesto } from '../reglas.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSelect } from '@angular/material/select';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 
 describe('ReglasTributariasComponent', () => {
   let component: ReglasTributariasComponent;
@@ -22,7 +21,6 @@ describe('ReglasTributariasComponent', () => {
   let httpMock: HttpTestingController;
   let router: Router;
   let route: ActivatedRoute;
-  let snackBar: MatSnackBar;
   let snackBarSpy: jasmine.SpyObj<MatSnackBar>;
   let cdRefSpy: jasmine.SpyObj<ChangeDetectorRef>;
   let fb: FormBuilder;
