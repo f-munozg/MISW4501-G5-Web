@@ -11,9 +11,35 @@ export class ReglasLegalesService {
 
 constructor(private http: HttpClient) { }
   
-  /* postData() */
+  postData(formData: any):
+  Observable<any>{
+    const requestData = {
+      country: formData.fieldPais,
+      category_producto: formData.fieldCategoriaProducto,
+      description: formData.fieldDescripcion
+    }
 
-  /* editarReglaLegal() */
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post<any>(`${environment.apiUrlProviders}/rules/commercial/add`, requestData, {headers});
+  }
+
+  updateReglaComercial(formData: any):
+  Observable<any>{
+    const requestData = {
+      country: formData.fieldPais,
+      category_producto: formData.fieldCategoriaProducto,
+      description: formData.fieldDescripcion
+    }
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.put<any>(`${environment.apiUrlProviders}/rules/commercial/update/${formData.id}`, requestData, {headers});
+  }
 
   getListaReglasLegales():
   Observable<ReglaLegalResponse>{

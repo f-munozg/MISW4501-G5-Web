@@ -120,7 +120,7 @@ export class ReglasLegalesComponent implements OnInit {
         relativeTo: this.route,
         queryParams: {
           pais: this.filtroPais || null,
-          tipo_regla_comercial: this.filtroCategoriaProducto || null,
+          categoria_producto: this.filtroCategoriaProducto || null,
         },
         queryParamsHandling: 'merge'
       });
@@ -135,7 +135,7 @@ export class ReglasLegalesComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error loading rules', err);
-          this.mensajeError = 'Error cargando las reglas comerciales';
+          this.mensajeError = 'Error cargando las reglas legales';
           this.cargando = false;
         }
       });
@@ -159,20 +159,185 @@ export class ReglasLegalesComponent implements OnInit {
       }));
     }
   
-    cambioValoresFiltros(): void {
-      this.cargarReglas();
+  cambioValoresFiltros(): void {
+    this.cargarReglas();
+  }
+
+  sonFiltrosValidos(): boolean{
+    return this.fieldPais?.value != null && this.fieldPais?.value != undefined && this.fieldPais?.value != "" && 
+            this.fieldCategoriaProducto?.value != null && this.fieldCategoriaProducto?.value != undefined && this.fieldCategoriaProducto?.value != "";
+  }
+
+  // Carga la regla legal a editar, la edición se maneja en onSubmit()
+  editarReglaLegal(regla_id: string): void {
+    if (!this.sonFiltrosValidos()){
+      this.mostrarAlertaFiltros();
+      return;
     }
-  
-    sonFiltrosValidos(): boolean{
-      return this.fieldPais?.value != null && this.fieldPais?.value != undefined && this.fieldPais?.value != "" && 
-             this.fieldCategoriaProducto?.value != null && this.fieldCategoriaProducto?.value != undefined && this.fieldCategoriaProducto?.value != "";
+
+    const regla = this.reglasFiltradas.find(r => r.id === regla_id);
+
+    if (regla) {
+      this.idReglaLegal = regla_id;
+      this.esModoEdicion = true;
+
+      this.agregarReglaLegalForm.patchValue({
+        fieldDescripcion: regla.descripcion
+      });
+
+      this.fieldPais.writeValue(regla.pais);
+      this.fieldCategoriaProducto.writeValue(regla.categoria_producto);
+
+      this.fieldPais.disabled = true;
+      this.fieldCategoriaProducto.disabled = true;
     }
+  }
+
+  puedeEditar(): boolean {
+    const tienePais = this.fieldPais?.value !== null &&
+                      this.fieldPais?.value !== undefined &&
+                      this.fieldPais?.value !== '';
+
+    const tieneCategoriaProducto = this.fieldCategoriaProducto?.value !== null &&
+                                    this.fieldCategoriaProducto?.value !== undefined &&
+                                    this.fieldCategoriaProducto?.value !== '';
+
+    return tienePais && tieneCategoriaProducto;
+  }
+
+  eliminarReglaLegal(regla_id: string): void {
+    if (confirm('¿Está segudo de querer eliminar la regla legal')) {
+      this.cargando = true;
+      this.apiService.eliminarReglaLegal(regla_id).subscribe({
+        next: (response) => {
+          this.cargarReglas();
+          console.log("Delete successful", response);
+          this.mostrarMensajeExito('Regla legal eliminada exitosamente');
+          this.enviando = false;
+        },
+        error: (err) => {
+          console.error("Error during deletion", err);
+          this.mostrarMensajeError('Error eliminando la regla legal');
+          this.cargando = false;
+        }
+      });
+    }
+  }
 
   onSubmit(){
+    if (this.enviando) return;
 
+    if (this.agregarReglaLegalForm.valid && 
+        this.filtroPais != '' && this.filtroCategoriaProducto != '') {
+          this.enviando = true;
+          this.mensajeError = null;
+
+          const formData = {
+            ...this.agregarReglaLegalForm.value,
+            fieldPais: this.fieldPais.value,
+            fieldTipoReglaComercial: this.fieldCategoriaProducto.value
+          }
+
+          if (this.esModoEdicion && this.idReglaLegal) {
+            // Acá se actualiza una regla legal existente
+            formData.id = this.idReglaLegal;
+            this.apiService.updateReglaComercial(formData).subscribe(
+              response => {
+                this.limpiarEdicion();
+                this.mostrarMensajeExito('Regla legal actualizada con éxito');
+                console.log('Update successful', response);
+                this.enviando = false;
+              },
+              error => {
+                console.error('Error updating:', error);
+                this.mostrarMensajeError('Error al actualizar la regla legal');
+                this.enviando = false;
+              }
+            );
+          } else {
+              // Acá se crea una nueva regla legal
+              this.apiService.postData(formData).subscribe(
+                response => {
+                  this.cargarReglas();
+                  this.mostrarMensajeExito('Regla legal creada exitosamente');
+                  this.agregarReglaLegalForm.reset();
+                  console.log('Success!', response);
+                  this.enviando = false;
+                },
+                error => {
+                  console.error('Error!', error);
+                  this.mostrarMensajeError('Error creando la regla legal');
+                  this.enviando = false;
+                }
+              )
+          }
+        }
+  }
+
+  limpiarEdicion(): void {
+    this.agregarReglaLegalForm.reset();
+    this.esModoEdicion = false;
+    this.idReglaLegal = null;
+    this.cargarReglas();
+
+    this.fieldPais.disabled = false;
+    this.fieldCategoriaProducto.disabled = false;
+    
+    this.cdRef.detectChanges();
+    
+    this.cargarReglas();
   }
 
   clearAll(): void {
+    this.agregarReglaLegalForm.reset();
+  
+    if (!this.fieldPais.disabled) {
+      this.fieldPais.writeValue('');
+    }
+    if (!this.fieldCategoriaProducto.disabled) {
+      this.fieldCategoriaProducto.writeValue('');
+    }
+    
+    if (this.esModoEdicion) {
+      this.esModoEdicion = false;
+      this.idReglaLegal = null;
+      
+      this.fieldPais.disabled = false;
+      this.fieldCategoriaProducto.disabled = false;
+    }
+    
+    this.filtroPais = '';
+    this.filtroCategoriaProducto = '';
+    this.cargarReglas();
+    
+    this.mensajeExito = null;
+    this.mensajeError = null;
 
+    this.cdRef.detectChanges();
+  }
+
+  mostrarMensajeExito(mensaje: string): void {
+    this.mensajeExito = mensaje;
+    this.messageBox.open(mensaje, 'Cerrar', {
+      duration: 5000,
+      panelClass: ['snackbar-success']
+    });
+    setTimeout(() => this.mensajeExito = null, 5000);
+  }
+
+  mostrarMensajeError(mensaje: string): void {
+    this.mensajeError = mensaje;
+    this.messageBox.open(mensaje, 'Cerrar', {
+      duration: 5000,
+      panelClass: ['snackbar-error']
+    });
+  }
+
+  mostrarAlertaFiltros(): void {
+    this.messageBox.open(
+      'Seleccione País y Tipo de Impuesto antes de editar', 
+      'Cerrar', 
+      { duration: 3000, panelClass: ['snackbar-warning'] }
+    );
   }
 }
