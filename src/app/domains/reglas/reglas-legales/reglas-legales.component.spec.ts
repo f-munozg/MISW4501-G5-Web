@@ -372,4 +372,219 @@ describe('puedeEditar', () => {
       expect(component.mostrarMensajeError).toHaveBeenCalledWith('Error creando la regla legal');
     });
   });
+
+  describe('cambioValoresFiltros', () => {
+    it('should call cargarReglas', () => {
+      spyOn(component, 'cargarReglas');
+      
+      component.cambioValoresFiltros();
+      
+      expect(component.cargarReglas).toHaveBeenCalled();
+    });
+  });
+  
+  describe('limpiarEdicion', () => {
+    it('should reset form and update component state', () => {
+      component.agregarReglaLegalForm = fb.group({
+        fieldDescripcion: ['Prueba'],
+      });
+  
+      component.fieldPais = { 
+        disabled: true,
+        writeValue: jasmine.createSpy()
+      } as any;
+  
+      component.fieldCategoriaProducto = { 
+        disabled: true,
+        writeValue: jasmine.createSpy()
+      } as any;
+  
+      component.esModoEdicion = true;
+      component.idReglaLegal = '123';
+      
+      spyOn(component, 'cargarReglas');
+      cdRefSpy.detectChanges.calls.reset();
+
+      component.limpiarEdicion();
+
+      expect(component.esModoEdicion).toBeFalse();
+      expect(component.idReglaLegal).toBeNull();
+      expect(component.fieldPais.disabled).toBeFalse();
+      expect(component.fieldCategoriaProducto.disabled).toBeFalse();
+      expect(component.cargarReglas).toHaveBeenCalled();
+      expect(cdRefSpy.detectChanges).toHaveBeenCalled();
+    });
+  });
+
+  describe('clearAll', () => {
+    beforeEach(() => {
+      component.agregarReglaLegalForm = fb.group({
+        fieldDescripcion: ['test'],
+        fieldValor: ['10']
+      });
+  
+      component.fieldPais = { 
+        disabled: false,
+        writeValue: jasmine.createSpy()
+      } as any;
+  
+      component.fieldCategoriaProducto = { 
+        disabled: false,
+        writeValue: jasmine.createSpy()
+      } as any;
+  
+      component.filtroPais = Paises.COLOMBIA;
+      component.filtroCategoriaProducto = CategoriaProductos.ROPA;
+      component.mensajeExito = 'Success message';
+      component.mensajeError = 'Error message';
+    });
+  
+    it('should clear all fields and reset state when not in edit mode', () => {
+      spyOn(component, 'cargarReglas');
+  
+      component.clearAll();
+  
+      expect(component.agregarReglaLegalForm.value).toEqual({
+        fieldDescripcion: null,
+        fieldValor: null
+      });
+      expect(component.fieldPais.writeValue).toHaveBeenCalledWith('');
+      expect(component.fieldCategoriaProducto.writeValue).toHaveBeenCalledWith('');
+      expect(component.filtroPais).toBe('');
+      expect(component.filtroCategoriaProducto).toBe('');
+      expect(component.mensajeExito).toBeNull();
+      expect(component.mensajeError).toBeNull();
+      expect(component.cargarReglas).toHaveBeenCalled();
+      expect(cdRefSpy.detectChanges).toHaveBeenCalled();
+    });
+  
+    it('should reset edit mode when in edit mode', () => {
+      component.esModoEdicion = true;
+      component.idReglaLegal = '123';
+      component.fieldPais.disabled = true;
+      component.fieldCategoriaProducto.disabled = true;
+  
+      spyOn(component, 'cargarReglas');
+  
+      component.clearAll();
+  
+      expect(component.esModoEdicion).toBeFalse();
+      expect(component.idReglaLegal).toBeNull();
+      expect(component.fieldPais.disabled).toBeFalse();
+      expect(component.fieldCategoriaProducto.disabled).toBeFalse();
+    });
+  });
+
+  describe('messageBox methods', () => {
+    it('should show success message', fakeAsync(() => {
+      const testMessage = 'Test success';
+      component.mostrarMensajeExito(testMessage);
+      
+      expect(snackBarSpy.open).toHaveBeenCalledWith(
+        testMessage, 
+        'Cerrar', 
+        { duration: 5000, panelClass: ['snackbar-success'] }
+      );
+      tick(5000);
+      expect(component.mensajeExito).toBeNull();
+    }));
+
+    it('should show error message', () => {
+      const testMessage = 'Test error';
+      component.mostrarMensajeError(testMessage);
+      
+      expect(snackBarSpy.open).toHaveBeenCalledWith(
+        testMessage, 
+        'Cerrar', 
+        { duration: 5000, panelClass: ['snackbar-error'] }
+      );
+    });
+
+    it('should show filter warning', () => {
+      component.mostrarAlertaFiltros();
+      
+      expect(snackBarSpy.open).toHaveBeenCalledWith(
+        'Seleccione País y Categoría de Producto antes de editar', 
+        'Cerrar', 
+        { duration: 3000, panelClass: ['snackbar-warning'] }
+      );
+    });
+  });
+
+  describe('Table Configuration', () => {
+    describe('tableColumns', () => {
+      it('should have correct column definitions', () => {
+        expect(component.tableColumns.length).toBe(3);
+        
+        const countryColumn = component.tableColumns.find(c => c.name === 'country');
+        expect(countryColumn).toBeDefined();
+        expect(countryColumn?.header).toBe('País');
+        
+        const taxTypeColumn = component.tableColumns.find(c => c.name === 'category_product');
+        expect(taxTypeColumn).toBeDefined();
+        expect(taxTypeColumn?.header).toBe('Categoría');
+        
+        const taxValueColumn = component.tableColumns.find(c => c.name === 'description');
+        expect(taxValueColumn).toBeDefined();
+        expect(taxValueColumn?.header).toBe('Descripción');
+      });
+  
+      it('should correctly format cell values', () => {
+        const testRow = {
+          id: '1',
+          pais: Paises.COLOMBIA,
+          categoria_producto: CategoriaProductos.ROPA,
+          descripcion: 'Prueba'
+        };
+        
+        const countryColumn = component.tableColumns.find(c => c.name === 'country');
+        expect(countryColumn?.cell(testRow)).toBe(Paises.COLOMBIA.toString());
+        
+        const taxTypeColumn = component.tableColumns.find(c => c.name === 'category_product');
+        expect(taxTypeColumn?.cell(testRow)).toBe(CategoriaProductos.ROPA.toString());
+        
+        const taxValueColumn = component.tableColumns.find(c => c.name === 'description');
+        expect(taxValueColumn?.cell(testRow)).toBe('Prueba');
+      });
+    });
+  
+    describe('assignAction', () => {
+      it('should have edit and delete actions', () => {
+        expect(component.assignAction.length).toBe(2);
+        expect(component.assignAction[0].icon).toBe('Editar');
+        expect(component.assignAction[1].icon).toBe('Eliminar');
+      });
+  
+      it('should call editarReglaLegal when edit action is clicked with valid filters', () => {
+        const testRow = { id: '1' } as TableRow;
+        spyOn(component, 'editarReglaLegal');
+        spyOn(component, 'sonFiltrosValidos').and.returnValue(true);
+        
+        component.assignAction[0].action(testRow);
+        
+        expect(component.editarReglaLegal).toHaveBeenCalledWith('1');
+      });
+  
+      it('should show alert when edit action is clicked with invalid filters', () => {
+        const testRow = { id: '1' } as TableRow;
+        spyOn(component, 'editarReglaLegal');
+        spyOn(component, 'sonFiltrosValidos').and.returnValue(false);
+        spyOn(component, 'mostrarAlertaFiltros');
+        
+        component.assignAction[0].action(testRow);
+        
+        expect(component.editarReglaLegal).not.toHaveBeenCalled();
+        expect(component.mostrarAlertaFiltros).toHaveBeenCalled();
+      });
+  
+      it('should call eliminarReglaComercial when delete action is clicked', () => {
+        const testRow = { id: '1' } as TableRow;
+        spyOn(component, 'eliminarReglaLegal');
+        
+        component.assignAction[1].action(testRow);
+        
+        expect(component.eliminarReglaLegal).toHaveBeenCalledWith('1');
+      });
+    });
+  });
 });
