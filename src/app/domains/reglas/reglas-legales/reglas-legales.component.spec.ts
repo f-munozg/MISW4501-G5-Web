@@ -213,7 +213,44 @@ describe('ReglasLegalesComponent', () => {
     });
   });
 
-describe('puedeEditar', () => {
+  describe('editarReglaLegal', () => {
+      it('sonFiltrosValidos returns true and regla returns true', () => {   
+        spyOn(component, 'sonFiltrosValidos').and.returnValue(true);
+        component.reglasFiltradas = [
+          { id: '1', pais: Paises.COLOMBIA, categoria_producto: CategoriaProductos.ROPA, descripcion: 'Prueba' }
+        ];
+        component.fieldPais = { value: Paises.COLOMBIA, writeValue: jasmine.createSpy(), disabled: false } as any;
+        component.fieldCategoriaProducto = { value: CategoriaProductos.ROPA, writeValue: jasmine.createSpy(), disabled: false } as any;
+        component.agregarReglaLegalForm = { patchValue: jasmine.createSpy() } as any;
+        
+        component.editarReglaLegal('1');
+              
+        expect(component.esModoEdicion).toBeTrue();
+        expect(component.idReglaLegal).toBe('1');
+        expect(component.fieldPais.writeValue).toHaveBeenCalledWith(Paises.COLOMBIA);
+        expect(component.fieldCategoriaProducto.writeValue).toHaveBeenCalledWith(CategoriaProductos.ROPA);
+      });
+  
+      it('sonFiltrosValidos returns false', () => {     
+        spyOn(component, 'sonFiltrosValidos').and.returnValue(false);
+        spyOn(component, 'mostrarAlertaFiltros');
+        
+        component.editarReglaLegal('1');
+        
+        expect(component.mostrarAlertaFiltros).toHaveBeenCalled();
+      });
+  
+      it('sonFiltrosValidos returns true and regla returns false', () => {
+        spyOn(component, 'sonFiltrosValidos').and.returnValue(true);
+        component.reglasFiltradas = [];
+        
+        component.editarReglaLegal('1');
+        
+        expect(component.esModoEdicion).toBeFalse();
+      });
+    });
+
+  describe('puedeEditar', () => {
     it('returns true', () => {
       component.fieldPais = { value: Paises.COLOMBIA } as MatSelect;
       component.fieldCategoriaProducto = { value: CategoriaProductos.ROPA } as MatSelect;

@@ -211,7 +211,7 @@ describe('ReglasTributariasComponent', () => {
     });
   });
 
-  describe('editarTributo', () => {
+  describe('editarReglaComercial', () => {
     it('sonFiltrosValidos returns true and regla returns true', () => {   
       spyOn(component, 'sonFiltrosValidos').and.returnValue(true);
       component.reglasFiltradas = [
