@@ -1,3 +1,26 @@
-<p>
-  reporte-menu works!
-</p>
+<app-default-window>
+  <main class="reportesMenuContainer">
+    <div class="reportesMenuHeaderGrid">
+      <div class="grid-item-reportesMenuHeaderTitulo">
+        <h2>Definición de Reglas</h2>
+      </div>
+    </div>
+
+    <div class="reportesMenuDropdown">
+      <div class="grid-item-reportesMenuDropdownDescription">
+        <p>Seleccione el reporte a generar:</p>
+      </div>
+      <div class="grid-item-reportesMenuDropdownForm">
+        <mat-form-field class="fieldReportes">
+          <mat-label>Tipo de Regla</mat-label>
+          <mat-select>
+            <mat-option value="reporte_ventas" routerLink="/reportes/ventas">Reporte de Ventas</mat-option>
+            <mat-option value="reporte_vendedor" routerLink="/reportes/vendedor">Reporte de Vendedor</mat-option>
+            <mat-option value="reporte_rotacion_inventario" routerLink="/reportes/rotacion_inventario">Reporte de Rotación de Inventario</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+  </main> 
+</app-default-window>

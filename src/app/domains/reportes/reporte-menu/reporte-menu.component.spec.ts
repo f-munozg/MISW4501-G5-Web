@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { ReporteMenuComponent } from './reporte-menu.component';
+import { ReportesModule } from '../reportes.module';
 
 describe('ReporteMenuComponent', () => {
   let component: ReporteMenuComponent;
@@ -11,7 +12,8 @@ describe('ReporteMenuComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ReporteMenuComponent ]
+      declarations: [ ReporteMenuComponent ],
+      imports: [ ReportesModule ]
     })
     .compileComponents();
   }));

@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { ReporteRotacionInventarioComponent } from './reporte-rotacion-inventario.component';
+import { ReportesModule } from '../reportes.module';
 
 describe('ReporteRotacionInventarioComponent', () => {
   let component: ReporteRotacionInventarioComponent;
@@ -11,7 +12,8 @@ describe('ReporteRotacionInventarioComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ReporteRotacionInventarioComponent ]
+      declarations: [ ReporteRotacionInventarioComponent ],
+      imports: [ ReportesModule ]
     })
     .compileComponents();
   }));

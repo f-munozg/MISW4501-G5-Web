@@ -1,0 +1,42 @@
+.reportesMenuContainer{
+    display: grid;
+    gap: 20px;
+    /*background-color: #e4e4e4;*/
+}
+
+/*
+[class^='grid-item']{
+    outline: 3px dashed #f90;
+}
+*/
+
+.reportesMenuHeaderGrid{
+    display: grid;
+    grid-row: 1;
+    grid-template-columns: repeat(9, 1fr);
+
+    .grid-item-reportesMenuHeaderTitulo{
+        grid-column: 1 / 5;
+    }
+}
+
+.reportesMenuDropdown{
+    display: grid;
+    grid-row: 2;
+    grid-template-columns: repeat(9, 1fr);
+
+    .grid-item-reportesMenuDropdownDescription{
+        grid-column: 1 / 5;
+        grid-row: 1;
+    }
+
+    .grid-item-reportesMenuDropdownForm{
+        grid-column: 1 / 5;
+        grid-row: 2;
+
+        .fieldReportes{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+}
