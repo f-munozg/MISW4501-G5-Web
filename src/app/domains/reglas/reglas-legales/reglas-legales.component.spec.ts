@@ -213,4 +213,163 @@ describe('ReglasLegalesComponent', () => {
     });
   });
 
+describe('puedeEditar', () => {
+    it('returns true', () => {
+      component.fieldPais = { value: Paises.COLOMBIA } as MatSelect;
+      component.fieldCategoriaProducto = { value: CategoriaProductos.ROPA } as MatSelect;
+      
+      const result = component.puedeEditar();
+      
+      expect(result).toBeTrue();
+    });
+  
+    it('returns false due to fieldPais', () => {
+      component.fieldPais = { value: null } as MatSelect;
+      component.fieldCategoriaProducto = { value: CategoriaProductos.ROPA } as MatSelect;
+      
+      const result = component.puedeEditar();
+      
+      expect(result).toBeFalse();
+    });
+  
+    it('returns false due to fieldTipoReglaComercial', () => {
+      component.fieldPais = { value: Paises.COLOMBIA } as MatSelect;
+      component.fieldCategoriaProducto = { value: undefined } as MatSelect;
+      
+      const result = component.puedeEditar();
+      
+      expect(result).toBeFalse();
+    });
+  });
+
+  describe('eliminarReglaLegal', () => {
+    it('confirm returns false or cancel', () => {
+      spyOn(window, 'confirm').and.returnValue(false);
+      spyOn(service, 'eliminarReglaLegal');
+      
+      component.eliminarReglaLegal('1');
+      
+      expect(service.eliminarReglaLegal).not.toHaveBeenCalled();
+    });
+
+    it('confirm returns true and record is deleted', () => {    
+      spyOn(window, 'confirm').and.returnValue(true);
+      const mockResponse: ReglaLegal = {
+        id: '1',
+        pais: Paises.COLOMBIA,
+        categoria_producto: CategoriaProductos.ROPA,
+        descripcion: 'Regla de Prueba'
+      };
+      spyOn(service, 'eliminarReglaLegal').and.returnValue(of(mockResponse));
+      spyOn(component, 'cargarReglas');
+      spyOn(component, 'mostrarMensajeExito');
+      
+      component.eliminarReglaLegal('1');
+      
+      expect(service.eliminarReglaLegal).toHaveBeenCalledWith('1');
+      expect(component.cargarReglas).toHaveBeenCalled();
+      expect(component.mostrarMensajeExito).toHaveBeenCalledWith('Regla legal eliminada exitosamente');
+    });
+
+    it('confirm returns true but record is not deleted due to server error', () => {
+      spyOn(window, 'confirm').and.returnValue(true);
+      spyOn(service, 'eliminarReglaLegal').and.returnValue(throwError(() => new Error('Error')));
+      spyOn(component, 'mostrarMensajeError');
+      
+      component.eliminarReglaLegal('1');
+      
+      expect(service.eliminarReglaLegal).toHaveBeenCalledWith('1');
+      expect(component.mostrarMensajeError).toHaveBeenCalled();
+    });
+  });
+
+  describe('onSubmit', () => {
+    beforeEach(() => {
+      component.agregarReglaLegalForm = {
+        valid: true,
+        value: { fieldDescripcion: 'Prueba', fieldValor: 19 },
+        reset: jasmine.createSpy()
+      } as any;
+      component.fieldPais = { value: Paises.COLOMBIA, disabled: false } as any;
+      component.fieldCategoriaProducto = { value: CategoriaProductos.ROPA, disabled: false } as any;
+      component.filtroPais = Paises.COLOMBIA;
+      component.filtroCategoriaProducto = CategoriaProductos.ROPA;
+    });
+
+    it('enviando is true so there is a return', () => {
+      component.enviando = true;
+      spyOn(service, 'postData');
+      
+      component.onSubmit();
+      
+      expect(service.postData).not.toHaveBeenCalled();
+    });
+
+    it('agregarReglaLegalForm.valid is true and filtroPais and filtroCategoriaProducto as well', () => {
+      spyOn(service, 'postData').and.returnValue(of({}));
+      spyOn(component, 'cargarReglas');
+      spyOn(component, 'mostrarMensajeExito');
+      
+      component.onSubmit();
+          
+      expect(service.postData).toHaveBeenCalled();
+      expect(component.cargarReglas).toHaveBeenCalled();
+      expect(component.mostrarMensajeExito).toHaveBeenCalled();
+    });
+
+    it('agregarReglaLegalForm.valid is true but filtroPais or filtroCategoriaProducto are false', () => {   
+      component.filtroPais = '';
+      spyOn(service, 'postData');
+      
+      component.onSubmit();
+      
+      expect(service.postData).not.toHaveBeenCalled();
+    });
+
+    it('updateReglaComercial is successful and message in mostrarMensajeExito is "Regla legal actualizada con éxito"', () => {
+      component.esModoEdicion = true;
+      component.idReglaLegal = '1';
+      spyOn(service, 'updateReglaComercial').and.returnValue(of({}));
+      spyOn(component, 'mostrarMensajeExito');
+      spyOn(component, 'limpiarEdicion');
+      
+      component.onSubmit();
+      
+      expect(service.updateReglaComercial).toHaveBeenCalled();
+      expect(component.mostrarMensajeExito).toHaveBeenCalledWith('Regla legal actualizada con éxito');
+      expect(component.limpiarEdicion).toHaveBeenCalled();
+    });
+
+    it('updateReglaComercial is unsuccessful and message in mostrarMensajeError is "Error al actualizar la regla legal"', () => { 
+      component.esModoEdicion = true;
+      component.idReglaLegal = '1';
+      spyOn(service, 'updateReglaComercial').and.returnValue(throwError(() => new Error('Error')));
+      spyOn(component, 'mostrarMensajeError');
+       
+      component.onSubmit();
+      
+      expect(service.updateReglaComercial).toHaveBeenCalled();
+      expect(component.mostrarMensajeError).toHaveBeenCalledWith('Error al actualizar la regla legal');
+    });
+
+    it('postData is successful and message in mostrarMensajeExito is "Regla legal creada exitosamente"', () => {
+      spyOn(service, 'postData').and.returnValue(of({}));
+      spyOn(component, 'mostrarMensajeExito');
+      
+      component.onSubmit();
+      
+      expect(service.postData).toHaveBeenCalled();
+      expect(component.mostrarMensajeExito).toHaveBeenCalledWith('Regla legal creada exitosamente');
+    });
+
+    it('postData is unsuccessful and message in mostrarMensajeError is "Error creando la regla legal"', () => {
+      spyOn(service, 'postData').and.returnValue(throwError(() => new Error('Error')));
+      spyOn(component, 'mostrarMensajeError');
+            
+      component.onSubmit();
+            
+      expect(service.postData).toHaveBeenCalled();
+      expect(component.mostrarMensajeError).toHaveBeenCalledWith('Error creando la regla legal');
+    });
+  });
 });
