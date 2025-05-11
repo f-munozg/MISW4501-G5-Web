@@ -23,7 +23,7 @@
             <mat-select [(value)]="filtroTipoReglaComercial" #fieldTipoReglaComercial required 
               (selectionChange)="cambioValoresFiltros()">
               <mat-option *ngFor="let tipoReglaComercial of listaTiposReglasComerciales" [value]="tipoReglaComercial">
-                {{TipoImpuesto2LabelMapping[tipoReglaComercial]}}
+                {{TipoReglaComercial2LabelMapping[tipoReglaComercial]}}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -55,12 +55,6 @@
               <input matInput formControlName="fieldDescripcion" placeholder="Descripción">
             </mat-form-field>
           </div>
-          <div class="grid-item-valorField">
-            <h3>Valor de la Regla</h3>
-            <mat-form-field class="valorFormField">
-              <input type="number" formControlName="fieldValor" matInput placeholder="Valor">
-            </mat-form-field>
-          </div>
           <div class="reglasComercialesAgregarReglaBtnsContainer">
             <div class="grid-item-cancelarBtnDiv">
               <button mat-flat-button class="cancelarBtn"
@@ -72,7 +66,7 @@
             <div class="grid-item-guardarBtnDiv">
               <button mat-flat-button class="guardarBtn" 
                       type="submit" 
-                      [disabled]="!sonFiltrosValidos() || agregarReglaTributariaForm.invalid"
+                      [disabled]="!sonFiltrosValidos() || agregarReglaComercialForm.invalid"
                       >Guardar
               </button>
             </div>

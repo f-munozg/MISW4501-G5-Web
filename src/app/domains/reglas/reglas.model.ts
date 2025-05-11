@@ -135,3 +135,14 @@ export interface ReglaTributaria{
 export interface ReglaTributariaResponse{
     rules: ReglaTributaria[]
 }
+
+export interface ReglaComercial{
+    id: string;
+    pais: Paises;
+    tipo_regla_comercial: TipoReglaComercial;
+    descripcion: string;
+}
+
+export interface ReglaComercialResponse{
+    rules: ReglaComercial[]
+}
