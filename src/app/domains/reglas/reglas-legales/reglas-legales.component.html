@@ -1,3 +1,78 @@
 <app-default-window>
-  
-</app-default-window>
+    <main class="reglasLegalesContainer">
+      <div class="reglasLegalesHeaderGrid">
+        <h2 class="grid-item-reglasLegalesTitulo">Definición de Reglas Legales</h2>
+      </div>
+      <div class="reglasLegalesSeleccionFormGrid">
+        <div class="grid-item-paisFormField">
+          <h3>País</h3>
+          <mat-form-field class="paisFormField">
+            <mat-label>Escoja el País</mat-label>
+            <mat-select [(value)]="filtroPais" #fieldPais required 
+              (selectionChange)="cambioValoresFiltros()">
+              <mat-option *ngFor="let pais of listaPaises" [value]="pais">
+                {{PaisesType2LabelMapping[pais]}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="grid-item-categoriaProductoFormField">
+          <h3>Categoría del Producto</h3>
+          <mat-form-field class="categoriaProductoFormField">
+            <mat-label>Escoja la Categoría</mat-label>
+            <mat-select [(value)]="filtroCategoriaProducto" #fieldCategoriaProducto required
+              (selectionChange)="cambioValoresFiltros()">
+              <mat-option *ngFor="let fileType of fileTypes"
+                  [value]="fileType">
+                  {{FileType2LabelMapping[fileType]}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <!-- 
+          Zona para notificaciones/mensajes 
+      -->
+      <div class="reglasLegalesTablaHeaderGrid">
+        <h3 class="grid-item-reglasLegalesTablaTitulo">Reglas Legales Existentes</h3>
+      </div>
+      <div class="reglasLegalesTablaGrid">
+        <app-table-template
+          [data]="tableData"
+          [columns]="tableColumns"
+          [displayedColumns]="visibleColumns"
+          [actions]="assignAction"
+        >  
+        </app-table-template>
+      </div>
+      <div class="reglasLegalesAgregarReglaHeaderGrid">
+        <h3 class="grid-item-reglasLegalesAgregarReglaTitulo">Agregar Regla Legal</h3>
+      </div>
+      <form [formGroup]="agregarReglaLegalForm" (ngSubmit)="onSubmit()">
+        <div class="reglasLegalesAgregarReglaForm">
+          <div class="grid-item-descripcionField">
+            <h3>Regulación</h3>
+            <mat-form-field class="descripcionFormField">
+              <input matInput formControlName="fieldDescripcion" placeholder="Descripción">
+            </mat-form-field>
+          </div>
+          <div class="reglasLegalesAgregarReglaBtnsContainer">
+            <div class="grid-item-cancelarBtnDiv">
+              <button mat-flat-button class="cancelarBtn"
+                      (click)="clearAll()"
+                      [disabled]="enviando">
+                      Cancelar
+              </button>
+            </div>
+            <div class="grid-item-guardarBtnDiv">
+              <button mat-flat-button class="guardarBtn" 
+                      type="submit" 
+                      [disabled]="!sonFiltrosValidos() || agregarReglaLegalForm.invalid"
+                      >Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>    
+    </main>
+  </app-default-window>
