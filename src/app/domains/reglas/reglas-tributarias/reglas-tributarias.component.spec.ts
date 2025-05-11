@@ -1,10 +1,10 @@
 /* tslint:disable:no-unused-variable */
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { ChangeDetectorRef, DebugElement } from '@angular/core';
 import { of, throwError } from 'rxjs';
 
-import { ReglasTributariasComponent } from './reglas-tributarias.component';
+import { ReglasTributariasComponent, TableRow } from './reglas-tributarias.component';
 import { ReglasModule } from '../reglas.module';
 import { ReglasTributariasService } from './reglas-tributarias.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
@@ -13,6 +13,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Paises, ReglaTributaria, TipoImpuesto } from '../reglas.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSelect } from '@angular/material/select';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 describe('ReglasTributariasComponent', () => {
   let component: ReglasTributariasComponent;
@@ -22,8 +23,15 @@ describe('ReglasTributariasComponent', () => {
   let router: Router;
   let route: ActivatedRoute;
   let snackBar: MatSnackBar;
+  let snackBarSpy: jasmine.SpyObj<MatSnackBar>;
+  let cdRefSpy: jasmine.SpyObj<ChangeDetectorRef>;
+  let fb: FormBuilder;
+
 
   beforeEach(waitForAsync(() => {
+    snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
+    cdRefSpy = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
+
     TestBed.configureTestingModule({
       declarations: [ ReglasTributariasComponent ],
       imports: [ 
@@ -32,7 +40,10 @@ describe('ReglasTributariasComponent', () => {
         RouterTestingModule.withRoutes([]) 
       ],
       providers:[
-        ReglasTributariasService
+        ReglasTributariasService,
+        FormBuilder,
+        { provide: MatSnackBar, useValue: snackBarSpy },
+        { provide: ChangeDetectorRef, useValue: cdRefSpy, multi: false }
       ]
     })
     .compileComponents();
@@ -41,12 +52,20 @@ describe('ReglasTributariasComponent', () => {
     httpMock = TestBed.inject(HttpTestingController);
     router = TestBed.inject(Router);
     route = TestBed.inject(ActivatedRoute);
-    snackBar = TestBed.inject(MatSnackBar);
+    fb = TestBed.inject(FormBuilder);
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ReglasTributariasComponent);
     component = fixture.componentInstance;
+    (component as any).cdRef = cdRefSpy;
+    fixture.detectChanges();
+
+    component.agregarReglaTributariaForm = fb.group({
+      fieldDescripcion: [''],
+      fieldValor: ['']
+    });
+    
     fixture.detectChanges();
   });
 
@@ -78,13 +97,60 @@ describe('ReglasTributariasComponent', () => {
     });
   });
 
+  describe('cargarReglas', () => {
+    it('should load and filter rules successfully', fakeAsync(() => {
+      const mockRules = {
+        rules: [
+          { id: '1', pais: Paises.COLOMBIA, tipo_impuesto: TipoImpuesto.VALOR_AGREGADO, valor: 19, descripcion: 'Test' }
+        ]
+      };
+    
+      spyOn(service, 'getListaTributos').and.returnValue(of(mockRules));
+      spyOn(component, 'filtrarReglas').and.callThrough();
+      spyOn(component, 'actualizarTabla');
+      spyOn(router, 'navigate');
+    
+      component.cargarReglas();
+      tick();
+    
+      expect(component.cargando).toBeFalse();
+      expect(component.mensajeError).toBeNull();
+      expect(service.getListaTributos).toHaveBeenCalled();
+      expect(component.filtrarReglas).toHaveBeenCalledWith(mockRules.rules);
+      expect(component.actualizarTabla).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalledWith([], {
+        relativeTo: route,
+        queryParams: {
+          pais: component.filtroPais || null,
+          tipo_impuesto: component.filtroTipoImpuesto || null
+        },
+        queryParamsHandling: 'merge'
+      });
+    }));
+
+    it('should handle API errors properly', fakeAsync(() => {
+      const mockError = new Error('API failed');
+      spyOn(service, 'getListaTributos').and.returnValue(throwError(() => mockError));
+      spyOn(console, 'error');
+      spyOn(router, 'navigate');
+    
+      component.cargarReglas();
+      tick();
+    
+      expect(component.cargando).toBeFalse();
+      expect(component.mensajeError).toBe('Error cargando las reglas tributarias');
+      expect(console.error).toHaveBeenCalledWith('Error loading rules:', mockError);
+      expect(router.navigate).toHaveBeenCalled();
+    }));
+  });
+
   describe('filtrarReglas', () => {
     it('filtrar works and filters a value', () => {
       component.filtroPais = Paises.COLOMBIA;
       component.filtroTipoImpuesto = TipoImpuesto.VALOR_AGREGADO;
       const reglas = [
-        { id: '1', pais: Paises.COLOMBIA, tipo_impuesto: TipoImpuesto.VALOR_AGREGADO, valor: 19, descripcion: 'Test' },
-        { id: '2', pais: Paises.ARGENTINA, tipo_impuesto: TipoImpuesto.VALOR_AGREGADO, valor: 21, descripcion: 'Test 2' }
+        { id: '1', pais: Paises.COLOMBIA, tipo_impuesto: TipoImpuesto.VALOR_AGREGADO, valor: 19, descripcion: 'Prueba 1' },
+        { id: '2', pais: Paises.ARGENTINA, tipo_impuesto: TipoImpuesto.VALOR_AGREGADO, valor: 21, descripcion: 'Prueba 2' }
       ];
       
       const result = component.filtrarReglas(reglas);
@@ -97,8 +163,8 @@ describe('ReglasTributariasComponent', () => {
       component.filtroPais = '';
       component.filtroTipoImpuesto = '';
       const reglas = [
-        { id: '1', pais: Paises.COLOMBIA, tipo_impuesto: TipoImpuesto.VALOR_AGREGADO, valor: 19, descripcion: 'Test' },
-        { id: '2', pais: Paises.ARGENTINA, tipo_impuesto: TipoImpuesto.VALOR_AGREGADO, valor: 21, descripcion: 'Test 2' }
+        { id: '1', pais: Paises.COLOMBIA, tipo_impuesto: TipoImpuesto.VALOR_AGREGADO, valor: 19, descripcion: 'Prueba 1' },
+        { id: '2', pais: Paises.ARGENTINA, tipo_impuesto: TipoImpuesto.VALOR_AGREGADO, valor: 21, descripcion: 'Prueba 2' }
       ];
       
       const result = component.filtrarReglas(reglas);
@@ -110,7 +176,7 @@ describe('ReglasTributariasComponent', () => {
   describe('actualizarTabla', () => {
     it('map method brings back data and updates table', () => {
       const reglas = [
-        { id: '1', pais: Paises.COLOMBIA, tipo_impuesto: TipoImpuesto.VALOR_AGREGADO, valor: 19, descripcion: 'Test' }
+        { id: '1', pais: Paises.COLOMBIA, tipo_impuesto: TipoImpuesto.VALOR_AGREGADO, valor: 19, descripcion: 'Prueba' }
       ];
       
       component.actualizarTabla(reglas);
@@ -152,7 +218,7 @@ describe('ReglasTributariasComponent', () => {
     it('sonFiltrosValidos returns true and regla returns true', () => {   
       spyOn(component, 'sonFiltrosValidos').and.returnValue(true);
       component.reglasFiltradas = [
-        { id: '1', pais: Paises.COLOMBIA, tipo_impuesto: TipoImpuesto.VALOR_AGREGADO, valor: 19, descripcion: 'Test' }
+        { id: '1', pais: Paises.COLOMBIA, tipo_impuesto: TipoImpuesto.VALOR_AGREGADO, valor: 19, descripcion: 'Prueba' }
       ];
       component.fieldPais = { value: Paises.COLOMBIA, writeValue: jasmine.createSpy(), disabled: false } as any;
       component.fieldTipoImpuesto = { value: TipoImpuesto.VALOR_AGREGADO, writeValue: jasmine.createSpy(), disabled: false } as any;
@@ -231,7 +297,7 @@ describe('ReglasTributariasComponent', () => {
         pais: Paises.COLOMBIA,
         tipo_impuesto: TipoImpuesto.VALOR_AGREGADO,
         valor: 19,
-        descripcion: 'Test rule'
+        descripcion: 'Regla de Prueba'
       };
       spyOn(service, 'eliminarTributo').and.returnValue(of(mockResponse));
       spyOn(component, 'cargarReglas');
@@ -260,7 +326,7 @@ describe('ReglasTributariasComponent', () => {
     beforeEach(() => {
       component.agregarReglaTributariaForm = {
         valid: true,
-        value: { fieldDescripcion: 'Test', fieldValor: 19 },
+        value: { fieldDescripcion: 'Prueba', fieldValor: 19 },
         reset: jasmine.createSpy()
       } as any;
       component.fieldPais = { value: Paises.COLOMBIA, disabled: false } as any;
@@ -346,5 +412,220 @@ describe('ReglasTributariasComponent', () => {
     });
   });
 
+  describe('cambioValoresFiltros', () => {
+    it('should call cargarReglas', () => {
+      spyOn(component, 'cargarReglas');
+      
+      component.cambioValoresFiltros();
+      
+      expect(component.cargarReglas).toHaveBeenCalled();
+    });
+  });
   
+  describe('limpiarEdicion', () => {
+    it('should reset form and update component state', () => {
+      component.agregarReglaTributariaForm = fb.group({
+        fieldDescripcion: ['test'],
+        fieldValor: ['10']
+      });
+  
+      component.fieldPais = { 
+        disabled: true,
+        writeValue: jasmine.createSpy()
+      } as any;
+  
+      component.fieldTipoImpuesto = { 
+        disabled: true,
+        writeValue: jasmine.createSpy()
+      } as any;
+  
+      component.esModoEdicion = true;
+      component.idTributo = '123';
+      
+      spyOn(component, 'cargarReglas');
+      cdRefSpy.detectChanges.calls.reset();
+
+      component.limpiarEdicion();
+
+      expect(component.esModoEdicion).toBeFalse();
+      expect(component.idTributo).toBeNull();
+      expect(component.fieldPais.disabled).toBeFalse();
+      expect(component.fieldTipoImpuesto.disabled).toBeFalse();
+      expect(component.cargarReglas).toHaveBeenCalled();
+      expect(cdRefSpy.detectChanges).toHaveBeenCalled();
+    });
+  });
+
+  describe('clearAll', () => {
+    beforeEach(() => {
+      component.agregarReglaTributariaForm = fb.group({
+        fieldDescripcion: ['test'],
+        fieldValor: ['10']
+      });
+  
+      component.fieldPais = { 
+        disabled: false,
+        writeValue: jasmine.createSpy()
+      } as any;
+  
+      component.fieldTipoImpuesto = { 
+        disabled: false,
+        writeValue: jasmine.createSpy()
+      } as any;
+  
+      component.filtroPais = Paises.COLOMBIA;
+      component.filtroTipoImpuesto = TipoImpuesto.VALOR_AGREGADO;
+      component.mensajeExito = 'Success message';
+      component.mensajeError = 'Error message';
+    });
+  
+    it('should clear all fields and reset state when not in edit mode', () => {
+      spyOn(component, 'cargarReglas');
+  
+      component.clearAll();
+  
+      expect(component.agregarReglaTributariaForm.value).toEqual({
+        fieldDescripcion: null,
+        fieldValor: null
+      });
+      expect(component.fieldPais.writeValue).toHaveBeenCalledWith('');
+      expect(component.fieldTipoImpuesto.writeValue).toHaveBeenCalledWith('');
+      expect(component.filtroPais).toBe('');
+      expect(component.filtroTipoImpuesto).toBe('');
+      expect(component.mensajeExito).toBeNull();
+      expect(component.mensajeError).toBeNull();
+      expect(component.cargarReglas).toHaveBeenCalled();
+      expect(cdRefSpy.detectChanges).toHaveBeenCalled();
+    });
+  
+    it('should reset edit mode when in edit mode', () => {
+      component.esModoEdicion = true;
+      component.idTributo = '123';
+      component.fieldPais.disabled = true;
+      component.fieldTipoImpuesto.disabled = true;
+  
+      spyOn(component, 'cargarReglas');
+  
+      component.clearAll();
+  
+      expect(component.esModoEdicion).toBeFalse();
+      expect(component.idTributo).toBeNull();
+      expect(component.fieldPais.disabled).toBeFalse();
+      expect(component.fieldTipoImpuesto.disabled).toBeFalse();
+    });
+  });
+
+  describe('messageBox methods', () => {
+    it('should show success message', fakeAsync(() => {
+      const testMessage = 'Test success';
+      component.mostrarMensajeExito(testMessage);
+      
+      expect(snackBarSpy.open).toHaveBeenCalledWith(
+        testMessage, 
+        'Cerrar', 
+        { duration: 5000, panelClass: ['snackbar-success'] }
+      );
+      tick(5000);
+      expect(component.mensajeExito).toBeNull();
+    }));
+
+    it('should show error message', () => {
+      const testMessage = 'Test error';
+      component.mostrarMensajeError(testMessage);
+      
+      expect(snackBarSpy.open).toHaveBeenCalledWith(
+        testMessage, 
+        'Cerrar', 
+        { duration: 5000, panelClass: ['snackbar-error'] }
+      );
+    });
+
+    it('should show filter warning', () => {
+      component.mostrarAlertaFiltros();
+      
+      expect(snackBarSpy.open).toHaveBeenCalledWith(
+        'Seleccione País y Tipo de Impuesto antes de editar', 
+        'Cerrar', 
+        { duration: 3000, panelClass: ['snackbar-warning'] }
+      );
+    });
+  });
+
+  describe('Table Configuration', () => {
+    describe('tableColumns', () => {
+      it('should have correct column definitions', () => {
+        expect(component.tableColumns.length).toBe(3);
+        
+        const countryColumn = component.tableColumns.find(c => c.name === 'country');
+        expect(countryColumn).toBeDefined();
+        expect(countryColumn?.header).toBe('País');
+        
+        const taxTypeColumn = component.tableColumns.find(c => c.name === 'tax_type');
+        expect(taxTypeColumn).toBeDefined();
+        expect(taxTypeColumn?.header).toBe('Tipo Impuesto');
+        
+        const taxValueColumn = component.tableColumns.find(c => c.name === 'tax_value');
+        expect(taxValueColumn).toBeDefined();
+        expect(taxValueColumn?.header).toBe('Valor');
+      });
+  
+      it('should correctly format cell values', () => {
+        const testRow = {
+          id: '1',
+          pais: Paises.COLOMBIA,
+          tipo_impuesto: TipoImpuesto.VALOR_AGREGADO,
+          valor: 19,
+          descripcion: 'Prueba'
+        };
+        
+        const countryColumn = component.tableColumns.find(c => c.name === 'country');
+        expect(countryColumn?.cell(testRow)).toBe(Paises.COLOMBIA.toString());
+        
+        const taxTypeColumn = component.tableColumns.find(c => c.name === 'tax_type');
+        expect(taxTypeColumn?.cell(testRow)).toBe(TipoImpuesto.VALOR_AGREGADO.toString());
+        
+        const taxValueColumn = component.tableColumns.find(c => c.name === 'tax_value');
+        expect(taxValueColumn?.cell(testRow)).toBe('19');
+      });
+    });
+  
+    describe('assignAction', () => {
+      it('should have edit and delete actions', () => {
+        expect(component.assignAction.length).toBe(2);
+        expect(component.assignAction[0].icon).toBe('Editar');
+        expect(component.assignAction[1].icon).toBe('Eliminar');
+      });
+  
+      it('should call editarTributo when edit action is clicked with valid filters', () => {
+        const testRow = { id: '1' } as TableRow;
+        spyOn(component, 'editarTributo');
+        spyOn(component, 'sonFiltrosValidos').and.returnValue(true);
+        
+        component.assignAction[0].action(testRow);
+        
+        expect(component.editarTributo).toHaveBeenCalledWith('1');
+      });
+  
+      it('should show alert when edit action is clicked with invalid filters', () => {
+        const testRow = { id: '1' } as TableRow;
+        spyOn(component, 'editarTributo');
+        spyOn(component, 'sonFiltrosValidos').and.returnValue(false);
+        spyOn(component, 'mostrarAlertaFiltros');
+        
+        component.assignAction[0].action(testRow);
+        
+        expect(component.editarTributo).not.toHaveBeenCalled();
+        expect(component.mostrarAlertaFiltros).toHaveBeenCalled();
+      });
+  
+      it('should call eliminarTributo when delete action is clicked', () => {
+        const testRow = { id: '1' } as TableRow;
+        spyOn(component, 'eliminarTributo');
+        
+        component.assignAction[1].action(testRow);
+        
+        expect(component.eliminarTributo).toHaveBeenCalledWith('1');
+      });
+    });
+  });
 });
