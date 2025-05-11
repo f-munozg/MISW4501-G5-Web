@@ -1,3 +1,5 @@
+import { CategoriaProductos } from "../productos/producto.model";
+
 export enum Paises{
     ARGENTINA = "Argentina",
     BOLIVIA = "Bolivia",
@@ -145,4 +147,15 @@ export interface ReglaComercial{
 
 export interface ReglaComercialResponse{
     rules: ReglaComercial[]
+}
+
+export interface ReglaLegal{
+    id: string;
+    pais: Paises;
+    categoria_producto: CategoriaProductos;
+    descripcion: string;
+}
+
+export interface ReglaLegalResponse{
+    rules: ReglaLegal[]
 }
