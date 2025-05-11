@@ -20,7 +20,7 @@
     }
 }
 
-.reglasComercialesSeleccionFormGrid{
+.reglasLegalesSeleccionFormGrid{
     display: grid;
     grid-row: 2;
     grid-template-columns: repeat(9, 1fr);
