@@ -211,7 +211,7 @@ describe('ReglasTributariasComponent', () => {
     });
   });
 
-  describe('editarTributo', () => {
+  describe('editarReglaComercial', () => {
     it('sonFiltrosValidos returns true and regla returns true', () => {   
       spyOn(component, 'sonFiltrosValidos').and.returnValue(true);
       component.reglasFiltradas = [
@@ -539,7 +539,7 @@ describe('ReglasTributariasComponent', () => {
       component.mostrarAlertaFiltros();
       
       expect(snackBarSpy.open).toHaveBeenCalledWith(
-        'Seleccione País y Tipo de Impuesto antes de editar', 
+        'Seleccione País y Tipo de Regla Comercial antes de editar', 
         'Cerrar', 
         { duration: 3000, panelClass: ['snackbar-warning'] }
       );
