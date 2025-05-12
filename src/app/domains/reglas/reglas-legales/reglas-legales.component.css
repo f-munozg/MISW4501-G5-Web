@@ -1,0 +1,119 @@
+.reglasLegalesContainer{
+    display: grid;
+    gap: 20px;
+    /* background-color: #e4e4e4; */
+}
+
+/*
+[class^='grid-item']{
+    outline: 3px dashed #f90;
+}
+*/
+
+.reglasLegalesHeaderGrid{
+    display: grid;
+    grid-row: 1;
+    grid-template-columns: repeat(9, 1fr);
+
+    .grid-item-reglasLegalesTitulo{
+        grid-column: 1 / 5;
+    }
+}
+
+.reglasLegalesSeleccionFormGrid{
+    display: grid;
+    grid-row: 2;
+    grid-template-columns: repeat(9, 1fr);
+
+    .grid-item-paisFormField{
+        grid-column: 2 / 9;
+        grid-row: 1;
+
+        .paisFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .grid-item-categoriaProductoFormField{
+        grid-column: 2 / 9;
+        grid-row: 2;
+
+        .categoriaProductoFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+}
+
+.reglasLegalesTablaHeaderGrid{
+    display: grid;
+    grid-row: 3;
+    grid-template-columns: repeat(9, 1fr);
+
+    .grid-item-reglasLegalesTablaTitulo{
+        grid-column: 1 / 5;
+    }
+}
+
+.reglasLegalesAgregarReglaHeaderGrid{
+    display: grid;
+    grid-row: 5;
+    grid-template-columns: repeat(9, 1fr);
+
+    .grid-item-reglasLegalesAgregarReglaTitulo{
+        grid-column: 1 / 5;
+    }
+}
+
+.reglasLegalesAgregarReglaForm{
+    display: grid;
+    grid-row: 6;
+    grid-template-columns: repeat(9, 1fr);
+
+    .grid-item-descripcionField{
+        grid-column: 2 / 9;
+
+        .descripcionFormField{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    .reglasLegalesAgregarReglaBtnsContainer{
+        grid-column: 6 / 9;
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+
+        .grid-item-cancelarBtnDiv{
+            flex: 1;
+            min-width: 0;
+
+            .mat-mdc-unelevated-button:not(:disabled) {
+                color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+                background-color: #EC1C1C !important;
+            }
+
+            .cancelarBtn{
+                width: 100% !important;
+                grid-column: 1 / -1 !important;
+            } 
+        }
+    
+        .grid-item-guardarBtnDiv{
+            flex: 1;
+            min-width: 0;
+            
+            .mat-mdc-unelevated-button:not(:disabled) {
+                color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+                background-color: #005d52 !important;
+            }
+
+            .guardarBtn{
+                width: 100% !important;
+                grid-column: 1 / -1 !important;
+            }
+        }
+    }
+}

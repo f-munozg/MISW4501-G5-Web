@@ -5,10 +5,11 @@ import { AppComponent } from './app.component';
 
 import { LoginModule } from './domains/login/login.module';
 import { FabricantesModule } from './domains/fabricantes/fabricantes.module';
-import { ProductosModule } from './domains/productos/productos.module';
 import { InventariosModule } from './domains/inventarios/inventarios.module';
-import { VentasModule } from './domains/ventas/ventas.module';
+import { ProductosModule } from './domains/productos/productos.module';
+import { ReglasModule } from './domains/reglas/reglas.module';
 import { VendedoresModule } from './domains/vendedores/vendedores.module';
+import { VentasModule } from './domains/ventas/ventas.module';
 
 import { DefaultWindowComponent } from './shared/default-window/default-window.component';
 import { TableTemplateComponent } from './shared/table-template/table-template.component';
@@ -21,13 +22,14 @@ import { TableDemoComponent } from './shared/table-template/table-demo.component
   imports: [
     BrowserModule,
     AppRoutingModule,
-    LoginModule,
     DefaultWindowComponent,
+    LoginModule,
     FabricantesModule,
-    ProductosModule,
     InventariosModule,
-    VentasModule,
+    ProductosModule,
+    ReglasModule,
     VendedoresModule,
+    VentasModule,
     TableTemplateComponent,
     TableDemoComponent, // Testing
   ],

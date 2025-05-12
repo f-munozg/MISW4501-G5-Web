@@ -24,25 +24,55 @@ import { PlanesDeVentaComponent } from './domains/ventas/planes-de-venta/planes-
 // Testing
 import { TableTemplateComponent } from './shared/table-template/table-template.component';
 import { TableDemoComponent } from './shared/table-template/table-demo.component';
+import { ReglasMenuComponent } from './domains/reglas/reglas-menu/reglas-menu.component';
+import { ReglasLegalesComponent } from './domains/reglas/reglas-legales/reglas-legales.component';
+import { ReglasTributariasComponent } from './domains/reglas/reglas-tributarias/reglas-tributarias.component';
+import { ReglasComercialesComponent } from './domains/reglas/reglas-comerciales/reglas-comerciales.component';
 
 const routes: Routes = [
+  /* Login */
   {path: 'login', component: LoginMainComponent},
   {path: 'recover', component: RecoveryContainerComponent},
+  
+  /* General */
   {path: 'menu', component: DefaultWindowComponent},
+  
+  /* Fabricantes */
   {path: 'fabricantes/registro', component: RegistroFabricantesComponent},
+  {path: 'fabricantes/portafolio', component: GestionPortafolioComponent},
+
+  /* Inventarios */
+  {path: 'inventario/consulta', component: ConsultaInventarioComponent},
+  {path: 'inventario/consulta_producto_bodega', component: ConsultaProductoBodegaComponent},
+
+  /* Productos */
   {path: 'productos/carga_producto', component: CargaProductoComponent},
   {path: 'productos/editar/:id', component: CargaProductoComponent},
   {path: 'productos/carga_masiva_productos', component: CargaMasivaProductosComponent},
-  {path: 'tabla/container', component: TableTemplateComponent}, // Testing
-  {path: 'tabla/demo', component: TableDemoComponent}, // Testing
-  {path: 'inventario/consulta', component: ConsultaInventarioComponent},
-  {path: 'ventas/consulta', component: ConsultaVentasComponent},
-  {path: 'inventario/consulta_producto_bodega', component: ConsultaProductoBodegaComponent},
+
+  /* Reglas */
+  {
+    path: 'reglas',
+    children: [
+      { path: '', pathMatch: 'full', component: ReglasMenuComponent },
+      { path: 'legales', component: ReglasLegalesComponent },
+      { path: 'tributarias', component: ReglasTributariasComponent },
+      { path: 'comerciales', component: ReglasComercialesComponent }
+    ]
+  },
+
+  /* Vendedores */
   {path: 'vendedores/registro', component: RegistroVendedoresComponent,
     children: [{ path: 'view', component: RegistroVendedoresComponent }]
   },
+
+  /* Ventas */
+  {path: 'ventas/consulta', component: ConsultaVentasComponent},
   {path: 'ventas/planes_de_venta', component: PlanesDeVentaComponent},
-  {path: 'fabricantes/portafolio', component: GestionPortafolioComponent},
+
+  /* Testing */
+  {path: 'tabla/container', component: TableTemplateComponent}, 
+  {path: 'tabla/demo', component: TableDemoComponent}, 
 ];
 
 @NgModule({

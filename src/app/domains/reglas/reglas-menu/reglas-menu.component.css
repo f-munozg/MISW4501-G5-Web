@@ -1,0 +1,42 @@
+.reglasMenuContainer{
+    display: grid;
+    gap: 20px;
+    /*background-color: #e4e4e4;*/
+}
+
+/*
+[class^='grid-item']{
+    outline: 3px dashed #f90;
+}
+*/
+
+.reglasMenuHeaderGrid{
+    display: grid;
+    grid-row: 1;
+    grid-template-columns: repeat(9, 1fr);
+
+    .grid-item-reglasMenuHeaderTitulo{
+        grid-column: 1 / 5;
+    }
+}
+
+.reglasMenuDropdown{
+    display: grid;
+    grid-row: 2;
+    grid-template-columns: repeat(9, 1fr);
+
+    .grid-item-reglasMenuDropdownDescription{
+        grid-column: 1 / 5;
+        grid-row: 1;
+    }
+
+    .grid-item-reglasMenuDropdownForm{
+        grid-column: 1 / 5;
+        grid-row: 2;
+
+        .fieldReglas{
+            width: 100% !important;
+            grid-column: 1 / -1 !important;
+        }
+    }
+}

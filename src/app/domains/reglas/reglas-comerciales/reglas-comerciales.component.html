@@ -1,0 +1,77 @@
+<app-default-window>
+    <main class="reglasComercialesContainer">
+      <div class="reglasComercialesHeaderGrid">
+        <h2 class="grid-item-reglasComercialesTitulo">Definición de Reglas Comerciales</h2>
+      </div>
+      <div class="reglasComercialesSeleccionFormGrid">
+        <div class="grid-item-paisFormField">
+          <h3>País</h3>
+          <mat-form-field class="paisFormField">
+            <mat-label>Escoja el País</mat-label>
+            <mat-select [(value)]="filtroPais" #fieldPais required 
+              (selectionChange)="cambioValoresFiltros()">
+              <mat-option *ngFor="let pais of listaPaises" [value]="pais">
+                {{PaisesType2LabelMapping[pais]}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="grid-item-tipoReglaComercialFormField">
+          <h3>Tipo de Regla Comercial</h3>
+          <mat-form-field class="tipoReglaComercialFormField">
+            <mat-label>Escoja el Tipo de Regla Comercial</mat-label>
+            <mat-select [(value)]="filtroTipoReglaComercial" #fieldTipoReglaComercial required 
+              (selectionChange)="cambioValoresFiltros()">
+              <mat-option *ngFor="let tipoReglaComercial of listaTiposReglasComerciales" [value]="tipoReglaComercial">
+                {{TipoReglaComercial2LabelMapping[tipoReglaComercial]}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <!-- 
+          Zona para notificaciones/mensajes 
+      -->
+      <div class="reglasComercialesTablaHeaderGrid">
+        <h3 class="grid-item-reglasComercialesTablaTitulo">Reglas Comerciales Existentes</h3>
+      </div>
+      <div class="reglasComercialesTablaGrid">
+        <app-table-template
+          [data]="tableData"
+          [columns]="tableColumns"
+          [displayedColumns]="visibleColumns"
+          [actions]="assignAction"
+        >  
+        </app-table-template>
+      </div>
+      <div class="reglasComercialesAgregarReglaHeaderGrid">
+        <h3 class="grid-item-reglasComercialesAgregarReglaTitulo">Agregar Regla Comercial</h3>
+      </div>
+      <form [formGroup]="agregarReglaComercialForm" (ngSubmit)="onSubmit()">
+        <div class="reglasComercialesAgregarReglaForm">
+          <div class="grid-item-descripcionField">
+            <h3>Descripción de la Regla</h3>
+            <mat-form-field class="descripcionFormField">
+              <input matInput formControlName="fieldDescripcion" placeholder="Descripción">
+            </mat-form-field>
+          </div>
+          <div class="reglasComercialesAgregarReglaBtnsContainer">
+            <div class="grid-item-cancelarBtnDiv">
+              <button mat-flat-button class="cancelarBtn"
+                      (click)="clearAll()"
+                      [disabled]="enviando">
+                      Cancelar
+              </button>
+            </div>
+            <div class="grid-item-guardarBtnDiv">
+              <button mat-flat-button class="guardarBtn" 
+                      type="submit" 
+                      [disabled]="!sonFiltrosValidos() || agregarReglaComercialForm.invalid"
+                      >Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>    
+    </main>
+  </app-default-window>
