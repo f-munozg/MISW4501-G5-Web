@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Producto } from '../../productos/producto.model';
+import { Observable } from 'rxjs';
 
 export interface TableRow{
 
@@ -11,6 +14,13 @@ export interface TableRow{
   styleUrls: ['./reporte-rotacion-inventario.component.css']
 })
 export class ReporteRotacionInventarioComponent implements OnInit {
+  reporteRotacionInventarioForm!: FormGroup;
+
+  listaProductos: Producto[] = [];
+
+  productosFiltrados!: Observable<Producto[]>;
+  
+  idProductoSeleccionado: string | null = null;
 
   tableData: TableRow[] = [];
 
@@ -39,4 +49,7 @@ export class ReporteRotacionInventarioComponent implements OnInit {
   ngOnInit() {
   }
 
+  onSubmit() {
+    
+  }
 }
