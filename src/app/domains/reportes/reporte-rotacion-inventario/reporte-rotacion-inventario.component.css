@@ -1,7 +1,7 @@
 .reporteRotacionInventarioContainer{
     display: grid;
     gap: 20px;
-    background-color: #e4e4e4;
+    /* background-color: #e4e4e4; */
 }
 
 /*
@@ -16,7 +16,7 @@
     grid-template-columns: repeat(9, 1fr);
 
     .grid-item-reporteRotacionInventarioTitulo{
-        grid-column: 1 / 5;
+        grid-column: 1 / 7;
     }
 }
 
@@ -83,4 +83,43 @@
             grid-column: 1 / -1 !important;
         }
     }
+}
+
+.reporteRotacionInventarioBoxGrid{
+    display: grid;
+    grid-row: 3;
+    grid-template-columns: repeat(9, 1fr);
+
+    .reporteRotacionInventarioBoxFlex{
+        grid-column: 2 / 9;
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+
+        .grid-item-reporteRotacionInventarioStockInicialBox{
+            flex: 1;
+            min-width: 0;
+            background-color: #CCCCCC;
+            justify-items: center;
+            border-bottom: 2px solid black;
+        }
+
+        .grid-item-reporteRotacionInventarioStockFinalBox{
+            flex: 1;
+            min-width: 0;
+            background-color: #CCCCCC;
+            justify-items: center;
+            border-bottom: 2px solid black;
+        }
+
+        .grid-item-reporteRotacionInventarioRotacionBox{
+            flex: 1;
+            min-width: 0;
+            background-color: #CCCCCC;
+            justify-items: center;
+            border-bottom: 2px solid black;
+        }
+
+    }
+
 }

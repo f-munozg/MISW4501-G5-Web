@@ -37,9 +37,8 @@
             <input 
               type="text" 
               matInput
-              formControlName="fieldProducto"
               [matAutocomplete]="autoProducto"
-            >
+            > <!-- formControlName="fieldProducto" -->
             <mat-autocomplete #autoProducto="matAutocomplete" > <!-- (optionSelected)="conProductoSeleccionado($event)" -->
               <mat-option > <!-- *ngFor="let producto of productosFiltrados | async" [value]="producto" --> <!-- {{ producto.name }} -->
                 
@@ -53,14 +52,16 @@
       </div>
     <!-- Aquí acaba el form-->
     <div class="reporteRotacionInventarioBoxGrid">
-      <div class="grid-item-reporteRotacionInventarioStockInicialBox">
-        <h3>Stock Inicial</h3>
-      </div>
-      <div class="grid-item-reporteRotacionInventarioStockFinalBox">
-        <h3>Stock Final</h3>
-      </div>
-      <div class="grid-item-reporteRotacionInventarioRotaciónBox">
-        <h3>Rotación</h3>
+      <div class="reporteRotacionInventarioBoxFlex">
+        <div class="grid-item-reporteRotacionInventarioStockInicialBox">
+          <h3>Stock Inicial</h3>
+        </div>
+        <div class="grid-item-reporteRotacionInventarioStockFinalBox">
+          <h3>Stock Final</h3>
+        </div>
+        <div class="grid-item-reporteRotacionInventarioRotacionBox">
+          <h3>Rotación</h3>
+        </div>
       </div>
     </div>
     <div class="reporteRotacionInventarioTablaHeaderGrid">
