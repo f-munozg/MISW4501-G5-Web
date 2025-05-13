@@ -40,9 +40,9 @@
               [matAutocomplete]="autoProducto"
               formControlName="fieldProducto"
             >
-            <mat-autocomplete #autoProducto="matAutocomplete" > <!-- (optionSelected)="conProductoSeleccionado($event)" --> 
-              <mat-option *ngFor="let producto of productosFiltrados | async" [value]="producto">
-                {{ producto.name }}
+            <mat-autocomplete #autoProducto="matAutocomplete" (optionSelected)="conProductoSeleccionado($event.option.value)"> 
+              <mat-option *ngFor="let nombreProducto of nombresProductosFiltrados | async" [value]="nombreProducto">
+                {{ nombreProducto }}
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
