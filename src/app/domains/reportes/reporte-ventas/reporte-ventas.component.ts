@@ -7,7 +7,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Vendedor } from '../../vendedores/vendedores.model';
 
 export interface TableRow{
-
+    producto: string;
+    vendedor: string;
+    unidades_vendidas: number;
+    ingresos: number;
+    primera_venta: string;
+    ultima_venta: string;
 }
 
 @Component({
@@ -26,19 +31,15 @@ export class ReporteVentasComponent implements OnInit {
   nombresProductosFiltrados!: Observable<string[]>;
 
   idProductoSeleccionado: string | null = null;
+  idVendedorSeleccionado: string | null = null;
 
   tableData: TableRow[] = [];
 
   tableColumns = [
     {
-      name: 'timestamp',
-      header: 'Fecha',
-      cell: (item: any) => item.timestamp.toString()
-    },
-    {
-      name: 'nombre_producto',
+      name: 'producto',
       header: 'Producto',
-      cell: (item: any) => item.nombre_producto.toString()
+      cell: (item: any) => item.producto.toString()
     },
     {
       name: 'vendedor',
@@ -46,19 +47,28 @@ export class ReporteVentasComponent implements OnInit {
       cell: (item: any) => item.vendedor.toString()
     },
     {
-      name: 'units_sold',
-      header: 'Unidades Vendidas',
-      cell: (item: any) => item.cantidad_salida.toString()
+      name: 'unidades_vendidas',
+      header: 'Unidades',
+      cell: (item: any) => item.unidades_vendidas.toString()
     },
     {
-      name: 'value',
+      name: 'ingresos',
       header: 'Ingresos',
-      cell: (item: any) => item.stock_acumulado.toString()
+      cell: (item: any) => item.ingresos.toString()
+    },
+    {
+      name: 'primera_venta',
+      header: 'Primera Venta',
+      cell: (item: any) => item.primera_venta.toString()
+    },
+        {
+      name: 'ultima_venta',
+      header: 'Última Venta',
+      cell: (item: any) => item.ultima_venta.toString()
     },
   ]
 
-  visibleColumns = ['timestamp', 'nombre_producto', 'vendedor', 'units_sold', 'value'];
-
+  visibleColumns = ['producto','vendedor','unidades_vendidas','ingresos','primera_venta','ultima_venta'];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -71,8 +81,8 @@ export class ReporteVentasComponent implements OnInit {
     this.reporteVentasForm = this.formBuilder.group({
       fieldDesde: ['', Validators.required],
       fieldHasta: ['', Validators.required],
-      fieldProducto: ['', Validators.required],
-      fieldVendedor: ['', Validators.required]
+      fieldProducto: [''],
+      fieldVendedor: ['']
     });
   }
 
@@ -120,9 +130,9 @@ export class ReporteVentasComponent implements OnInit {
 
   actualizarUrlConParams(): void {
     this.route.queryParams.subscribe(params => {
-      if (params['product_id'] && this.listaProductos.length > 0) {
-        this.idProductoSeleccionado = params['product_id'];
-        const producto = this.listaProductos.find(p => p.id === params['product_id']);
+      if (params['producto'] && this.listaProductos.length > 0) {
+        this.idProductoSeleccionado = params['producto'];
+        const producto = this.listaProductos.find(p => p.id === params['producto']);
         
         if (producto) {
           this.reporteVentasForm.patchValue({
@@ -131,17 +141,33 @@ export class ReporteVentasComponent implements OnInit {
         }
       }
       
-      if (params['start_date']) {
-        const startDateValue = this.parsearFechaComoString(params['start_date']);
-        
+      if (params['vendedor'] && this.listaVendedores.length > 0) {
+        const vendedor = this.listaVendedores.find(v => v.id === params['vendedor']);
+        if (vendedor) {
+          this.reporteVentasForm.patchValue({
+            fieldVendedor: vendedor.identification_number.toString()
+          });
+        }
+      } else if (params['vendedor'] && this.listaVendedores.length === 0) {
+        this.cargarVendedores(() => {
+          const vendedor = this.listaVendedores.find(v => v.id === params['vendedor']);
+          if (vendedor) {
+            this.reporteVentasForm.patchValue({
+              fieldVendedor: vendedor.identification_number.toString()
+            });
+          }
+        });
+      }
+      
+      if (params['fecha_inicio']) {
+        const startDateValue = this.parsearFechaComoString(params['fecha_inicio']);
         this.reporteVentasForm.patchValue({
           fieldDesde: startDateValue
         });
       }
       
-      if (params['end_date']) {
-        const endDateValue = this.parsearFechaComoString(params['end_date']);
-        
+      if (params['fecha_fin']) {
+        const endDateValue = this.parsearFechaComoString(params['fecha_fin']);
         this.reporteVentasForm.patchValue({
           fieldHasta: endDateValue
         });
@@ -184,7 +210,6 @@ export class ReporteVentasComponent implements OnInit {
     ).subscribe({
       next: (vendedores) => {
         this.listaVendedores = vendedores.sellers;
-        this.reporteVentasForm.get('fieldVendedor')?.setValue('', { emitEvent: true});
       },
       error: (err) => {
         console.error('Failed to load sellers', err);
@@ -193,29 +218,63 @@ export class ReporteVentasComponent implements OnInit {
   }
 
   conVendedorSeleccionado(numeroIdentificacionSeleccionado: number): void {
-    const vendedor = this.listaVendedores.find(v => v.identification_number === numeroIdentificacionSeleccionado);
+    const vendedorSeleccionado = this.listaVendedores.find(v => 
+      v.identification_number === numeroIdentificacionSeleccionado
+    );
     
-    this.router.navigate(['view'], {
-      relativeTo: this.route,
-      queryParams: {id: vendedor?.id},
-      queryParamsHandling: 'merge',
-      replaceUrl: true
-    });
-    
+    if (vendedorSeleccionado) {
+      this.idVendedorSeleccionado = vendedorSeleccionado.id;
+    } else {
+      this.idVendedorSeleccionado = null;
+    }
   }
 
   ngOnInit() {
     this.initializeForm();
     this.autoCompletar();
-    this.cargarProductos();
     this.autoCompletarVendedor();
-    this.cargarVendedores();
     this.setupValidacionFechas();
+    
+    this.cargarProductos();
+    this.cargarVendedores(() => {
+      this.actualizarUrlConParams();
+    });
   }
 
 
   onSubmit() {
+    if (this.reporteVentasForm.valid) {
+      const formValues = this.reporteVentasForm.value;
+      
+      const queryParams: any = {
+        fecha_inicio: this.formatoFecha(formValues.fieldDesde),
+        fecha_fin: this.formatoFecha(formValues.fieldHasta)
+      };
 
+      if (this.idProductoSeleccionado) {
+        queryParams.producto = this.idProductoSeleccionado;
+      }
+
+      if (formValues.fieldVendedor) {
+        const vendedor = this.listaVendedores.find(v => 
+          v.identification_number.toString() === formValues.fieldVendedor.toString()
+        );
+        if (vendedor) {
+          queryParams.vendedor = vendedor.id;
+        }
+      }
+
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams,
+        queryParamsHandling: 'merge',
+        replaceUrl: true
+      });
+
+      /*
+      Aquí va el llamado al backend para traer la info del reporte de ventas
+      */
+    }
   }
 
   formatoFecha(date: Date | string): string {

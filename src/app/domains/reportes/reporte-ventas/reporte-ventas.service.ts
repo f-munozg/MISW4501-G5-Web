@@ -22,4 +22,8 @@ export class ReporteVentasService {
       return this.http.get<VendedoresResponse>(`${environment.apiUrlSellers}/sellers`);
   }
 
+  getReporteVentas(){
+
+  }
+
 }
