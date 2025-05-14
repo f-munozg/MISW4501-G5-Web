@@ -155,7 +155,7 @@ export class ReporteRotacionInventarioComponent implements OnInit {
     });
   }
 
-  private parsearFechaComoString(dateStr: string): Date {
+  parsearFechaComoString(dateStr: string): Date {
     if (!dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
       return new Date(dateStr);
     }
@@ -235,7 +235,7 @@ export class ReporteRotacionInventarioComponent implements OnInit {
     return result;
   }
 
-  private setupValidacionFechas(): void {
+  setupValidacionFechas(): void {
     this.reporteRotacionInventarioForm.get('fieldDesde')?.valueChanges.subscribe(() => {
       this.validarFechas();
     });
@@ -245,7 +245,7 @@ export class ReporteRotacionInventarioComponent implements OnInit {
     });
   }
 
-  private validarFechas(): void {
+  validarFechas(): void {
     const fechaInicial = this.reporteRotacionInventarioForm.get('fieldDesde')?.value;
     const fechaFinal = this.reporteRotacionInventarioForm.get('fieldHasta')?.value;
 
