@@ -5,6 +5,9 @@ import { DebugElement } from '@angular/core';
 
 import { ReporteRotacionInventarioComponent } from './reporte-rotacion-inventario.component';
 import { ReportesModule } from '../reportes.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ReporteRotacionInventarioService } from './reporte-rotacion-inventario.service';
 
 describe('ReporteRotacionInventarioComponent', () => {
   let component: ReporteRotacionInventarioComponent;
@@ -13,7 +16,14 @@ describe('ReporteRotacionInventarioComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ReporteRotacionInventarioComponent ],
-      imports: [ ReportesModule ]
+      imports: [ 
+        ReportesModule,
+        HttpClientTestingModule,
+        RouterTestingModule.withRoutes([]) 
+      ],
+      providers: [
+        ReporteRotacionInventarioService
+      ]
     })
     .compileComponents();
   }));
