@@ -8,13 +8,25 @@ import { DefaultWindowComponent } from './shared/default-window/default-window.c
 import { RegistroFabricantesComponent } from './domains/fabricantes/registro-fabricantes/registro-fabricantes.component';
 import { GestionPortafolioComponent } from './domains/fabricantes/gestion-portafolio/gestion-portafolio.component';
 
+// Inventario
+import { ConsultaInventarioComponent } from './domains/inventarios/consulta-inventario/consulta-inventario.component';
+import { ConsultaProductoBodegaComponent } from './domains/inventarios/consulta-producto-bodega/consulta-producto-bodega.component';
+
 // Productos
 import { CargaProductoComponent } from './domains/productos/carga-producto/carga-producto.component';
 import { CargaMasivaProductosComponent } from './domains/productos/carga-masiva-productos/carga-masiva-productos.component';
 
-// Inventario
-import { ConsultaInventarioComponent } from './domains/inventarios/consulta-inventario/consulta-inventario.component';
-import { ConsultaProductoBodegaComponent } from './domains/inventarios/consulta-producto-bodega/consulta-producto-bodega.component';
+// Reglas
+import { ReglasMenuComponent } from './domains/reglas/reglas-menu/reglas-menu.component';
+import { ReglasLegalesComponent } from './domains/reglas/reglas-legales/reglas-legales.component';
+import { ReglasTributariasComponent } from './domains/reglas/reglas-tributarias/reglas-tributarias.component';
+import { ReglasComercialesComponent } from './domains/reglas/reglas-comerciales/reglas-comerciales.component';
+
+// Reportes
+import { ReporteMenuComponent } from './domains/reportes/reporte-menu/reporte-menu.component';
+import { ReporteVentasComponent } from './domains/reportes/reporte-ventas/reporte-ventas.component';
+import { ReporteVendedorComponent } from './domains/reportes/reporte-vendedor/reporte-vendedor.component';
+import { ReporteRotacionInventarioComponent } from './domains/reportes/reporte-rotacion-inventario/reporte-rotacion-inventario.component';
 
 // Ventas y Vendedores
 import { ConsultaVentasComponent } from './domains/ventas/consulta-ventas/consulta-ventas.component';
@@ -24,10 +36,7 @@ import { PlanesDeVentaComponent } from './domains/ventas/planes-de-venta/planes-
 // Testing
 import { TableTemplateComponent } from './shared/table-template/table-template.component';
 import { TableDemoComponent } from './shared/table-template/table-demo.component';
-import { ReglasMenuComponent } from './domains/reglas/reglas-menu/reglas-menu.component';
-import { ReglasLegalesComponent } from './domains/reglas/reglas-legales/reglas-legales.component';
-import { ReglasTributariasComponent } from './domains/reglas/reglas-tributarias/reglas-tributarias.component';
-import { ReglasComercialesComponent } from './domains/reglas/reglas-comerciales/reglas-comerciales.component';
+
 
 const routes: Routes = [
   /* Login */
@@ -58,6 +67,17 @@ const routes: Routes = [
       { path: 'legales', component: ReglasLegalesComponent },
       { path: 'tributarias', component: ReglasTributariasComponent },
       { path: 'comerciales', component: ReglasComercialesComponent }
+    ]
+  },
+
+  /* Reportes */
+  {
+    path: 'reportes',
+    children: [
+      { path: '', pathMatch: 'full', component: ReporteMenuComponent },
+      { path: 'ventas', component: ReporteVentasComponent },
+      { path: 'vendedor', component: ReporteVendedorComponent },
+      { path: 'rotacion_inventario', component: ReporteRotacionInventarioComponent }
     ]
   },
 
