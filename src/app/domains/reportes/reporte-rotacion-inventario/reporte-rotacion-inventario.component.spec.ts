@@ -11,6 +11,7 @@ import { ReporteRotacionInventarioService } from './reporte-rotacion-inventario.
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { TipoMovimiento } from '../../inventarios/inventario.model';
+import { of } from 'rxjs';
 
 const mockRotacionProductoResponse = {
   "product_id": "27644658-6c5c-4643-8121-c30bed696f68",
@@ -92,6 +93,16 @@ describe('ReporteRotacionInventarioComponent', () => {
   let formBuilder: FormBuilder;
 
   beforeEach(waitForAsync(() => {
+    const mockRoute = {
+      queryParams: of({
+        product_id: '27644658-6c5c-4643-8121-c30bed696f68',
+        start_date: '2025-04-01',
+        end_date: '2025-05-01'
+      })
+    };
+
+    TestBed.overrideProvider(ActivatedRoute, { useValue: mockRoute });
+
     TestBed.configureTestingModule({
       declarations: [ ReporteRotacionInventarioComponent ],
       imports: [ 
@@ -141,10 +152,16 @@ describe('ReporteRotacionInventarioComponent', () => {
   });
 
   describe('autoCompletar', () => {
-    it('', () => {
-        // 1. Inicialización de datos de prueba
-        // 2. Ejecución de métodos/funciones
-        // 3. Validación
+    it('should initialize filtered products observable', () => {
+      component.listaProductos = mockProductosResponse.products;
+      component.autoCompletar();
+      
+      expect(component.nombresProductosFiltrados).toBeDefined();
+      
+      component.nombresProductosFiltrados.subscribe(result => {
+        expect(result.length).toBe(2);
+        expect(result).toEqual(['Chocolisto', 'Leche']);
+      });
     });
   });
 
@@ -173,28 +190,64 @@ describe('ReporteRotacionInventarioComponent', () => {
   });
 
   describe('cargarProductos', () => {
-    it('', () => {
-        // 1. Inicialización de datos de prueba
-        // 2. Ejecución de métodos/funciones
-        // 3. Validación
-    });
-  });
+    it('should load products and update filtered list', fakeAsync(() => {
+      spyOn(component, 'autoCompletar').and.callThrough();
+      spyOn(component, 'actualizarUrlConParams').and.callThrough();
 
-  describe('conProductoSeleccionado', () => {
-    it('', () => {
-        // 1. Inicialización de datos de prueba
-        // 2. Ejecución de métodos/funciones
-        // 3. Validación
-    });
+      component.listaProductos = [];
+      
+      component.cargarProductos();
+      tick();
+      
+      const reqs = httpMock.match(req => req.url.includes('/products'));
+      expect(reqs.length).toBe(2);
+
+      reqs[0].flush(mockProductosResponse);
+      reqs[1].flush(mockProductosResponse);
+      tick();
+
+      expect(component.listaProductos.length).toBe(2);
+      expect(component.autoCompletar).toHaveBeenCalled();
+      expect(component.actualizarUrlConParams).toHaveBeenCalled();
+    }));
+
+    it('should handle error when loading products', fakeAsync(() => {
+      spyOn(console, 'error');
+      
+      component.listaProductos = [];
+      
+      component.cargarProductos();
+      tick(); 
+      
+      const reqs = httpMock.match(req => req.url.includes('/products'));
+      
+      expect(reqs.length).toBe(2);
+      
+      reqs[0].error(new ErrorEvent('Error loading products'));
+      tick();
+      
+      expect(console.error).toHaveBeenCalled();
+    }));
+
   });
 
   describe('actualizarUrlConParams', () => {
-    it('', () => {
-        // 1. Inicialización de datos de prueba
-        // 2. Ejecución de métodos/funciones
-        // 3. Validación
-    });
+    it('should update form values from query params', fakeAsync(() => {
+      spyOn(service, 'getListaProductos').and.returnValue(of(mockProductosResponse));
+      
+      component.cargarProductos();
+      tick();
+      
+      component.actualizarUrlConParams();
+      tick();
+      
+      expect(component.idProductoSeleccionado).toBe('27644658-6c5c-4643-8121-c30bed696f68');
+      expect(component.reporteRotacionInventarioForm.value.fieldProducto).toBe('Chocolisto');
+      expect(component.reporteRotacionInventarioForm.value.fieldDesde).toEqual(new Date(2025, 3, 1)); 
+      expect(component.reporteRotacionInventarioForm.value.fieldHasta).toEqual(new Date(2025, 4, 1));
+    }));
   });
+
 
   describe('parsearFechaComoString', () => {
     it('should parse YYYY-MM-DD format correctly', () => {
@@ -213,20 +266,88 @@ describe('ReporteRotacionInventarioComponent', () => {
 
 
   describe('onSubmit', () => {
-    it('', () => {
-        // 1. Inicialización de datos de prueba
-        // 2. Ejecución de métodos/funciones
-        // 3. Validación
+    it('should not submit if form is invalid', () => {
+      spyOn(router, 'navigate');
+      spyOn(service, 'getRotacionProducto');
+      
+      component.reporteRotacionInventarioForm.setErrors({ invalid: true });
+      component.onSubmit();
+      
+      expect(router.navigate).not.toHaveBeenCalled();
+      expect(service.getRotacionProducto).not.toHaveBeenCalled();
     });
+
+    it('should navigate and fetch data when form is valid', fakeAsync(() => {
+      spyOn(router, 'navigate').and.callThrough();
+      
+      component.listaProductos = mockProductosResponse.products;
+      component.idProductoSeleccionado = '27644658-6c5c-4643-8121-c30bed696f68';
+      
+      component.reporteRotacionInventarioForm.patchValue({
+        fieldProducto: 'Chocolisto',
+        fieldDesde: new Date('2025-04-01'),
+        fieldHasta: new Date('2025-05-01')
+      });
+      
+      component.onSubmit();
+      tick();
+      
+      expect(router.navigate).toHaveBeenCalled();
+      
+      const req = httpMock.expectOne(
+        req => req.url.includes('/stock/product_rotation')
+      );
+      req.flush(mockRotacionProductoResponse);
+      tick();
+      
+      expect(component.tableData.length).toBe(3);
+      expect(component.stockInicial).toBe(50);
+      expect(component.stockFinal).toBe(7);
+      expect(component.rotacion).toBe('700%');
+    }));
+
+    it('should handle error when fetching rotation data', fakeAsync(() => {
+      spyOn(console, 'log');
+      
+      component.listaProductos = mockProductosResponse.products;
+      component.idProductoSeleccionado = '27644658-6c5c-4643-8121-c30bed696f68';
+      
+      component.reporteRotacionInventarioForm.patchValue({
+        fieldProducto: 'Chocolisto',
+        fieldDesde: new Date('2025-04-01'),
+        fieldHasta: new Date('2025-05-01')
+      });
+      
+      component.onSubmit();
+      tick();
+      
+      const req = httpMock.expectOne(
+        req => req.url.includes('/stock/product_rotation')
+      );
+      req.error(new ErrorEvent('Error'));
+      tick();
+      
+      expect(console.log).toHaveBeenCalled();
+    }));
   });
 
   describe('formatoFecha', () => {
-    it('', () => {
-        // 1. Inicialización de datos de prueba
-        // 2. Ejecución de métodos/funciones
-        // 3. Validación
+    it('should format Date object to YYYY-MM-DD string', () => {
+      const date = new Date(2025, 3, 1); // Abril 1, 2025
+      const result = component.formatoFecha(date);
+      expect(result).toBe('2025-04-01');
+    });
+
+    it('should return YYYY-MM-DD string as is', () => {
+      const result = component.formatoFecha('2025-04-01');
+      expect(result).toBe('2025-04-01');
+    });
+
+    it('should throw error for invalid date', () => {
+      expect(() => component.formatoFecha('invalid-date')).toThrowError('Invalid date');
     });
   });
+
 
   describe('setupValidacionFechas', () => {
     it('should set up date validation', fakeAsync(() => {
@@ -243,12 +364,39 @@ describe('ReporteRotacionInventarioComponent', () => {
     }));
   });
 
-
   describe('validarFechas', () => {
-    it('', () => {
-        // 1. Inicialización de datos de prueba
-        // 2. Ejecución de métodos/funciones
-        // 3. Validación
+    it('should set error when end date is before start date', () => {
+      component.reporteRotacionInventarioForm.patchValue({
+        fieldDesde: new Date('2025-05-01'),
+        fieldHasta: new Date('2025-04-01')
+      });
+      
+      component.validarFechas();
+      
+      expect(component.reporteRotacionInventarioForm.get('fieldHasta')?.errors).toEqual({ invalidDate: true });
+    });
+
+    it('should clear error when dates are valid', () => {
+      component.reporteRotacionInventarioForm.patchValue({
+        fieldDesde: new Date('2025-04-01'),
+        fieldHasta: new Date('2025-05-01')
+      });
+      
+      component.validarFechas();
+      
+      expect(component.reporteRotacionInventarioForm.get('fieldHasta')?.errors).toBeNull();
+    });
+
+    it('should do nothing when dates are not both set', () => {
+      component.reporteRotacionInventarioForm.patchValue({
+        fieldDesde: new Date('2025-04-01'),
+        fieldHasta: null
+      });
+      
+      component.validarFechas();
+      
+      const errors = component.reporteRotacionInventarioForm.get('fieldHasta')?.errors;
+      expect(errors).toEqual({ required: true });
     });
   });
 
