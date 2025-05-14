@@ -231,6 +231,44 @@ describe('ReporteRotacionInventarioComponent', () => {
 
   });
 
+  describe('conProductoSeleccionado', () => {
+    beforeEach(() => {
+      component.listaProductos = mockProductosResponse.products;
+    });
+
+    it('should set idProductoSeleccionado when product is found', () => {
+      component.conProductoSeleccionado('Chocolisto');
+      
+      expect(component.idProductoSeleccionado).toBe('27644658-6c5c-4643-8121-c30bed696f68');
+    });
+
+    it('should set idProductoSeleccionado to null when product is not found', () => {
+      component.conProductoSeleccionado('No existe');
+      
+      expect(component.idProductoSeleccionado).toBeNull();
+    });
+
+    it('should handle empty string input', () => {
+      component.conProductoSeleccionado('');
+      
+      expect(component.idProductoSeleccionado).toBeNull();
+    });
+
+    it('should handle case sensitivity', () => {
+      component.conProductoSeleccionado('CHOCOLISTO');
+      
+      expect(component.idProductoSeleccionado).toBeNull();
+      
+    });
+
+    it('should work correctly with empty product list', () => {
+      component.listaProductos = [];
+      component.conProductoSeleccionado('Chocolisto');
+      
+      expect(component.idProductoSeleccionado).toBeNull();
+    });
+  });
+
   describe('actualizarUrlConParams', () => {
     it('should update form values from query params', fakeAsync(() => {
       spyOn(service, 'getListaProductos').and.returnValue(of(mockProductosResponse));
