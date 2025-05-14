@@ -5,6 +5,7 @@ import { finalize, map, Observable, startWith } from 'rxjs';
 import { ReporteVentasService } from './reporte-ventas.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Vendedor } from '../../vendedores/vendedores.model';
+import { ReporteVentas } from '../reportes.model';
 
 export interface TableRow{
     producto: string;
@@ -198,13 +199,16 @@ export class ReporteVentasComponent implements OnInit {
   _filtrarNumerosIdentificacion(value: string): number[] {
     const valorFiltro = value?.toString().toLowerCase() || '';
     return this.listaVendedores
-      .filter(vendedor => vendedor.identification_number.toString().includes(valorFiltro))
-      .map(vendedor => vendedor.identification_number)
+      .filter(vendedor => 
+        vendedor.identification_number.toString().includes(valorFiltro)
+      )
+      .map(vendedor => vendedor.identification_number);
   }
 
   cargarVendedores(callback?: () => void): void {
     this.apiService.getListaVendedores().pipe(
       finalize(() => {
+        this.autoCompletarVendedor();
         if (callback) callback();
       })
     ).subscribe({
@@ -255,13 +259,8 @@ export class ReporteVentasComponent implements OnInit {
         queryParams.producto = this.idProductoSeleccionado;
       }
 
-      if (formValues.fieldVendedor) {
-        const vendedor = this.listaVendedores.find(v => 
-          v.identification_number.toString() === formValues.fieldVendedor.toString()
-        );
-        if (vendedor) {
-          queryParams.vendedor = vendedor.id;
-        }
+      if (this.idVendedorSeleccionado) {
+        queryParams.vendedor = this.idVendedorSeleccionado;
       }
 
       this.router.navigate([], {
@@ -271,9 +270,17 @@ export class ReporteVentasComponent implements OnInit {
         replaceUrl: true
       });
 
-      /*
-      Aquí va el llamado al backend para traer la info del reporte de ventas
-      */
+      this.apiService.getReporteVentas(
+        queryParams.fecha_inicio,
+        queryParams.fecha_fin,
+        this.idProductoSeleccionado,
+        this.idVendedorSeleccionado
+      ).subscribe(
+        (response: ReporteVentas[]) => {
+          this.tableData = response;
+        },
+        error => console.log(error)
+      )
     }
   }
 
