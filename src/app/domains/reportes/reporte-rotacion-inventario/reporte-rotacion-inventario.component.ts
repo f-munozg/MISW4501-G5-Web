@@ -31,6 +31,10 @@ export class ReporteRotacionInventarioComponent implements OnInit {
   
   idProductoSeleccionado: string | null = null;
 
+  stockInicial: number = 0;
+  stockFinal: number = 0;
+  rotacion: string = '';
+
   tableData: TableRow[] = [];
 
   tableColumns = [
@@ -198,7 +202,12 @@ export class ReporteRotacionInventarioComponent implements OnInit {
     });
     
     this.apiService.getRotacionProducto(this.idProductoSeleccionado, queryParams.start_date, queryParams.end_date).subscribe(
-      (response: ReporteRotacionProducto) => { this.tableData = response.movimientos; console.log(this.tableData)},
+      (response: ReporteRotacionProducto) => { 
+        this.tableData = response.movimientos; 
+        this.stockInicial = response.stock_inicial;
+        this.stockFinal = response.stock_final;
+        this.rotacion = response.rotacion.texto;
+      },
       error => console.log(error)
     )
   }
