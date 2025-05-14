@@ -21,3 +21,17 @@ export interface ProductInventoryItem {
     location: string;
     status: string;
 }
+
+export enum TipoMovimiento {
+    INGRESO = "Ingreso",
+    SALIDA = "Salida"
+}
+
+export interface MovimientoDetalle {
+    timestamp: string;
+    nombre_producto: string;
+    cantidad_ingreso: number;
+    cantidad_salida: number;
+    tipo_movimiento: TipoMovimiento;
+    stock_acumulado: number;
+}

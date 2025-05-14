@@ -4,9 +4,16 @@ import { Producto } from '../../productos/producto.model';
 import { map, Observable, startWith } from 'rxjs';
 import { ReporteRotacionInventarioService } from './reporte-rotacion-inventario.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TipoMovimiento } from '../../inventarios/inventario.model';
+import { ReporteRotacionProducto } from '../reportes.model';
 
 export interface TableRow{
-
+    timestamp: string;
+    nombre_producto: string;
+    cantidad_ingreso: number;
+    cantidad_salida: number;
+    tipo_movimiento: TipoMovimiento;
+    stock_acumulado: number;
 }
 
 @Component({
@@ -28,23 +35,33 @@ export class ReporteRotacionInventarioComponent implements OnInit {
 
   tableColumns = [
     {
-      name: 'one',
-      header: 'one',
-      cell: (item: any) => item.one.toString()
+      name: 'timestamp',
+      header: 'Fecha',
+      cell: (item: any) => item.timestamp.toString()
     },
     {
-      name: 'two',
-      header: 'two',
-      cell: (item: any) => item.two.toString()
+      name: 'nombre_producto',
+      header: 'Producto',
+      cell: (item: any) => item.nombre_producto.toString()
     },
     {
-      name: 'three',
-      header: 'three',
-      cell: (item: any) => item.three.toString()
+      name: 'cantidad_ingreso',
+      header: 'Entrada',
+      cell: (item: any) => item.cantidad_ingreso.toString()
+    },
+    {
+      name: 'cantidad_salida',
+      header: 'Salida',
+      cell: (item: any) => item.cantidad_salida.toString()
+    },
+    {
+      name: 'stock_acumulado',
+      header: 'Stock Final',
+      cell: (item: any) => item.stock_acumulado.toString()
     },
   ]
 
-  visibleColumns = ['one', 'two', 'three']
+  visibleColumns = ['timestamp', 'nombre_producto', 'cantidad_ingreso', 'cantidad_salida', 'stock_acumulado']
 
   constructor(
     private formBuilder: FormBuilder,
@@ -161,7 +178,6 @@ export class ReporteRotacionInventarioComponent implements OnInit {
     }
 
     const formValue = this.reporteRotacionInventarioForm.value;
-
     
     const queryParams: any = {
       product_id: this.idProductoSeleccionado
@@ -180,6 +196,11 @@ export class ReporteRotacionInventarioComponent implements OnInit {
       queryParams: queryParams,
       queryParamsHandling: 'merge'
     });
+    
+    this.apiService.getRotacionProducto(this.idProductoSeleccionado, queryParams.start_date, queryParams.end_date).subscribe(
+      (response: ReporteRotacionProducto) => { this.tableData = response.movimientos; console.log(this.tableData)},
+      error => console.log(error)
+    )
   }
 
   formatoFecha(date: Date | string): string {
