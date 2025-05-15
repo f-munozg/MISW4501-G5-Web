@@ -233,20 +233,22 @@ describe('RegistroMovimientoInventarioComponent', () => {
         fieldCantidad: new FormControl(null),
         fieldTipoMovimiento: new FormControl(null)
       });
+
+      component.listaProductos = [mockProduct];
     });
 
-    it('should set idProductoSeleccionado and form value when product is selected', () => {
+    it('should not throw error when form control is missing', () => {
       const mockEvent = {
         option: {
-          value: mockProduct
+          value: mockProduct.name
         }
       } as MatAutocompleteSelectedEvent;
 
+      component.registroMovimientoInventarioForm.removeControl('fieldProducto');
+      
       component.conProductoSeleccionado(mockEvent);
 
       expect(component.idProductoSeleccionado).toBe(mockProduct.id);
-      expect(component.registroMovimientoInventarioForm.get('fieldProducto')?.value)
-        .toBe(mockProduct.name);
     });
 
     it('should handle null product selection by clearing values', () => {

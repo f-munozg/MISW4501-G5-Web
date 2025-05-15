@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MovementType2LabelMapping, TipoMovimiento } from '../inventario.model';
+import { MovementType2LabelMapping, RegistroMovimiento, TipoMovimiento } from '../inventario.model';
 import { Bodega, BodegasResponse } from '../../bodegas/bodegas.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Producto } from '../../productos/producto.model';
@@ -7,15 +7,15 @@ import { RegistroMovimientoInventarioService } from './registro-movimiento-inven
 import { Router } from '@angular/router';
 import { finalize, map, Observable, startWith } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface TableRow{
-  product_id: string,
-  warehouse_id: string,
-  quantity: number,
-  user: string,
-  movement_type: string,
-  timestamp: string,
-  alert_message: string,
+  fecha: string,
+  nombre_producto: string,
+  nombre_bodega: string,
+  tipo_movimiento: TipoMovimiento,
+  cantidad: number,
+  usuario: string
 }
 
 @Component({
@@ -34,6 +34,7 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
   nombresProductosFiltrados!: Observable<string[]>;
 
   isRefreshing: boolean = true;
+  isSubmitting: boolean = false;
 
   idProductoSeleccionado: string | null = null;
 
@@ -80,6 +81,7 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private apiService: RegistroMovimientoInventarioService,
+    private snackBar: MatSnackBar
   ) { }
 
   initializeForms(): void {
@@ -120,15 +122,30 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
   }
 
   conProductoSeleccionado(event: MatAutocompleteSelectedEvent): void {
-    const producto = event.option?.value as Producto | undefined;
-    if (!producto) {
+    const value = event.option?.value;
+    let productName: string;
+    
+    if (typeof value === 'string') {
+      productName = value;
+    } else if (value?.name) {
+      productName = value.name;
+    } else {
       this.idProductoSeleccionado = null;
       this.registroMovimientoInventarioForm.get('fieldProducto')?.setValue('');
       return;
     }
-    
-    this.idProductoSeleccionado = producto.id;
-    this.registroMovimientoInventarioForm.get('fieldProducto')?.setValue(producto.name);
+
+    const producto = this.listaProductos.find(p => p.name === productName);
+    if (producto) {
+      this.idProductoSeleccionado = producto.id;
+
+      const control = this.registroMovimientoInventarioForm.get('fieldProducto');
+      if (control) {
+        control.setValue(producto.name);
+      }
+    } else {
+      console.log('Product not found!');
+    }
   }
 
   cargarProductos(callback?: () => void): void{
@@ -150,16 +167,82 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
     })
   }
 
+  cargarListaMovimientos(): void {
+    this.isRefreshing = true;
+    
+    this.apiService.getListaMovimientos().pipe(
+      finalize(() => this.isRefreshing = false)
+    ).subscribe({
+      next: (movimientos) => {
+        this.tableData = movimientos;
+      },
+      error: (err) => {
+        console.error('Error loading movements:', err);
+        this.snackBar.open('Error al cargar los movimientos', 'Cerrar', {
+          duration: 5000,
+          panelClass: ['error-snackbar']
+        });
+      }
+    });
+  }
+
   ngOnInit() {
     this.initializeForms();
     this.cargarFabricantes();
+    this.cargarListaMovimientos();
     this.cargarProductos(() => {
       this.autoCompletar();
     });
   }
 
   onSubmit() {
+    if (this.registroMovimientoInventarioForm.invalid || this.isSubmitting) {
+      this.registroMovimientoInventarioForm.markAllAsTouched();
+      this.snackBar.open('Por favor complete todos los campos requeridos', 'Cerrar', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    const formData = this.registroMovimientoInventarioForm.value;
     
+    const productoSeleccionado = this.listaProductos.find(
+      product => product.name === formData.fieldProducto
+    );
+
+    if (!productoSeleccionado) {
+      console.error('No product selected or product not found');
+      return;
+    }
+
+    const requestData = {
+      ...formData,
+      idProducto: productoSeleccionado.id
+    };
+
+    this.apiService.postData(requestData).pipe(
+      finalize(() => this.isSubmitting = false)
+      ).subscribe({
+        next: (response) => {
+          console.log('Movement recorded successfully', response);
+          this.snackBar.open('Movimiento registrado exitosamente', 'Cerrar', {
+            duration: 5000,
+            panelClass: ['success-snackbar']
+          });
+          this.clearAll();
+          this.cargarListaMovimientos();
+        },
+        error: (err) => {
+          console.error('Error recording movement', err);
+          this.snackBar.open('Error al registrar el movimiento', 'Cerrar', {
+            duration: 5000,
+            panelClass: ['error-snackbar']
+          });
+        }
+      });
   }
 
   clearAll() {

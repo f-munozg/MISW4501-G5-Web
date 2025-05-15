@@ -32,6 +32,15 @@ export const MovementType2LabelMapping: Record<TipoMovimiento, string> = {
   [TipoMovimiento.SALIDA]: "Salida",
 }
 
+export interface RegistroMovimiento {
+    fecha: string,
+    nombre_producto: string,
+    nombre_bodega: string,
+    tipo_movimiento: TipoMovimiento,
+    cantidad: number,
+    usuario: string
+}
+
 export interface MovimientoDetalle {
     timestamp: string;
     nombre_producto: string;
