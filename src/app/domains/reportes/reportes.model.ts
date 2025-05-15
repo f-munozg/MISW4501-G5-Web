@@ -21,3 +21,12 @@ export interface RotacionProducto {
     texto: string;
     nivel: string;
 }
+
+export interface ReporteVentas {
+    producto: string;
+    vendedor: string;
+    unidades_vendidas: number;
+    ingresos: number;
+    primera_venta: string;
+    ultima_venta: string;
+}
