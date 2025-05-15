@@ -131,33 +131,39 @@ export class ReporteVentasComponent implements OnInit {
 
   actualizarUrlConParams(): void {
     this.route.queryParams.subscribe(params => {
-      if (params['producto'] && this.listaProductos.length > 0) {
+      if (Object.keys(params).length === 0) return;
+
+      if (params['producto']) {
         this.idProductoSeleccionado = params['producto'];
-        const producto = this.listaProductos.find(p => p.id === params['producto']);
-        
-        if (producto) {
-          this.reporteVentasForm.patchValue({
-            fieldProducto: producto.name
-          });
+        if (this.listaProductos.length > 0) {
+          const producto = this.listaProductos.find(p => p.id === params['producto']);
+          if (producto) {
+            this.reporteVentasForm.patchValue({
+              fieldProducto: producto.name
+            });
+          }
         }
       }
       
-      if (params['vendedor'] && this.listaVendedores.length > 0) {
-        const vendedor = this.listaVendedores.find(v => v.id === params['vendedor']);
-        if (vendedor) {
-          this.reporteVentasForm.patchValue({
-            fieldVendedor: vendedor.identification_number.toString()
-          });
-        }
-      } else if (params['vendedor'] && this.listaVendedores.length === 0) {
-        this.cargarVendedores(() => {
+      if (params['vendedor']) {
+        this.idVendedorSeleccionado = params['vendedor'];
+        if (this.listaVendedores.length > 0) {
           const vendedor = this.listaVendedores.find(v => v.id === params['vendedor']);
           if (vendedor) {
             this.reporteVentasForm.patchValue({
               fieldVendedor: vendedor.identification_number.toString()
             });
           }
-        });
+        } else {
+          this.cargarVendedores(() => {
+            const vendedor = this.listaVendedores.find(v => v.id === params['vendedor']);
+            if (vendedor) {
+              this.reporteVentasForm.patchValue({
+                fieldVendedor: vendedor.identification_number.toString()
+              });
+            }
+          });
+        }
       }
       
       if (params['fecha_inicio']) {
