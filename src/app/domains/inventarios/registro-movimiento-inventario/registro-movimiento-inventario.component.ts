@@ -31,7 +31,7 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
   listaProductos: any[] = [];
   listaBodegas: Bodega[] = [];
 
-  productosFiltrados!: Observable<Producto[]>;
+  nombresProductosFiltrados!: Observable<string[]>;
 
   isRefreshing: boolean = true;
 
@@ -80,7 +80,6 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private apiService: RegistroMovimientoInventarioService,
-    private router: Router,
   ) { }
 
   initializeForms(): void {
@@ -89,7 +88,6 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
       fieldBodega: ['', Validators.required],
       fieldCantidad: ['', [Validators.required, Validators.min(1)]],
       fieldTipoMovimiento: ['', Validators.required],
-      fieldResponsable: ['', Validators.required],
     });
   }
 
@@ -105,18 +103,20 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
   }
 
   autoCompletar(): void {
-    this.productosFiltrados = this.registroMovimientoInventarioForm.get('fieldProducto')!.valueChanges.pipe(
+    this.nombresProductosFiltrados = this.registroMovimientoInventarioForm.get('fieldProducto')!.valueChanges.pipe(
           startWith(''),
-          map(value => this._filtrarNombresProductos(value))
+          map(value => this._filtrarNombresProductos(value || ''))
         )
   }
 
-  _filtrarNombresProductos(value: string): Producto[] {
-    if (!this.listaProductos) return [];
-
-    const valorFiltro = value?.toString() || '';
+  _filtrarNombresProductos(value: string): string[] {
+    const valorFiltro = value.toLowerCase();
     return this.listaProductos
-      .filter(producto => producto.name.toString().includes(valorFiltro))
+      .filter(producto => 
+        producto.name.toLowerCase().includes(valorFiltro) ||
+        producto.name.toLowerCase().indexOf(valorFiltro) === 0
+      )
+      .map(producto => producto.name);
   }
 
   conProductoSeleccionado(event: MatAutocompleteSelectedEvent): void {
