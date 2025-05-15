@@ -27,6 +27,11 @@ export enum TipoMovimiento {
     SALIDA = "Salida"
 }
 
+export const MovementType2LabelMapping: Record<TipoMovimiento, string> = {
+  [TipoMovimiento.INGRESO]: "Ingreso",
+  [TipoMovimiento.SALIDA]: "Salida",
+}
+
 export interface MovimientoDetalle {
     timestamp: string;
     nombre_producto: string;

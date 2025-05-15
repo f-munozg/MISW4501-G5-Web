@@ -1,0 +1,101 @@
+<p>
+  registro-movimiento-inventario works!
+</p>
+<app-default-window>
+  <main class="registroMovimientoInventarioContainer">
+    <div class="registroMovimientoInventarioHeaderGrid">
+      <h2 class="grid-item-registroMovimientoInventarioTitulo">
+        Movimientos de Inventarios
+      </h2>
+    </div>
+    <form [formGroup]="registroMovimientoInventarioForm" (ngSubmit)="onSubmit()">
+      <div class="registroMovimientoInventarioGrid">
+        <div class="grid-item-productoForm">
+          <h3>Producto</h3>
+          <mat-form-field class="productoFormField" appearance="fill">
+            <mat-label>Escoja el producto</mat-label>
+            <input 
+              type="text" 
+              matInput
+              formControlName="fieldProducto"
+              id="consultaVendedores-fieldproducto" 
+              [matAutocomplete]="auto"
+            >
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="conProductoSeleccionado($event)">
+              <mat-option *ngFor="let producto of productosFiltrados | async" [value]="producto">
+                {{producto.name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-item-bodegaForm">
+          <h3>Bodega</h3>
+          <mat-form-field class="bodegaFormField">
+            <mat-label>Escoja la Bodega</mat-label>
+            <mat-select formControlName="fieldBodega">
+              <mat-option *ngFor="let bodega of listaBodegas" 
+                [value]="bodega.id">
+                {{ bodega.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-item-cantidadForm">
+          <h3>Cantidad</h3>
+          <mat-form-field class="cantidadFormField">
+            <mat-label>Unidades movidas</mat-label>
+            <input 
+              type="number"
+              formControlName="fieldCantidad" 
+              matInput
+              >
+          </mat-form-field>
+        </div> 
+
+        <div class="grid-item-tipoMovimientoForm">
+          <h3>Tipo de Movimiento</h3>
+          <mat-form-field class="tipoMovimientoFormField">
+            <mat-label>Escoja la Zona</mat-label>
+            <mat-select formControlName="fieldTipoMovimiento">
+              <mat-option *ngFor="let tipoMovimiento of tiposMovimiento"
+                  [value]="tipoMovimiento">
+                  {{MovementType2LabelMapping[tipoMovimiento]}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        
+        <div class="registroMovimientoInventarioFormBtnsContainer">
+          <div class="grid-item-cancelarBtnDiv">
+            <button mat-flat-button class="cancelarBtn" (click)="clearAll()">Cancelar</button>
+          </div>
+          <div class="grid-item-guardarBtnDiv">
+            <button mat-flat-button class="guardarBtn" 
+                    type="submit" 
+                    >Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="movimientosRecientesTableHeader">
+      <h2 class="grid-item-movimientosRecientesTableHeader">
+        Movimientos de Inventarios
+      </h2>
+    </div>
+    <div class="movimientosRecientesTableGrid">
+      <app-table-template
+        [data]="tableData"
+        [columns]="tableColumns"
+        [displayedColumns]="visibleColumns"
+      ></app-table-template>
+    </div>
+    <div class="trazabilidadAuditoriaBtnGrid">
+      <div class="grid-item-trazabilidadAuditoriaBtnDiv">
+        <button mat-flat-button class="trazabilidadAuditoriaBtn">Trazabilidad y Auditoría</button>
+      </div>
+    </div>
+  </main>
+</app-default-window>
