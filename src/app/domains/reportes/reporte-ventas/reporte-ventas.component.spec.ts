@@ -10,7 +10,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 const mockReporteVentasResponse = [
     { 
@@ -201,6 +201,91 @@ describe('ReporteVentasComponent', () => {
 
   });
 
+  // ---------------------------------------------
+
+  describe('autoCompletarVendedor', () => {
+    it('should initialize filtered products observable', () => {
+      component.listaVendedores = mockVendedoresResponse.sellers;
+      component.autoCompletarVendedor();
+      
+      expect(component.numerosIdentificacionFiltrados).toBeDefined();
+      
+      component.numerosIdentificacionFiltrados.subscribe(result => {
+        expect(result.length).toBe(2);
+        expect(result).toEqual([123456789, 987654321]);
+      });
+    });
+  });
+
+  describe('_filtrarNumerosIdentificacion', () => {
+    it('should filter sellers by identification number', () => {
+      component.listaVendedores = mockVendedoresResponse.sellers;
+      
+      const result = component._filtrarNumerosIdentificacion('12345');
+      expect(result.length).toBe(1);
+      expect(result[0]).toBe(123456789);
+    });
+
+    it('should return empty array if no match', () => {
+      component.listaVendedores = mockVendedoresResponse.sellers;
+      
+      const result = component._filtrarNumerosIdentificacion('XYZ');
+      expect(result.length).toBe(0);
+    });
+
+    it('should return all sellers if empty filter', () => {
+      component.listaVendedores = mockVendedoresResponse.sellers;
+      
+      const result = component._filtrarNumerosIdentificacion('');
+      expect(result.length).toBe(2);
+    });
+  });
+
+  describe('cargarVendedores', () => {
+    it('should load sellers and update filtered list', fakeAsync(() => {
+      spyOn(component, 'autoCompletarVendedor').and.callThrough();
+
+      component.listaVendedores = [];
+      
+      component.cargarVendedores();
+      tick();
+      
+      const reqs = httpMock.match(req => req.url.includes('/sellers'));
+      expect(reqs.length).toBeGreaterThanOrEqual(1);
+      
+      reqs.forEach(req => {
+        expect(req.request.method).toBe('GET');
+        req.flush(mockVendedoresResponse);
+      });
+      tick();
+
+      expect(component.listaVendedores.length).toBe(2);
+      expect(component.autoCompletarVendedor).toHaveBeenCalled();
+    }));
+
+    it('should handle error when loading sellers', fakeAsync(() => {
+      spyOn(console, 'error');
+      
+      component.listaVendedores = [];
+      
+      component.cargarVendedores();
+      tick(); 
+      
+      const reqs = httpMock.match(req => req.url.includes('/sellers'));
+      expect(reqs.length).toBeGreaterThanOrEqual(1);
+      
+      reqs.forEach(req => {
+        req.error(new ErrorEvent('Error loading sellers'));
+      });
+      tick();
+      
+      expect(console.error).toHaveBeenCalled();
+    }));
+  });
+
+
+  // ---------------------------------------------
+
   describe('conProductoSeleccionado', () => {
     beforeEach(() => {
       component.listaProductos = mockProductosResponse.products;
@@ -236,6 +321,38 @@ describe('ReporteVentasComponent', () => {
       component.conProductoSeleccionado('Chocolisto');
       
       expect(component.idProductoSeleccionado).toBeNull();
+    });
+  });
+
+  describe('conVendedorSeleccionado', () => {
+    beforeEach(() => {
+      component.listaVendedores = mockVendedoresResponse.sellers;
+    });
+
+    it('should set idVendedorSeleccionado when seller is found', () => {
+      component.conVendedorSeleccionado(123456789);
+      expect(component.idVendedorSeleccionado).toBe('1e783abf-b6ae-4df3-80f4-c3936645389e');
+    });
+
+    it('should set idVendedorSeleccionado to null when seller is not found', () => {
+      component.conVendedorSeleccionado(999999999);
+      expect(component.idVendedorSeleccionado).toBeNull();
+    });
+
+    it('should handle empty input', () => {
+      component.conVendedorSeleccionado(NaN);
+      expect(component.idVendedorSeleccionado).toBeNull();
+    });
+
+    it('should work correctly with empty sellers list', () => {
+      component.listaVendedores = [];
+      component.conVendedorSeleccionado(123456789);
+      expect(component.idVendedorSeleccionado).toBeNull();
+    });
+
+    it('should handle string input by converting to number', () => {
+      component.conVendedorSeleccionado(parseInt('123456789'));
+      expect(component.idVendedorSeleccionado).toBe('1e783abf-b6ae-4df3-80f4-c3936645389e');
     });
   });
 
@@ -292,11 +409,127 @@ describe('ReporteVentasComponent', () => {
     });
   });
 
-  /*
   describe('onSubmit', () => {
+    beforeEach(() => {
+      component.initializeForm();
+      component.listaProductos = mockProductosResponse.products;
+      component.listaVendedores = mockVendedoresResponse.sellers;
+      fixture.detectChanges();
+    });
 
+    function adjustDateForTimezone(date: Date): string {
+      const timezoneOffset = date.getTimezoneOffset() * 60000;
+      const adjustedDate = new Date(date.getTime() - timezoneOffset);
+      return adjustedDate.toISOString().split('T')[0];
+    }
+
+    it('should submit form with valid data and update URL', fakeAsync(() => {
+      spyOn(router, 'navigate').and.callThrough();
+      spyOn(service, 'getReporteVentas').and.returnValue(of(mockReporteVentasResponse));
+
+      const startDate = new Date(2025, 3, 1); // Abril 1, 2025
+      const endDate = new Date(2025, 5, 1); // Junio 1, 2025
+
+      const expectedStartDate = adjustDateForTimezone(startDate);
+      const expectedEndDate = adjustDateForTimezone(endDate);
+      
+      component.reporteVentasForm.patchValue({
+        fieldDesde: startDate,
+        fieldHasta: endDate,
+        fieldProducto: 'Chocolisto',
+        fieldVendedor: '123456789'
+      });
+      
+      component.conProductoSeleccionado('Chocolisto');
+      component.conVendedorSeleccionado(123456789);
+      
+      component.onSubmit();
+      tick();
+      
+      expect(router.navigate).toHaveBeenCalledWith([], {
+        relativeTo: route,
+        queryParams: jasmine.objectContaining({
+          fecha_inicio: expectedStartDate,
+          fecha_fin: expectedEndDate,
+          producto: '27644658-6c5c-4643-8121-c30bed696f68',
+          vendedor: '1e783abf-b6ae-4df3-80f4-c3936645389e'
+        }),
+        queryParamsHandling: 'merge',
+        replaceUrl: true
+      });
+      
+      expect(service.getReporteVentas).toHaveBeenCalledWith(
+        expectedStartDate,
+        expectedEndDate,
+        '27644658-6c5c-4643-8121-c30bed696f68',
+        '1e783abf-b6ae-4df3-80f4-c3936645389e'
+      );
+      
+      expect(component.tableData).toEqual(mockReporteVentasResponse);
+    }));
+
+    it('should handle form submission without optional fields', fakeAsync(() => {
+      spyOn(router, 'navigate').and.callThrough();
+      spyOn(service, 'getReporteVentas').and.returnValue(of(mockReporteVentasResponse));
+
+      const startDate = new Date(2025, 3, 1); // Abril 1, 2025
+      const endDate = new Date(2025, 5, 1); // Junio 1, 2025
+      
+      const expectedStartDate = adjustDateForTimezone(startDate);
+      const expectedEndDate = adjustDateForTimezone(endDate);
+      
+      component.reporteVentasForm.patchValue({
+        fieldDesde: startDate,
+        fieldHasta: endDate,
+        fieldProducto: '',
+        fieldVendedor: ''
+      });
+      
+      component.onSubmit();
+      tick();
+      
+      expect(router.navigate).toHaveBeenCalledWith([], {
+        relativeTo: route,
+        queryParams: jasmine.objectContaining({
+          fecha_inicio: expectedStartDate,
+          fecha_fin: expectedEndDate
+        }),
+        queryParamsHandling: 'merge',
+        replaceUrl: true
+      });
+      
+      expect(service.getReporteVentas).toHaveBeenCalledWith(
+        expectedStartDate,
+        expectedEndDate,
+        null,
+        null
+      );
+    }));
+
+    it('should handle API errors when getting sales report', fakeAsync(() => {
+      const startDate = new Date(2025, 3, 1); // Abril 1, 2025
+      const endDate = new Date(2025, 5, 1); // Junio 1, 2025
+      
+      component.reporteVentasForm.patchValue({
+        fieldDesde: startDate,
+        fieldHasta: endDate
+      });
+
+      const errorResponse = new ErrorEvent('API error', {
+        message: 'Failed to load sales report'
+      });
+      spyOn(service, 'getReporteVentas').and.returnValue(
+        throwError(() => errorResponse)
+      );
+      spyOn(console, 'log');
+
+      component.onSubmit();
+      tick();
+
+      expect(service.getReporteVentas).toHaveBeenCalled();
+      expect(console.log).toHaveBeenCalledWith(errorResponse);
+    }));
   });
-  */
 
   describe('formatoFecha', () => {
     it('should format Date object to YYYY-MM-DD string', () => {
@@ -314,7 +547,6 @@ describe('ReporteVentasComponent', () => {
       expect(() => component.formatoFecha('invalid-date')).toThrowError('Invalid date');
     });
   });
-
 
   describe('setupValidacionFechas', () => {
     it('should set up date validation', fakeAsync(() => {
