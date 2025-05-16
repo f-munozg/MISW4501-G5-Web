@@ -4,6 +4,11 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { GestionAlertasInventarioCriticoComponent } from './gestion-alertas-inventario-critico.component';
+import { InventariosModule } from '../inventarios.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { GestionAlertasInventarioCriticoService } from './gestion-alertas-inventario-critico.service';
 
 describe('GestionAlertasInventarioCriticoComponent', () => {
   let component: GestionAlertasInventarioCriticoComponent;
@@ -11,7 +16,9 @@ describe('GestionAlertasInventarioCriticoComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ GestionAlertasInventarioCriticoComponent ]
+      declarations: [ GestionAlertasInventarioCriticoComponent ],
+      imports: [ InventariosModule, ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
+      providers: [ GestionAlertasInventarioCriticoService ]
     })
     .compileComponents();
   }));
