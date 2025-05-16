@@ -1,7 +1,7 @@
 <app-default-window>
   <main class="gestionAlertasInventarioCriticoContainer">
     <div class="gestionAlertasInventarioCriticoHeader">
-      <h2 class=grid-item-gestionAlertasInventarioCriticoTitulo>
+      <h2 class="grid-item-gestionAlertasInventarioCriticoTitulo">
         Gestión de Alertas
       </h2>
     </div>
@@ -41,26 +41,14 @@
           </mat-form-field>
         </div>
 
-        <div class="grid-item-umbralMinimoForm">
-          <h3>Cantidad</h3>
-          <mat-form-field class="umbralMinimoFormField">
-            <mat-label>Unidades movidas</mat-label>
-            <input 
-              type="number"
-              formControlName="fieldUmbralMinimo" 
-              matInput
-              >
-          </mat-form-field>
-        </div> 
-
-        <div class="registroMovimientoInventarioFormBtnsContainer">
+        <div class="gestionAlertasInventarioCriticoBtnsContainer">
           <div class="grid-item-cancelarBtnDiv">
             <button mat-flat-button class="cancelarBtn" (click)="clearAll()">Cancelar</button>
           </div>
-          <div class="grid-item-guardarBtnDiv">
-            <button mat-flat-button class="guardarBtn" 
+          <div class="grid-item-buscarBtnDiv">
+            <button mat-flat-button class="buscarBtn" 
                     type="submit" 
-                    >Guardar Umbral
+                    >Buscar
             </button>
           </div>
         </div>
@@ -69,7 +57,9 @@
     </form>
 
     <div class="gestionAlertasInventarioCriticoTableHeader">
-
+      <h3 class="grid-item-gestionAlertasInventarioCriticoTableTitulo">
+        Productos en Nivel Crítico
+      </h3>
     </div>
 
     <div class="gestionAlertasInventarioCriticoTable">
