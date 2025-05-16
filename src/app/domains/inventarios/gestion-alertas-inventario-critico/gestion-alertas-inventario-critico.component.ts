@@ -67,6 +67,19 @@ export class GestionAlertasInventarioCriticoComponent implements OnInit {
     }
   ];
 
+  assignAction = [
+    {
+      icon: 'Reordernar',
+      tooltip: 'Reordernar',
+      action: (row: TableRow) => this.navegarOptimizacionCompras()
+    },
+    {
+      icon: 'Transferir',
+      tooltip: 'Transferir',
+      action: (row: TableRow) => this.navegarRegistroMovimiento()
+    }
+  ];
+
   visibleColumns = ['product_name', 'warehouse', 'current_quantity', 'alert_message', 'suggested_action'];
 
   constructor(
@@ -271,5 +284,13 @@ export class GestionAlertasInventarioCriticoComponent implements OnInit {
     this.listaProductosStockFiltrados = [...this.listaProductosStock];
     this.tableData = this.listaProductosStockFiltrados;
     this.mostrarSnackBar('Filtros limpiados');
+  }
+
+  navegarRegistroMovimiento(): void {
+    this.router.navigate(['/inventario/registro_movimiento']);
+  }
+
+  navegarOptimizacionCompras(): void {
+    this.router.navigate(['/']);
   }
 }
