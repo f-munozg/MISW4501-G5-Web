@@ -92,8 +92,8 @@ export class GestionAlertasInventarioCriticoComponent implements OnInit {
 
   initializeForms(): void{
     this.gestionAlertasInventarioCriticoForm = this.formBuilder.group({
-      fieldProducto: ['', Validators.required],
-      fieldBodega: ['', Validators.required],
+      fieldProducto: [''],
+      fieldBodega: [''],
     })
   }
 
