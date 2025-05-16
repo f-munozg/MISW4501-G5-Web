@@ -66,6 +66,51 @@
             </mat-select>
           </mat-form-field>
         </div>
+
+        <!-- Add toggle button for additional fields -->
+        <div class="grid-item-activarCamposAdicionales">
+          <button mat-button class="activarCamposAdicionalesBtn" type="button" (click)="activarCamposAdicionales()">
+            {{ mostrarCamposAdicionales ? 'Ocultar campos adicionales' : 'Mostrar campos adicionales (solo para crear stock)' }}
+          </button>
+        </div>
+
+        <!-- Additional fields (shown only when mostrarCamposAdicionales is true) -->
+        <div *ngIf="mostrarCamposAdicionales" class="grid-item-camposAdicionales">
+          <div class="grid-item-limiteStockFormField">
+            <h3>Stock de Advertencia</h3>
+            <mat-form-field class="limiteStockFormField">
+              <mat-label>Nivel de advertencia</mat-label>
+              <input type="number" formControlName="fieldLimiteStock" matInput>
+            </mat-form-field>
+          </div>
+
+          <div class="grid-item-nivelCriticoForm">
+            <h3>Nivel Crítico</h3>
+            <mat-form-field class="nivelCriticoFormField">
+              <mat-label>Nivel crítico</mat-label>
+              <input type="number" formControlName="fieldNivelCritico" matInput>
+            </mat-form-field>
+          </div>
+
+          <div class="grid-item-ubicacionForm">
+            <h3>Ubicación</h3>
+            <mat-form-field class="ubicacionFormField">
+              <mat-label>Ubicación en bodega</mat-label>
+              <input type="text" formControlName="fieldUbicacion" matInput>
+            </mat-form-field>
+          </div>
+
+          <div class="grid-item-fechaVencimientoForm">
+            <h3>Fecha de Vencimiento</h3>
+            <mat-form-field class="fechaVencimientoFormField">
+              <mat-label>Fecha de Vencimiento</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="fieldFechaVencimiento">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+
         
         <div class="registroMovimientoInventarioFormBtnsContainer">
           <div class="grid-item-cancelarBtnDiv">

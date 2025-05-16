@@ -35,6 +35,7 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
 
   isRefreshing: boolean = true;
   isSubmitting: boolean = false;
+  mostrarCamposAdicionales: boolean = false;
 
   idProductoSeleccionado: string | null = null;
 
@@ -90,6 +91,11 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
       fieldBodega: ['', Validators.required],
       fieldCantidad: ['', [Validators.required, Validators.min(1)]],
       fieldTipoMovimiento: ['', Validators.required],
+      // Campos adicionales
+      fieldLimiteStock: [null, Validators.min(0)],
+      fieldNivelCritico: [null, Validators.min(0)],
+      fieldUbicacion: [''],
+      fieldFechaVencimiento: [null]
     });
   }
 
@@ -195,6 +201,22 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
     });
   }
 
+  activarCamposAdicionales(): void {
+    this.mostrarCamposAdicionales = !this.mostrarCamposAdicionales;
+  
+    if (this.mostrarCamposAdicionales) {
+      this.registroMovimientoInventarioForm.get('fieldLimiteStock')?.enable();
+      this.registroMovimientoInventarioForm.get('fieldNivelCritico')?.enable();
+      this.registroMovimientoInventarioForm.get('fieldUbicacion')?.enable();
+      this.registroMovimientoInventarioForm.get('fieldFechaVencimiento')?.enable();
+    } else {
+      this.registroMovimientoInventarioForm.get('fieldLimiteStock')?.disable();
+      this.registroMovimientoInventarioForm.get('fieldNivelCritico')?.disable();
+      this.registroMovimientoInventarioForm.get('fieldUbicacion')?.disable();
+      this.registroMovimientoInventarioForm.get('fieldFechaVencimiento')?.disable();
+    }
+  }
+
   onSubmit() {
     if (this.registroMovimientoInventarioForm.invalid || this.isSubmitting) {
       this.registroMovimientoInventarioForm.markAllAsTouched();
@@ -218,9 +240,20 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
       return;
     }
 
+    let fechaVencimientoAjustada = null;
+    if (formData.fieldFechaVencimiento) {
+      const date = new Date(formData.fieldFechaVencimiento);
+      fechaVencimientoAjustada = date.toISOString().split('.')[0];
+    }
+
     const requestData = {
       ...formData,
-      idProducto: productoSeleccionado.id
+      idProducto: productoSeleccionado.id,
+      // Se incluyen campos adicionales si existen
+      threshold_stock: formData.fieldLimiteStock,
+      critical_level: formData.fieldNivelCritico,
+      location: formData.fieldUbicacion,
+      expiration_date: fechaVencimientoAjustada
     };
 
     this.apiService.postData(requestData).pipe(
@@ -246,9 +279,27 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
   }
 
   clearAll() {
-    this.registroMovimientoInventarioForm.reset();
+    this.registroMovimientoInventarioForm.reset({
+      fieldProducto: null,
+      fieldBodega: null,
+      fieldCantidad: null,
+      fieldTipoMovimiento: null,
+      fieldLimiteStock: null,
+      fieldNivelCritico: null,
+      fieldUbicacion: null,
+      fieldFechaVencimiento: null
+    });
+
+    if (!this.mostrarCamposAdicionales) {
+      this.registroMovimientoInventarioForm.get('fieldLimiteStock')?.disable();
+      this.registroMovimientoInventarioForm.get('fieldNivelCritico')?.disable();
+      this.registroMovimientoInventarioForm.get('fieldUbicacion')?.disable();
+      this.registroMovimientoInventarioForm.get('fieldFechaVencimiento')?.disable();
+    }
+
     this.registroMovimientoInventarioForm.markAsPristine();
     this.registroMovimientoInventarioForm.markAsUntouched();
     this.registroMovimientoInventarioForm.setErrors(null);
+    this.mostrarCamposAdicionales = false;
   }
 }

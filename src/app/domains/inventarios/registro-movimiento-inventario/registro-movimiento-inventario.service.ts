@@ -28,12 +28,25 @@ export class RegistroMovimientoInventarioService {
 
   postData(formData: any):
   Observable<any>{
-    const requestData = {
+    const requestData: any = {
       product_id: formData.idProducto,
       warehouse_id: formData.fieldBodega,
       quantity: formData.fieldCantidad,
       user: '3fa97477-cdf8-462d-970c-f7b49b25df3a', // hard-coded mientras se trabaja en la autenticación de usuarios
       movement_type: formData.fieldTipoMovimiento
+    };
+
+    if (formData.threshold_stock !== null) {
+      requestData.threshold_stock = formData.fieldLimiteStock;
+    }
+    if (formData.critical_level !== null) {
+      requestData.critical_level = formData.fieldNivelCritico;
+    }
+    if (formData.location) {
+      requestData.location = formData.fieldUbicacion;
+    }
+    if (formData.expiration_date) {
+      requestData.expiration_date = formData.expiration_date;
     }
 
     const headers = new HttpHeaders({
