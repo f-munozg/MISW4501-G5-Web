@@ -53,3 +53,8 @@ export interface MovimientoDetalle {
     tipo_movimiento: TipoMovimiento;
     stock_acumulado: number;
 }
+
+export interface CriticalStockResponse<T> {
+    message: string;
+    critical_products?: T[];
+}
