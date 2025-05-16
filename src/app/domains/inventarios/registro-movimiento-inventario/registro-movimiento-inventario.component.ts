@@ -204,6 +204,10 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
   activarCamposAdicionales(): void {
     this.mostrarCamposAdicionales = !this.mostrarCamposAdicionales;
   
+    if(!this.registroMovimientoInventarioForm) {
+      return;
+    }
+
     if (this.mostrarCamposAdicionales) {
       this.registroMovimientoInventarioForm.get('fieldLimiteStock')?.enable();
       this.registroMovimientoInventarioForm.get('fieldNivelCritico')?.enable();
