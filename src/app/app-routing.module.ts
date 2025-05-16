@@ -12,6 +12,7 @@ import { GestionPortafolioComponent } from './domains/fabricantes/gestion-portaf
 import { ConsultaInventarioComponent } from './domains/inventarios/consulta-inventario/consulta-inventario.component';
 import { ConsultaProductoBodegaComponent } from './domains/inventarios/consulta-producto-bodega/consulta-producto-bodega.component';
 import { RegistroMovimientoInventarioComponent } from './domains/inventarios/registro-movimiento-inventario/registro-movimiento-inventario.component';
+import { GestionAlertasInventarioCriticoComponent } from './domains/inventarios/gestion-alertas-inventario-critico/gestion-alertas-inventario-critico.component';
 
 // Productos
 import { CargaProductoComponent } from './domains/productos/carga-producto/carga-producto.component';
@@ -55,6 +56,7 @@ const routes: Routes = [
   {path: 'inventario/consulta', component: ConsultaInventarioComponent},
   {path: 'inventario/consulta_producto_bodega', component: ConsultaProductoBodegaComponent},
   {path: 'inventario/registro_movimiento', component: RegistroMovimientoInventarioComponent},
+  {path: 'inventario/gestion_alertas_inventario_critico', component: GestionAlertasInventarioCriticoComponent},
 
   /* Productos */
   {path: 'productos/carga_producto', component: CargaProductoComponent},
