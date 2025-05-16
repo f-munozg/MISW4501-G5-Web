@@ -14,7 +14,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { delay, of, Subject, throwError } from 'rxjs';
 import { Bodega } from '../../bodegas/bodegas.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RegistroMovimiento, TipoMovimiento } from '../inventario.model';
+import { RegistroMovimiento, RegistroMovimientoResponse, TipoMovimiento } from '../inventario.model';
 
 const mockProductosResponse = {
   products: [
@@ -318,24 +318,26 @@ describe('RegistroMovimientoInventarioComponent', () => {
   });
 
   describe('cargarListaMovimientos', () => {
-    const mockMovimientos: RegistroMovimiento[] = [
-      {
-        fecha: '2025-05-01T10:00:00',
-        nombre_producto: 'Chocolisto',
-        nombre_bodega: 'Bodega Norte',
-        tipo_movimiento: TipoMovimiento.INGRESO,
-        cantidad: 10,
-        usuario: '5729c444-170c-4397-a6c0-b50bde8da214'
-      },
-      {
-        fecha: '2025-05-02T14:30:00',
-        nombre_producto: 'Leche',
-        nombre_bodega: 'Bodega Sur',
-        tipo_movimiento: TipoMovimiento.SALIDA,
-        cantidad: 5,
-        usuario: '5729c444-170c-4397-a6c0-b50bde8da214'
-      }
-    ];
+    const mockMovimientos: RegistroMovimientoResponse = {
+        movimientos: [
+        {
+          fecha: '2025-05-01T10:00:00',
+          nombre_producto: 'Chocolisto',
+          nombre_bodega: 'Bodega Norte',
+          tipo_movimiento: TipoMovimiento.INGRESO,
+          cantidad: 10,
+          usuario: '5729c444-170c-4397-a6c0-b50bde8da214'
+        },
+        {
+          fecha: '2025-05-02T14:30:00',
+          nombre_producto: 'Leche',
+          nombre_bodega: 'Bodega Sur',
+          tipo_movimiento: TipoMovimiento.SALIDA,
+          cantidad: 5,
+          usuario: '5729c444-170c-4397-a6c0-b50bde8da214'
+        }
+      ]
+    };
 
     let snackBar: MatSnackBar;
 
@@ -349,7 +351,7 @@ describe('RegistroMovimientoInventarioComponent', () => {
     });
 
     it('should set isRefreshing to true when loading starts', () => {
-      const movimientosSubject = new Subject<RegistroMovimiento[]>();
+      const movimientosSubject = new Subject<RegistroMovimientoResponse>();
       spyOn(service, 'getListaMovimientos').and.returnValue(movimientosSubject.asObservable());
       
       component.cargarListaMovimientos();
@@ -367,7 +369,7 @@ describe('RegistroMovimientoInventarioComponent', () => {
       tick();
       
       expect(component.isRefreshing).toBeFalse();
-      expect(component.tableData).toEqual(mockMovimientos);
+      expect(component.tableData).toEqual(mockMovimientos.movimientos);
       expect(snackBar.open).not.toHaveBeenCalled();
     }));
 
@@ -761,12 +763,12 @@ describe('RegistroMovimientoInventarioComponent', () => {
 
   describe('tableColumns', () => {
     const mockApiResponseRow = {
-      timestamp: '2023-05-01T10:00:00',
-      product_id: '1523ea3a-b338-4d84-b22e-a56bd1299cc4',
-      warehouse_id: 'bbce3fb9-ade4-4fc4-946a-0e49604df59a',
-      movement_type: TipoMovimiento.INGRESO,
-      number: 5,
-      user: 'test@example.com'
+      fecha: '2023-05-01T10:00:00',
+      nombre_producto: 'Chocolisto',
+      nombre_bodega: 'bbce3fb9-ade4-4fc4-946a-0e49604df59a',
+      tipo_movimiento: 'Ingreso',
+      cantidad: 5,
+      usuario: 'test@example.com'
     };
 
     beforeEach(() => {
@@ -779,12 +781,12 @@ describe('RegistroMovimientoInventarioComponent', () => {
 
     it('should have the correct column structure', () => {
       const expectedColumns = [
-        { name: 'timestamp', header: 'Fecha' },
-        { name: 'product_id', header: 'Producto' },
-        { name: 'warehouse_id', header: 'Bodega' },
-        { name: 'movement_type', header: 'Movimiento' },
-        { name: 'number', header: 'Cantidad' },
-        { name: 'user', header: 'Responsable' }
+        { name: 'fecha', header: 'Fecha' },
+        { name: 'nombre_producto', header: 'Producto' },
+        { name: 'nombre_bodega', header: 'Bodega' },
+        { name: 'tipo_movimiento', header: 'Movimiento' },
+        { name: 'cantidad', header: 'Cantidad' },
+        { name: 'usuario', header: 'Responsable' }
       ];
 
       component.tableColumns.forEach((col, index) => {
@@ -795,51 +797,51 @@ describe('RegistroMovimientoInventarioComponent', () => {
     });
 
     it('should correctly render timestamp cell', () => {
-      const timestampColumn = component.tableColumns.find(c => c.name === 'timestamp');
+      const timestampColumn = component.tableColumns.find(c => c.name === 'fecha');
       expect(timestampColumn).toBeDefined();
       
       const renderedValue = timestampColumn!.cell(mockApiResponseRow);
-      expect(renderedValue).toBe(mockApiResponseRow.timestamp.toString());
+      expect(renderedValue).toBe(mockApiResponseRow.fecha.toString());
     });
 
     it('should correctly render product_id cell', () => {
-      const productColumn = component.tableColumns.find(c => c.name === 'product_id');
+      const productColumn = component.tableColumns.find(c => c.name === 'nombre_producto');
       expect(productColumn).toBeDefined();
       
       const renderedValue = productColumn!.cell(mockApiResponseRow);
-      expect(renderedValue).toBe(mockApiResponseRow.product_id.toString());
+      expect(renderedValue).toBe(mockApiResponseRow.nombre_producto.toString());
     });
 
     it('should correctly render warehouse_id cell', () => {
-      const warehouseColumn = component.tableColumns.find(c => c.name === 'warehouse_id');
+      const warehouseColumn = component.tableColumns.find(c => c.name === 'nombre_bodega');
       expect(warehouseColumn).toBeDefined();
       
       const renderedValue = warehouseColumn!.cell(mockApiResponseRow);
-      expect(renderedValue).toBe(mockApiResponseRow.warehouse_id.toString());
+      expect(renderedValue).toBe(mockApiResponseRow.nombre_bodega.toString());
     });
 
     it('should correctly render movement_type cell', () => {
-      const movementColumn = component.tableColumns.find(c => c.name === 'movement_type');
+      const movementColumn = component.tableColumns.find(c => c.name === 'tipo_movimiento');
       expect(movementColumn).toBeDefined();
       
       const renderedValue = movementColumn!.cell(mockApiResponseRow);
-      expect(renderedValue).toBe(mockApiResponseRow.movement_type.toString());
+      expect(renderedValue).toBe(mockApiResponseRow.tipo_movimiento.toString());
     });
 
     it('should correctly render number cell', () => {
-      const quantityColumn = component.tableColumns.find(c => c.name === 'number');
+      const quantityColumn = component.tableColumns.find(c => c.name === 'cantidad');
       expect(quantityColumn).toBeDefined();
       
       const renderedValue = quantityColumn!.cell(mockApiResponseRow);
-      expect(renderedValue).toBe(mockApiResponseRow.number.toString());
+      expect(renderedValue).toBe(mockApiResponseRow.cantidad.toString());
     });
 
     it('should correctly render user cell', () => {
-      const userColumn = component.tableColumns.find(c => c.name === 'user');
+      const userColumn = component.tableColumns.find(c => c.name === 'usuario');
       expect(userColumn).toBeDefined();
       
       const renderedValue = userColumn!.cell(mockApiResponseRow);
-      expect(renderedValue).toBe(mockApiResponseRow.user.toString());
+      expect(renderedValue).toBe(mockApiResponseRow.usuario.toString());
     });
 
     it('should match visibleColumns with tableColumns names', () => {

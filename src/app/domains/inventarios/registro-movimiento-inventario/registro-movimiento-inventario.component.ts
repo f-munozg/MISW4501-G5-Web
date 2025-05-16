@@ -13,7 +13,7 @@ export interface TableRow{
   fecha: string,
   nombre_producto: string,
   nombre_bodega: string,
-  tipo_movimiento: TipoMovimiento,
+  tipo_movimiento: string,
   cantidad: number,
   usuario: string
 }
@@ -46,38 +46,38 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
 
   tableColumns = [
     {
-      name: 'timestamp', 
+      name: 'fecha', 
       header: 'Fecha', 
-      cell: (item: any) => item.timestamp.toString() 
+      cell: (item: any) => item.fecha.toString() 
     },
     {
-      name: 'product_id', 
+      name: 'nombre_producto', 
       header: 'Producto', 
-      cell: (item: any) => item.product_id.toString() 
+      cell: (item: any) => item.nombre_producto.toString() 
     },
     {
-      name: 'warehouse_id', 
+      name: 'nombre_bodega', 
       header: 'Bodega', 
-      cell: (item: any) => item.warehouse_id.toString() 
+      cell: (item: any) => item.nombre_bodega.toString() 
     },
     {
-      name: 'movement_type', 
+      name: 'tipo_movimiento', 
       header: 'Movimiento', 
-      cell: (item: any) => item.movement_type.toString() 
+      cell: (item: any) => item.tipo_movimiento.toString() 
     },
     {
-      name: 'number', 
+      name: 'cantidad', 
       header: 'Cantidad', 
-      cell: (item: any) => item.number.toString() 
+      cell: (item: any) => item.cantidad.toString() 
     },
     {
-      name: 'user', 
+      name: 'usuario', 
       header: 'Responsable', 
-      cell: (item: any) => item.user.toString() 
+      cell: (item: any) => item.usuario.toString() 
     }
   ];
 
-  visibleColumns = ['timestamp','product_id','warehouse_id','movement_type','number','user'];
+  visibleColumns = ['fecha','nombre_producto','nombre_bodega','tipo_movimiento','cantidad','usuario'];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -180,7 +180,7 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
       finalize(() => this.isRefreshing = false)
     ).subscribe({
       next: (movimientos) => {
-        this.tableData = movimientos;
+        this.tableData = movimientos.movimientos;
       },
       error: (err) => {
         console.error('Error loading movements:', err);

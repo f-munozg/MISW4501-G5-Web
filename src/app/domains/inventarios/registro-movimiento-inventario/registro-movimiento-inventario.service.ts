@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BodegasResponse } from '../../bodegas/bodegas.model';
 import { environment } from '../../../../environments/environment'
 import { ProductosResponse } from '../../productos/producto.model';
-import { RegistroMovimiento } from '../inventario.model';
+import { RegistroMovimiento, RegistroMovimientoResponse } from '../inventario.model';
 import { Observable } from 'rxjs';
 
 
@@ -23,7 +23,7 @@ export class RegistroMovimientoInventarioService {
   }
 
   getListaMovimientos(){
-    return this.http.get<RegistroMovimiento[]>(`${environment.apiUrlStock}/stock/movement`);
+    return this.http.get<RegistroMovimientoResponse>(`${environment.apiUrlStock}/stock/movement`);
   }
 
   postData(formData: any):
