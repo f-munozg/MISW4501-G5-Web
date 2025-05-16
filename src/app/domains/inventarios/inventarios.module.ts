@@ -10,11 +10,13 @@ import { TableTemplateComponent } from 'src/app/shared/table-template/table-temp
 
 import { ConsultaInventarioComponent } from './consulta-inventario/consulta-inventario.component';
 import { ConsultaProductoBodegaComponent } from './consulta-producto-bodega/consulta-producto-bodega.component';
+import { RegistroMovimientoInventarioComponent } from './registro-movimiento-inventario/registro-movimiento-inventario.component';
 
 @NgModule({
   declarations: [
     ConsultaInventarioComponent,
-    ConsultaProductoBodegaComponent
+    ConsultaProductoBodegaComponent,
+    RegistroMovimientoInventarioComponent,
   ],
   imports: [
     CommonModule,

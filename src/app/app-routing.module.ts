@@ -11,6 +11,7 @@ import { GestionPortafolioComponent } from './domains/fabricantes/gestion-portaf
 // Inventario
 import { ConsultaInventarioComponent } from './domains/inventarios/consulta-inventario/consulta-inventario.component';
 import { ConsultaProductoBodegaComponent } from './domains/inventarios/consulta-producto-bodega/consulta-producto-bodega.component';
+import { RegistroMovimientoInventarioComponent } from './domains/inventarios/registro-movimiento-inventario/registro-movimiento-inventario.component';
 
 // Productos
 import { CargaProductoComponent } from './domains/productos/carga-producto/carga-producto.component';
@@ -53,6 +54,7 @@ const routes: Routes = [
   /* Inventarios */
   {path: 'inventario/consulta', component: ConsultaInventarioComponent},
   {path: 'inventario/consulta_producto_bodega', component: ConsultaProductoBodegaComponent},
+  {path: 'inventario/registro_movimiento', component: RegistroMovimientoInventarioComponent},
 
   /* Productos */
   {path: 'productos/carga_producto', component: CargaProductoComponent},
