@@ -27,6 +27,7 @@ export interface TableRow{
 export class RegistroMovimientoInventarioComponent implements OnInit {
   registroMovimientoInventarioForm!: FormGroup;
 
+  listaMovimientos: TableRow[] = [];
   listaUsuarios: any[] = [];
   listaProductos: any[] = [];
   listaBodegas: Bodega[] = [];
@@ -173,6 +174,24 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
     })
   }
 
+  filtrarMovimientosParaTabla(): void {
+    const selectedProduct = this.registroMovimientoInventarioForm.get('fieldProducto')?.value;
+    const selectedWarehouse = this.registroMovimientoInventarioForm.get('fieldBodega')?.value;
+
+    if (!selectedProduct && !selectedWarehouse) {
+      this.tableData = this.listaMovimientos;
+      return;
+    }
+
+    this.tableData = this.listaMovimientos.filter(movement => {
+      const matchesProduct = !selectedProduct || movement.nombre_producto.toLowerCase().includes(selectedProduct.toLowerCase());
+      
+      const matchesWarehouse = !selectedWarehouse || this.listaBodegas.find(b => b.id === selectedWarehouse)?.name === movement.nombre_bodega;
+      
+      return matchesProduct && matchesWarehouse;
+    });
+  }
+
   cargarListaMovimientos(): void {
     this.isRefreshing = true;
     
@@ -180,7 +199,8 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
       finalize(() => this.isRefreshing = false)
     ).subscribe({
       next: (movimientos) => {
-        this.tableData = movimientos.movimientos;
+        this.listaMovimientos = movimientos.movimientos;
+        this.filtrarMovimientosParaTabla();
       },
       error: (err) => {
         console.error('Error loading movements:', err);
@@ -198,6 +218,14 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
     this.cargarListaMovimientos();
     this.cargarProductos(() => {
       this.autoCompletar();
+    });
+
+    this.registroMovimientoInventarioForm.get('fieldProducto')?.valueChanges.subscribe(() => {
+      this.filtrarMovimientosParaTabla();
+    });
+
+    this.registroMovimientoInventarioForm.get('fieldBodega')?.valueChanges.subscribe(() => {
+      this.filtrarMovimientosParaTabla();
     });
   }
 
@@ -305,5 +333,8 @@ export class RegistroMovimientoInventarioComponent implements OnInit {
     this.registroMovimientoInventarioForm.markAsUntouched();
     this.registroMovimientoInventarioForm.setErrors(null);
     this.mostrarCamposAdicionales = false;
+
+    this.idProductoSeleccionado = null;
+    this.filtrarMovimientosParaTabla(); 
   }
 }

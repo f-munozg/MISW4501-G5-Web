@@ -430,6 +430,188 @@ describe('RegistroMovimientoInventarioComponent', () => {
     }));
   });
 
+  describe('filtrarMovimientosParaTabla', () => {
+    const mockMovimientos: TableRow[] = [
+      {
+        fecha: '2025-05-01T10:00:00',
+        nombre_producto: 'Chocolisto',
+        nombre_bodega: 'Bodega Norte',
+        tipo_movimiento: 'INGRESO',
+        cantidad: 10,
+        usuario: 'user1'
+      },
+      {
+        fecha: '2025-05-02T14:30:00',
+        nombre_producto: 'Leche',
+        nombre_bodega: 'Bodega Sur',
+        tipo_movimiento: 'SALIDA',
+        cantidad: 5,
+        usuario: 'user1'
+      },
+      {
+        fecha: '2025-05-03T09:15:00',
+        nombre_producto: 'Chocolisto',
+        nombre_bodega: 'Bodega Sur',
+        tipo_movimiento: 'INGRESO',
+        cantidad: 8,
+        usuario: 'user2'
+      }
+    ];
+
+    const mockBodegas: Bodega[] = [
+      { 
+        id: 'bbce3fb9-ade4-4fc4-946a-0e49604df59a', 
+        name: 'Bodega Norte',
+      },
+      { 
+        id: '2e23886e-2723-4c4c-9256-d4f63591dc25', 
+        name: 'Bodega Sur',
+      }
+    ];
+
+    beforeEach(() => {
+      component.listaMovimientos = mockMovimientos;
+      component.listaBodegas = mockBodegas;
+      component.tableData = [];
+      
+      component.registroMovimientoInventarioForm = new FormGroup({
+        fieldProducto: new FormControl(''),
+        fieldBodega: new FormControl('')
+      });
+    });
+
+    it('should show all movements when no filters are selected', () => {
+      component.registroMovimientoInventarioForm.patchValue({
+        fieldProducto: '',
+        fieldBodega: ''
+      });
+
+      component.filtrarMovimientosParaTabla();
+
+      expect(component.tableData).toEqual(mockMovimientos);
+    });
+
+    it('should filter by product name only', () => {
+      component.registroMovimientoInventarioForm.patchValue({
+        fieldProducto: 'Chocolisto',
+        fieldBodega: ''
+      });
+
+      component.filtrarMovimientosParaTabla();
+
+      expect(component.tableData.length).toBe(2);
+      expect(component.tableData.every(m => m.nombre_producto === 'Chocolisto')).toBeTrue();
+    });
+
+    it('should filter by warehouse only', () => {
+      component.registroMovimientoInventarioForm.patchValue({
+        fieldProducto: '',
+        fieldBodega: '2e23886e-2723-4c4c-9256-d4f63591dc25'
+      });
+
+      component.filtrarMovimientosParaTabla();
+
+      expect(component.tableData.length).toBe(2);
+      expect(component.tableData.every(m => 
+        m.nombre_bodega === 'Bodega Sur')).toBeTrue();
+    });
+
+    it('should filter by both product and warehouse', () => {
+      component.registroMovimientoInventarioForm.patchValue({
+        fieldProducto: 'Chocolisto',
+        fieldBodega: '2e23886e-2723-4c4c-9256-d4f63591dc25'
+      });
+
+      component.filtrarMovimientosParaTabla();
+
+      expect(component.tableData.length).toBe(1);
+      expect(component.tableData[0].nombre_producto).toBe('Chocolisto');
+      expect(component.tableData[0].nombre_bodega).toBe('Bodega Sur');
+    });
+
+    it('should return empty array when no matches found', () => {
+      component.registroMovimientoInventarioForm.patchValue({
+        fieldProducto: 'Non-existent product',
+        fieldBodega: 'non-existent-warehouse'
+      });
+
+      component.filtrarMovimientosParaTabla();
+
+      expect(component.tableData).toEqual([]);
+    });
+
+    it('should handle case when listaMovimientos is empty', () => {
+      component.listaMovimientos = [];
+      component.registroMovimientoInventarioForm.patchValue({
+        fieldProducto: 'Chocolisto',
+        fieldBodega: 'bbce3fb9-ade4-4fc4-946a-0e49604df59a'
+      });
+
+      component.filtrarMovimientosParaTabla();
+
+      expect(component.tableData).toEqual([]);
+    });
+
+    it('should handle case when listaBodegas is empty but warehouse filter is selected', () => {
+      component.listaBodegas = [];
+      component.registroMovimientoInventarioForm.patchValue({
+        fieldProducto: '',
+        fieldBodega: 'bbce3fb9-ade4-4fc4-946a-0e49604df59a'
+      });
+
+      component.filtrarMovimientosParaTabla();
+
+      expect(component.tableData).toEqual([]);
+    });
+
+    it('should be case insensitive when filtering by product name', () => {
+      component.registroMovimientoInventarioForm.patchValue({
+        fieldProducto: 'chocolisto', // lowercase
+        fieldBodega: ''
+      });
+
+      component.filtrarMovimientosParaTabla();
+
+      expect(component.tableData.length).toBe(2);
+      expect(component.tableData.every(m => 
+        m.nombre_producto.toLowerCase() === 'chocolisto')).toBeTrue();
+    });
+
+    it('should not modify original listaMovimientos', () => {
+      const originalMovimientos = [...component.listaMovimientos];
+      component.registroMovimientoInventarioForm.patchValue({
+        fieldProducto: 'Chocolisto',
+        fieldBodega: 'bbce3fb9-ade4-4fc4-946a-0e49604df59a'
+      });
+
+      component.filtrarMovimientosParaTabla();
+
+      expect(component.listaMovimientos).toEqual(originalMovimientos);
+    });
+
+    it('should handle null form values', () => {
+      component.registroMovimientoInventarioForm.patchValue({
+        fieldProducto: null,
+        fieldBodega: null
+      });
+
+      component.filtrarMovimientosParaTabla();
+
+      expect(component.tableData).toEqual(mockMovimientos);
+    });
+
+    it('should handle undefined form values', () => {
+      component.registroMovimientoInventarioForm.patchValue({
+        fieldProducto: undefined,
+        fieldBodega: undefined
+      });
+
+      component.filtrarMovimientosParaTabla();
+
+      expect(component.tableData).toEqual(mockMovimientos);
+    });
+});
+
   describe('activarCamposAdicionales', () => {
     beforeEach(() => {
       component.registroMovimientoInventarioForm = new FormGroup({

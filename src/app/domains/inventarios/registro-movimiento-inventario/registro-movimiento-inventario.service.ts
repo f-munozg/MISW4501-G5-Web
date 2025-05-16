@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BodegasResponse } from '../../bodegas/bodegas.model';
 import { environment } from '../../../../environments/environment'
-import { ProductosResponse } from '../../productos/producto.model';
-import { RegistroMovimiento, RegistroMovimientoResponse } from '../inventario.model';
+import { RegistroMovimientoResponse } from '../inventario.model';
 import { Observable } from 'rxjs';
 
 
