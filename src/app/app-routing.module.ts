@@ -4,6 +4,9 @@ import { LoginMainComponent } from './domains/login/login-main/login-main.compon
 import { RecoveryContainerComponent } from './domains/login/recovery-container/recovery-container.component';
 import { DefaultWindowComponent } from './shared/default-window/default-window.component';
 
+// Compras
+import { OptimizacionComprasComponent } from './domains/compras/optimizacion-compras/optimizacion-compras.component';
+
 // Fabricantes
 import { RegistroFabricantesComponent } from './domains/fabricantes/registro-fabricantes/registro-fabricantes.component';
 import { GestionPortafolioComponent } from './domains/fabricantes/gestion-portafolio/gestion-portafolio.component';
@@ -47,7 +50,10 @@ const routes: Routes = [
   
   /* General */
   {path: 'menu', component: DefaultWindowComponent},
-  
+
+  /* Compras */
+  {path: 'compras/optimizacion_compras', component: OptimizacionComprasComponent},
+
   /* Fabricantes */
   {path: 'fabricantes/registro', component: RegistroFabricantesComponent},
   {path: 'fabricantes/portafolio', component: GestionPortafolioComponent},
