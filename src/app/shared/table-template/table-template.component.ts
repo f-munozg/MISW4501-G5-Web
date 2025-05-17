@@ -91,5 +91,42 @@ export class TableTemplateComponent<T> implements AfterViewInit, OnChanges {
     const baseColumns = this._displayedColumns;
     return this.actions?.length ? [...baseColumns, 'actions'] : baseColumns;
   }
+
+  exportarComoCSV(): void {
+    if (!this._data.length) return;
+
+    // Se preparan los headers
+    const headers = this._columns
+      .filter(column => this._displayedColumns.includes(column.name))
+      .map(column => column.header);
+
+    // Se prepara las filas de la tabla
+    const dataRows = this._data.map(item => {
+      return this._columns
+        .filter(column => this._displayedColumns.includes(column.name))
+        .map(column => {
+          // Para manejar la potencial presencia de comillas
+          const cellValue = column.cell(item);
+          return `"${cellValue?.toString().replace(/"/g, '""')}"`;
+        });
+    });
+
+    // Se combina la información en formato csv
+    const csvContent = [
+      headers.join(','),
+      ...dataRows.map(row => row.join(','))
+    ].join('\n');
+
+    // Se prepara para la descarga
+    const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'export.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 }
 
