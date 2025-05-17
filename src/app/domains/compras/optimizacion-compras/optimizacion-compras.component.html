@@ -1,0 +1,73 @@
+<app-default-window>
+  <main class="optimizacionComprasContainer">
+    <div class="optimizacionComprasHeaderGrid">
+      <h2 class="grid-item-optimizacionComprasTitulo">
+        Optimización de compras
+      </h2>
+    </div>
+    <form [formGroup]="optimizacionComprasForm" (ngSubmit)="onSubmit()">
+      <div class="optimizacionComprasGrid">
+        <div class="grid-item-productoForm">
+          <h3>Producto</h3>
+          <mat-form-field class="productoFormField" appearance="fill">
+            <mat-label>Escoja el producto</mat-label>
+            <input 
+              type="text" 
+              matInput
+              formControlName="fieldProducto"
+              id="consultaVendedores-fieldproducto" 
+              [matAutocomplete]="auto"
+            >
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="conProductoSeleccionado($event)">
+              <mat-option *ngFor="let nombreProducto of nombresProductosFiltrados | async" [value]="nombreProducto">
+                {{ nombreProducto }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-item-bodegaForm">
+          <h3>Bodega</h3>
+          <mat-form-field class="bodegaFormField">
+            <mat-label>Escoja la Bodega</mat-label>
+            <mat-select formControlName="fieldBodega">
+              <mat-option *ngFor="let bodega of listaBodegas" 
+                [value]="bodega.id">
+                {{ bodega.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        
+        <div class="optimizacionComprasFormBtnsContainer">
+          <div class="grid-item-cancelarBtnDiv">
+            <button mat-flat-button class="cancelarBtn" (click)="clearAll()">Cancelar</button>
+          </div>
+          <div class="grid-item-calcularBtnDiv">
+            <button mat-flat-button class="calcularBtn" 
+                    type="submit" 
+                    >Calcular
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="resultadosOptimizacionComprasTableHeader">
+      <h2 class="grid-item-resultadosOptimizacionComprasTableHeader">
+        Resultados del cálculo
+      </h2>
+    </div>
+    <div class="resultadosOptimizacionComprasTableGrid">
+      <app-table-template
+        [data]="tableData"
+        [columns]="tableColumns"
+        [displayedColumns]="visibleColumns"
+      ></app-table-template>
+    </div>
+    <div class="gestionAlertaInventarioCriticoBtnGrid">
+      <div class="grid-item-gestionAlertaInventarioCriticoBtnDiv">
+        <button mat-flat-button class="gestionAlertaInventarioCriticoBtn">Productos en Nivel Crítico</button>
+      </div>
+    </div>
+  </main>
+</app-default-window>

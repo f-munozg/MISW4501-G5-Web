@@ -4,6 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { LoginModule } from './domains/login/login.module';
+import { ComprasModule } from './domains/compras/compras.module';
 import { FabricantesModule } from './domains/fabricantes/fabricantes.module';
 import { InventariosModule } from './domains/inventarios/inventarios.module';
 import { ProductosModule } from './domains/productos/productos.module';
@@ -25,6 +26,7 @@ import { TableDemoComponent } from './shared/table-template/table-demo.component
     AppRoutingModule,
     DefaultWindowComponent,
     LoginModule,
+    ComprasModule,
     FabricantesModule,
     InventariosModule,
     ProductosModule,
