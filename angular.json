@@ -80,7 +80,7 @@
               ]
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -97,7 +97,7 @@
               "allowedHosts": ["web-logistics-143596276526.us-central1.run.app", "web-purchases-143596276526.us-central1.run.app", "web-sales-143596276526.us-central1.run.app", "web-sellers-143596276526.us-central1.run.app"]
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
