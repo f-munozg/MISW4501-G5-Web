@@ -6,11 +6,14 @@ import { DebugElement, SimpleChange } from '@angular/core';
 import { TableTemplateComponent, TableAction, TableColumn } from './table-template.component';
 import { MaterialModule } from 'src/app/material/material.module';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+
+import { ExportPdfService } from './export-pdf.service';
 
 describe('TableTemplateComponent', () => {
   let component: TableTemplateComponent<any>;
   let fixture: ComponentFixture<TableTemplateComponent<any>>;
+  let mockPdfService: jasmine.SpyObj<ExportPdfService>;
+  let mockJsPDF: any;
 
   interface TestItem {
     id: number;
@@ -40,11 +43,24 @@ describe('TableTemplateComponent', () => {
   ];
 
   beforeEach(waitForAsync(() => {
+    mockJsPDF = {
+      text: jasmine.createSpy('text').and.returnValue({}),
+      save: jasmine.createSpy('save'),
+      setFont: jasmine.createSpy('setFont'),
+      setFontSize: jasmine.createSpy('setFontSize')
+    };
+
+    mockPdfService = jasmine.createSpyObj('ExportPdfService', ['crearPdf', 'agregarAutoTable']);
+    mockPdfService.crearPdf.and.returnValue(mockJsPDF);
+
     TestBed.configureTestingModule({
       imports: [ 
         TableTemplateComponent,
         MaterialModule,
         MatPaginator
+      ],
+      providers: [
+        { provide: ExportPdfService, useValue: mockPdfService }
       ]
     }).compileComponents();
   }));
@@ -119,7 +135,6 @@ describe('TableTemplateComponent', () => {
     const rows = table.querySelectorAll('tr[mat-row]');
     expect(rows.length).toBe(testData.length);
   });
-
 
   it('should render actions column when actions exist', async () => {
     component.actions = testActions;
@@ -242,6 +257,61 @@ describe('TableTemplateComponent', () => {
         expect(createElementSpy).toHaveBeenCalledWith('a');
         expect(appendChildSpy).toHaveBeenCalled();
         expect(removeChildSpy).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('exportar PDF', () => {
+    describe('generarContenidoPDF', () => {
+      beforeEach(() => {
+        component.data = [...testData];
+        component.columns = [...testColumns];
+        component.displayedColumns = ['id', 'name'];
+      });
+
+      it('should return null for empty data', () => {
+        component.data = [];
+        expect(component.generarContenidoPDF()).toBeNull();
+      });
+
+      it('should return correct headers and data', () => {
+        const result = component.generarContenidoPDF();
+        expect(result).toEqual({
+          headers: ['ID', 'Name'],
+          data: [['1', 'Item 1'], ['2', 'Item 2']]
+        });
+      });
+
+      it('should only include displayed columns', () => {
+        component.displayedColumns = ['id'];
+        const result = component.generarContenidoPDF();
+        expect(result).toEqual({
+          headers: ['ID'],
+          data: [['1'], ['2']]
+        });
+      });
+    });
+
+    describe('exportarComoPDF', () => {
+      it('should create PDF with correct content', () => {
+        spyOn(component, 'generarContenidoPDF').and.returnValue({
+          headers: ['ID', 'Name'],
+          data: [['1', 'Item 1'], ['2', 'Item 2']]
+        });
+
+        component.exportarComoPDF();
+
+        expect(mockPdfService.crearPdf).toHaveBeenCalled();
+        expect(mockJsPDF.text).toHaveBeenCalledWith('', 14, 16);
+        expect(mockPdfService.agregarAutoTable).toHaveBeenCalledWith(
+          mockJsPDF,
+          jasmine.objectContaining({
+            head: [['ID', 'Name']],
+            body: [['1', 'Item 1'], ['2', 'Item 2']],
+            startY: 20
+          })
+        );
+        expect(mockJsPDF.save).toHaveBeenCalledWith('export.pdf');
       });
     });
   });
