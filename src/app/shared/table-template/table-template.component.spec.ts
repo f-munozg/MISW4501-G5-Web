@@ -6,11 +6,14 @@ import { DebugElement, SimpleChange } from '@angular/core';
 import { TableTemplateComponent, TableAction, TableColumn } from './table-template.component';
 import { MaterialModule } from 'src/app/material/material.module';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+
+import { ExportPdfService } from './export-pdf.service';
 
 describe('TableTemplateComponent', () => {
   let component: TableTemplateComponent<any>;
   let fixture: ComponentFixture<TableTemplateComponent<any>>;
+  let mockPdfService: jasmine.SpyObj<ExportPdfService>;
+  let mockJsPDF: any;
 
   interface TestItem {
     id: number;
@@ -40,11 +43,24 @@ describe('TableTemplateComponent', () => {
   ];
 
   beforeEach(waitForAsync(() => {
+    mockJsPDF = {
+      text: jasmine.createSpy('text').and.returnValue({}),
+      save: jasmine.createSpy('save'),
+      setFont: jasmine.createSpy('setFont'),
+      setFontSize: jasmine.createSpy('setFontSize')
+    };
+
+    mockPdfService = jasmine.createSpyObj('ExportPdfService', ['crearPdf', 'agregarAutoTable']);
+    mockPdfService.crearPdf.and.returnValue(mockJsPDF);
+
     TestBed.configureTestingModule({
       imports: [ 
         TableTemplateComponent,
         MaterialModule,
         MatPaginator
+      ],
+      providers: [
+        { provide: ExportPdfService, useValue: mockPdfService }
       ]
     }).compileComponents();
   }));
@@ -120,7 +136,6 @@ describe('TableTemplateComponent', () => {
     expect(rows.length).toBe(testData.length);
   });
 
-
   it('should render actions column when actions exist', async () => {
     component.actions = testActions;
     fixture.detectChanges();
@@ -168,5 +183,136 @@ describe('TableTemplateComponent', () => {
     fixture.detectChanges();
     
     expect(spy).toHaveBeenCalled();
+  });
+
+  describe('exportarComoCSV', () => {
+    const testData = [
+      { id: 1, name: 'Test Item' },
+      { id: 2, name: 'Another Item' }
+    ];
+
+    const testColumns: TableColumn[] = [
+      { 
+        name: 'id', 
+        header: 'ID',
+        cell: (element: any) => element.id.toString()
+      },
+      { 
+        name: 'name', 
+        header: 'Name',
+        cell: (element: any) => element.name
+      }
+    ];
+
+    beforeEach(() => {
+      component.data = testData;
+      component.columns = testColumns;
+      component.displayedColumns = ['id', 'name'];
+    });
+
+    describe('generarContenidoCSV', () => {
+      it('should generate correct CSV content', () => {
+        const result = component.generarContenidoCSV();
+        const lines = result?.split('\n') || [];
+        
+        expect(lines[0]).toBe('ID,Name');
+        expect(lines[1]).toBe('"1","Test Item"');
+        expect(lines[2]).toBe('"2","Another Item"');
+      });
+
+      it('should return null for empty data', () => {
+        component.data = [];
+        expect(component.generarContenidoCSV()).toBeNull();
+      });
+
+      it('should escape special characters', () => {
+        component.data = [{ id: 1, name: 'Item with "quotes" and, comma' }];
+        const result = component.generarContenidoCSV();
+        expect(result).toContain('"Item with ""quotes"" and, comma"');
+      });
+
+      it('should only include displayed columns', () => {
+        component.displayedColumns = ['id'];
+        const result = component.generarContenidoCSV();
+        expect(result).toContain('ID');
+        expect(result).not.toContain('Name');
+      });
+    });
+
+    describe('exportarComoCSV', () => {
+      it('should not create blob for empty data', () => {
+        component.data = [];
+        const blobSpy = spyOn(window, 'Blob');
+        component.exportarComoCSV();
+        expect(blobSpy).not.toHaveBeenCalled();
+      });
+
+      it('should create download link when data exists', () => {
+        const createElementSpy = spyOn(document, 'createElement').and.callThrough();
+        const appendChildSpy = spyOn(document.body, 'appendChild');
+        const removeChildSpy = spyOn(document.body, 'removeChild');
+        
+        component.exportarComoCSV();
+        
+        expect(createElementSpy).toHaveBeenCalledWith('a');
+        expect(appendChildSpy).toHaveBeenCalled();
+        expect(removeChildSpy).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('exportar PDF', () => {
+    describe('generarContenidoPDF', () => {
+      beforeEach(() => {
+        component.data = [...testData];
+        component.columns = [...testColumns];
+        component.displayedColumns = ['id', 'name'];
+      });
+
+      it('should return null for empty data', () => {
+        component.data = [];
+        expect(component.generarContenidoPDF()).toBeNull();
+      });
+
+      it('should return correct headers and data', () => {
+        const result = component.generarContenidoPDF();
+        expect(result).toEqual({
+          headers: ['ID', 'Name'],
+          data: [['1', 'Item 1'], ['2', 'Item 2']]
+        });
+      });
+
+      it('should only include displayed columns', () => {
+        component.displayedColumns = ['id'];
+        const result = component.generarContenidoPDF();
+        expect(result).toEqual({
+          headers: ['ID'],
+          data: [['1'], ['2']]
+        });
+      });
+    });
+
+    describe('exportarComoPDF', () => {
+      it('should create PDF with correct content', () => {
+        spyOn(component, 'generarContenidoPDF').and.returnValue({
+          headers: ['ID', 'Name'],
+          data: [['1', 'Item 1'], ['2', 'Item 2']]
+        });
+
+        component.exportarComoPDF();
+
+        expect(mockPdfService.crearPdf).toHaveBeenCalled();
+        expect(mockJsPDF.text).toHaveBeenCalledWith('', 14, 16);
+        expect(mockPdfService.agregarAutoTable).toHaveBeenCalledWith(
+          mockJsPDF,
+          jasmine.objectContaining({
+            head: [['ID', 'Name']],
+            body: [['1', 'Item 1'], ['2', 'Item 2']],
+            startY: 20
+          })
+        );
+        expect(mockJsPDF.save).toHaveBeenCalledWith('export.pdf');
+      });
+    });
   });
 });
