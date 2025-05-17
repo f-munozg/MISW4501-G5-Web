@@ -169,4 +169,80 @@ describe('TableTemplateComponent', () => {
     
     expect(spy).toHaveBeenCalled();
   });
+
+  describe('exportarComoCSV', () => {
+    const testData = [
+      { id: 1, name: 'Test Item' },
+      { id: 2, name: 'Another Item' }
+    ];
+
+    const testColumns: TableColumn[] = [
+      { 
+        name: 'id', 
+        header: 'ID',
+        cell: (element: any) => element.id.toString()
+      },
+      { 
+        name: 'name', 
+        header: 'Name',
+        cell: (element: any) => element.name
+      }
+    ];
+
+    beforeEach(() => {
+      component.data = testData;
+      component.columns = testColumns;
+      component.displayedColumns = ['id', 'name'];
+    });
+
+    describe('generarContenidoCSV', () => {
+      it('should generate correct CSV content', () => {
+        const result = component.generarContenidoCSV();
+        const lines = result?.split('\n') || [];
+        
+        expect(lines[0]).toBe('ID,Name');
+        expect(lines[1]).toBe('"1","Test Item"');
+        expect(lines[2]).toBe('"2","Another Item"');
+      });
+
+      it('should return null for empty data', () => {
+        component.data = [];
+        expect(component.generarContenidoCSV()).toBeNull();
+      });
+
+      it('should escape special characters', () => {
+        component.data = [{ id: 1, name: 'Item with "quotes" and, comma' }];
+        const result = component.generarContenidoCSV();
+        expect(result).toContain('"Item with ""quotes"" and, comma"');
+      });
+
+      it('should only include displayed columns', () => {
+        component.displayedColumns = ['id'];
+        const result = component.generarContenidoCSV();
+        expect(result).toContain('ID');
+        expect(result).not.toContain('Name');
+      });
+    });
+
+    describe('exportarComoCSV', () => {
+      it('should not create blob for empty data', () => {
+        component.data = [];
+        const blobSpy = spyOn(window, 'Blob');
+        component.exportarComoCSV();
+        expect(blobSpy).not.toHaveBeenCalled();
+      });
+
+      it('should create download link when data exists', () => {
+        const createElementSpy = spyOn(document, 'createElement').and.callThrough();
+        const appendChildSpy = spyOn(document.body, 'appendChild');
+        const removeChildSpy = spyOn(document.body, 'removeChild');
+        
+        component.exportarComoCSV();
+        
+        expect(createElementSpy).toHaveBeenCalledWith('a');
+        expect(appendChildSpy).toHaveBeenCalled();
+        expect(removeChildSpy).toHaveBeenCalled();
+      });
+    });
+  });
 });

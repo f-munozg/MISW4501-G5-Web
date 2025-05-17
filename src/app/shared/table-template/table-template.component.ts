@@ -92,8 +92,8 @@ export class TableTemplateComponent<T> implements AfterViewInit, OnChanges {
     return this.actions?.length ? [...baseColumns, 'actions'] : baseColumns;
   }
 
-  exportarComoCSV(): void {
-    if (!this._data.length) return;
+  generarContenidoCSV(): string | null {
+    if (!this._data.length) return null;
 
     // Se preparan los headers
     const headers = this._columns
@@ -112,10 +112,15 @@ export class TableTemplateComponent<T> implements AfterViewInit, OnChanges {
     });
 
     // Se combina la información en formato csv
-    const csvContent = [
+    return [
       headers.join(','),
       ...dataRows.map(row => row.join(','))
     ].join('\n');
+  }
+
+  exportarComoCSV(): void {
+    const csvContent = this.generarContenidoCSV();
+    if (!csvContent) return;
 
     // Se prepara para la descarga
     const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8'});
