@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment'
 import { FabricantesResponse } from '../../fabricantes/fabricantes.model';
+import { OptimizacionComprasResponse } from '../compras.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ export class OptimizacionComprasService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.get<any>(`${environment.apiUrlStock}/stock/optimize_purchases?${params.toString()}`, {headers});
+    return this.http.get<OptimizacionComprasResponse>(`${environment.apiUrlStock}/stock/optimize_purchases?${params.toString()}`, {headers});
   }
 
 }
