@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MaterialModule } from '../../material/material.module';
+/* --- PDF dependencies  --- */
+import { ExportPdfService } from './export-pdf.service';
+/* ------------------------- */
 
 export interface TableColumn {
   name: string;
@@ -90,6 +93,104 @@ export class TableTemplateComponent<T> implements AfterViewInit, OnChanges {
   get displayedColumnsWithActions(): string[] {
     const baseColumns = this._displayedColumns;
     return this.actions?.length ? [...baseColumns, 'actions'] : baseColumns;
+  }
+
+  generarContenidoCSV(): string | null {
+    if (!this._data.length) return null;
+
+    // Se preparan los headers
+    const headers = this._columns
+      .filter(column => this._displayedColumns.includes(column.name))
+      .map(column => column.header);
+
+    // Se prepara las filas de la tabla
+    const dataRows = this._data.map(item => {
+      return this._columns
+        .filter(column => this._displayedColumns.includes(column.name))
+        .map(column => {
+          // Para manejar la potencial presencia de comillas
+          const cellValue = column.cell(item);
+          return `"${cellValue?.toString().replace(/"/g, '""')}"`;
+        });
+    });
+
+    // Se combina la información en formato csv
+    return [
+      headers.join(','),
+      ...dataRows.map(row => row.join(','))
+    ].join('\n');
+  }
+
+  exportarComoCSV(): void {
+    const csvContent = this.generarContenidoCSV();
+    if (!csvContent) return;
+
+    // Se prepara para la descarga
+    const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'export.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  constructor(private pdfService: ExportPdfService) {}
+
+  generarContenidoPDF(): { headers: string[], data: any[][] } | null {
+    if (!this._data.length) return null;
+
+    // Prepara los headers
+    const headers = this._columns
+      .filter(column => this._displayedColumns.includes(column.name))
+      .map(column => column.header);
+
+    // Se prepara la info de la tabla
+    const data = this._data.map(item => {
+      return this._columns
+        .filter(column => this._displayedColumns.includes(column.name))
+        .map(column => column.cell(item));
+    });
+
+    return { headers, data };
+  }
+
+  exportarComoPDF(): void {
+    const pdfContent = this.generarContenidoPDF();
+    if (!pdfContent) return;
+
+    const { headers, data } = pdfContent;
+    
+    // Se inicializa el documento PDF
+    const doc = this.pdfService.crearPdf();
+    
+    // El título...
+    doc.text('', 14, 16);
+    
+    // Y se añade la tabla usando el plugin autoTable
+    this.pdfService.agregarAutoTable(doc, {
+      head: [headers],
+      body: data,
+      startY: 20,
+      styles: {
+        cellPadding: 2,
+        fontSize: 10,
+        valign: 'middle'
+      },
+      headStyles: {
+        fillColor: [164, 224, 164],
+        textColor: 0,
+        fontStyle: 'bold'
+      },
+      alternateRowStyles: {
+        fillColor: [245, 245, 245]
+      }
+    });
+
+    // Se guarda el PDF con la info
+    doc.save('export.pdf');
   }
 }
 

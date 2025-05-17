@@ -1,0 +1,75 @@
+<app-default-window>
+  <main class="gestionAlertasInventarioCriticoContainer">
+    <div class="gestionAlertasInventarioCriticoHeader">
+      <h2 class="grid-item-gestionAlertasInventarioCriticoTitulo">
+        Gestión de Alertas
+      </h2>
+    </div>
+
+    <form [formGroup]="gestionAlertasInventarioCriticoForm" (ngSubmit)="onSubmit()">
+      <div class="gestionAlertasInventarioCriticoForm">
+
+        <div class="grid-item-productoForm">
+          <h3>Producto</h3>
+          <mat-form-field class="productoFormField" appearance="fill">
+            <mat-label>Escoja el producto</mat-label>
+            <input 
+              type="text" 
+              matInput
+              formControlName="fieldProducto"
+              id="consultaVendedores-fieldproducto" 
+              [matAutocomplete]="auto"
+            >
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="conProductoSeleccionado($event)">
+              <mat-option *ngFor="let nombreProducto of nombresProductosFiltrados | async" [value]="nombreProducto">
+                {{ nombreProducto }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-item-bodegaForm">
+          <h3>Bodega</h3>
+          <mat-form-field class="bodegaFormField">
+            <mat-label>Escoja la Bodega</mat-label>
+            <mat-select formControlName="fieldBodega">
+              <mat-option *ngFor="let bodega of listaBodegas" 
+                [value]="bodega.id">
+                {{ bodega.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="gestionAlertasInventarioCriticoBtnsContainer">
+          <div class="grid-item-cancelarBtnDiv">
+            <button mat-flat-button class="cancelarBtn" (click)="clearAll()">Cancelar</button>
+          </div>
+          <div class="grid-item-buscarBtnDiv">
+            <button mat-flat-button class="buscarBtn" 
+                    type="submit" 
+                    >Buscar
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </form>
+
+    <div class="gestionAlertasInventarioCriticoTableHeader">
+      <h3 class="grid-item-gestionAlertasInventarioCriticoTableTitulo">
+        Productos en Nivel Crítico
+      </h3>
+    </div>
+
+    <div class="gestionAlertasInventarioCriticoTableGrid">
+      <app-table-template
+        [data]="tableData"
+        [columns]="tableColumns"
+        [displayedColumns]="visibleColumns"
+        [actions]="assignAction"
+      ></app-table-template>
+    </div>
+
+  </main>
+</app-default-window>

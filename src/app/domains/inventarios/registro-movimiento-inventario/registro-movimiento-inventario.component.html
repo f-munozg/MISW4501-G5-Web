@@ -1,0 +1,146 @@
+<p>
+  registro-movimiento-inventario works!
+</p>
+<app-default-window>
+  <main class="registroMovimientoInventarioContainer">
+    <div class="registroMovimientoInventarioHeaderGrid">
+      <h2 class="grid-item-registroMovimientoInventarioTitulo">
+        Movimientos de Inventarios
+      </h2>
+    </div>
+    <form [formGroup]="registroMovimientoInventarioForm" (ngSubmit)="onSubmit()">
+      <div class="registroMovimientoInventarioGrid">
+        <div class="grid-item-productoForm">
+          <h3>Producto</h3>
+          <mat-form-field class="productoFormField" appearance="fill">
+            <mat-label>Escoja el producto</mat-label>
+            <input 
+              type="text" 
+              matInput
+              formControlName="fieldProducto"
+              id="consultaVendedores-fieldproducto" 
+              [matAutocomplete]="auto"
+            >
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="conProductoSeleccionado($event)">
+              <mat-option *ngFor="let nombreProducto of nombresProductosFiltrados | async" [value]="nombreProducto">
+                {{ nombreProducto }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-item-bodegaForm">
+          <h3>Bodega</h3>
+          <mat-form-field class="bodegaFormField">
+            <mat-label>Escoja la Bodega</mat-label>
+            <mat-select formControlName="fieldBodega">
+              <mat-option *ngFor="let bodega of listaBodegas" 
+                [value]="bodega.id">
+                {{ bodega.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-item-cantidadForm">
+          <h3>Cantidad</h3>
+          <mat-form-field class="cantidadFormField">
+            <mat-label>Unidades movidas</mat-label>
+            <input 
+              type="number"
+              formControlName="fieldCantidad" 
+              matInput
+              >
+          </mat-form-field>
+        </div> 
+
+        <div class="grid-item-tipoMovimientoForm">
+          <h3>Tipo de Movimiento</h3>
+          <mat-form-field class="tipoMovimientoFormField">
+            <mat-label>Escoja la Zona</mat-label>
+            <mat-select formControlName="fieldTipoMovimiento">
+              <mat-option *ngFor="let tipoMovimiento of tiposMovimiento"
+                  [value]="tipoMovimiento">
+                  {{MovementType2LabelMapping[tipoMovimiento]}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Add toggle button for additional fields -->
+        <div class="grid-item-activarCamposAdicionales">
+          <button mat-button class="activarCamposAdicionalesBtn" type="button" (click)="activarCamposAdicionales()">
+            {{ mostrarCamposAdicionales ? 'Ocultar campos adicionales' : 'Mostrar campos adicionales (solo para crear stock)' }}
+          </button>
+        </div>
+
+        <!-- Additional fields (shown only when mostrarCamposAdicionales is true) -->
+        <div *ngIf="mostrarCamposAdicionales" class="grid-item-camposAdicionales">
+          <div class="grid-item-limiteStockFormField">
+            <h3>Stock de Advertencia</h3>
+            <mat-form-field class="limiteStockFormField">
+              <mat-label>Nivel de advertencia</mat-label>
+              <input type="number" formControlName="fieldLimiteStock" matInput>
+            </mat-form-field>
+          </div>
+
+          <div class="grid-item-nivelCriticoForm">
+            <h3>Nivel Crítico</h3>
+            <mat-form-field class="nivelCriticoFormField">
+              <mat-label>Nivel crítico</mat-label>
+              <input type="number" formControlName="fieldNivelCritico" matInput>
+            </mat-form-field>
+          </div>
+
+          <div class="grid-item-ubicacionForm">
+            <h3>Ubicación</h3>
+            <mat-form-field class="ubicacionFormField">
+              <mat-label>Ubicación en bodega</mat-label>
+              <input type="text" formControlName="fieldUbicacion" matInput>
+            </mat-form-field>
+          </div>
+
+          <div class="grid-item-fechaVencimientoForm">
+            <h3>Fecha de Vencimiento</h3>
+            <mat-form-field class="fechaVencimientoFormField">
+              <mat-label>Fecha de Vencimiento</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="fieldFechaVencimiento">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+
+        
+        <div class="registroMovimientoInventarioFormBtnsContainer">
+          <div class="grid-item-cancelarBtnDiv">
+            <button mat-flat-button class="cancelarBtn" (click)="clearAll()">Cancelar</button>
+          </div>
+          <div class="grid-item-guardarBtnDiv">
+            <button mat-flat-button class="guardarBtn" 
+                    type="submit" 
+                    >Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="movimientosRecientesTableHeader">
+      <h2 class="grid-item-movimientosRecientesTableHeader">
+        Movimientos de Inventarios
+      </h2>
+    </div>
+    <div class="movimientosRecientesTableGrid">
+      <app-table-template
+        [data]="tableData"
+        [columns]="tableColumns"
+        [displayedColumns]="visibleColumns"
+      ></app-table-template>
+    </div>
+    <div class="trazabilidadAuditoriaBtnGrid">
+      <div class="grid-item-trazabilidadAuditoriaBtnDiv">
+        <button mat-flat-button class="trazabilidadAuditoriaBtn">Trazabilidad y Auditoría</button>
+      </div>
+    </div>
+  </main>
+</app-default-window>
