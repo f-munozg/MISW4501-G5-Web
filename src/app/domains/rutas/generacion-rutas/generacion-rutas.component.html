@@ -1,3 +1,50 @@
 <app-default-window>
+  <main class="generacionRutasContainer">
+    <div class="generacionRutasHeaderGrid">
+      <h2 class="grid-item-generacionRutasTitulo">
+        Generación de Rutas de Entrega
+      </h2>
+    </div>
+    <!-- Form starts here -->
+      <div class="generacionRutasGrid">
 
+        <div class="grid-item-fechaEntregaForm">
+          <h3>Fecha de Entrega</h3>
+          <mat-form-field class="fechaEntregaFormField">
+            <mat-label>Fecha de Entrega</mat-label>
+            <input matInput [matDatepicker]="picker"> <!-- formControlName="fieldFechaEntrega" -->
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-item-buscarBtnDiv">
+          <button mat-flat-button class="buscarBtn" 
+                  type="submit" 
+                  >Buscar
+          </button>
+        </div>
+
+      </div>
+    <!-- Form ends here -->
+    <div class="ordenesPendientesTableHeader">
+      <h3 class="grid-item-ordenesPendientesTableHeader">
+        Órdenes Pendientes
+      </h3>
+    </div>
+    <div class="ordenesPendientesTableGrid">
+
+    </div>
+    <div class="mapaRutaGenerada">
+
+    </div>
+    <div class="optimizacionComprasFormBtnsContainer">
+      <div class="grid-item-generarMapaBtnDiv">
+        <button mat-flat-button class="generarMapaBtn">Generar Ruta</button>
+      </div>
+      <div class="grid-item-consultarMapaBtnDiv">
+        <button mat-flat-button class="consultarMapaBtn">Consultar Mapa</button>
+      </div>
+    </div>
+  </main>
 </app-default-window>

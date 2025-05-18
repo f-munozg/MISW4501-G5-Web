@@ -253,8 +253,20 @@ export class TableTemplateComponent<T> implements AfterViewInit, OnChanges {
     }
   }
 
+  get selectedItems(): T[] {
+    return Array.from(this._selectedItems);
+  }
+
+  get selectedItemsCount(): number {
+    return this._selectedItems.size;
+  }
+
   isAllSelected(): boolean {
     return this._selectedItems.size === this._data.length && this._data.length > 0;
+  }
+
+  isIndeterminateSelection(): boolean {
+    return this._selectedItems.size > 0 && !this.isAllSelected();
   }
 }
 

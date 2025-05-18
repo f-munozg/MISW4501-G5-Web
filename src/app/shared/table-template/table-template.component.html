@@ -9,12 +9,12 @@
   </div>
   <div class="tableGrid">
     <table mat-table [dataSource]="dataSource">
-      <!--  -->
+      <!-- Checkbox -->
       <ng-container matColumnDef="select" *ngIf="checkboxConfig?.enabled">
         <th mat-header-cell *matHeaderCellDef>
           <mat-checkbox 
             [checked]="isAllSelected()"
-            [indeterminate]="_selectedItems.size > 0 && !isAllSelected()"
+            [indeterminate]="isIndeterminateSelection()"
             (change)="toggleAllSelection()"
           ></mat-checkbox>
         </th>
