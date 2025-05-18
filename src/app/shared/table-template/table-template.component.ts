@@ -19,6 +19,13 @@ export interface TableAction {
   action: (element: any) => void;
 }
 
+export interface TableCheckboxConfig {
+  enabled?: boolean;
+  selectedItems?: any[];
+  selectionChanged?: (selectedItems: any[]) => void;
+}
+
+
 @Component({
   selector: 'app-table-template',
   templateUrl: './table-template.component.html',
@@ -29,6 +36,10 @@ export class TableTemplateComponent<T> implements AfterViewInit, OnChanges {
   private _data: T[] = [];
   private _columns: TableColumn[] = [];
   private _displayedColumns: string[] = [];
+
+  @Input() checkboxConfig: TableCheckboxConfig = { enabled: false };
+
+  private _selectedItems = new Set<T>();
 
   @Input() 
   set data(value: T[]) {
@@ -88,11 +99,6 @@ export class TableTemplateComponent<T> implements AfterViewInit, OnChanges {
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
     }
-  }
-
-  get displayedColumnsWithActions(): string[] {
-    const baseColumns = this._displayedColumns;
-    return this.actions?.length ? [...baseColumns, 'actions'] : baseColumns;
   }
 
   generarContenidoCSV(): string | null {
@@ -191,6 +197,64 @@ export class TableTemplateComponent<T> implements AfterViewInit, OnChanges {
 
     // Se guarda el PDF con la info
     doc.save('export.pdf');
+  }
+
+  // Checkbox
+  get displayedColumnsWithActions(): string[] {
+    const baseColumns = this._displayedColumns;
+    let columns = [...baseColumns];
+    
+    if (this.checkboxConfig?.enabled) {
+      columns = ['select', ...columns];
+    }
+    
+    if (this.actions?.length) {
+      columns = [...columns, 'actions'];
+    }
+    
+    return columns;
+  }
+
+  toggleItemSelection(item: T): void {
+    if (this._selectedItems.has(item)) {
+      this._selectedItems.delete(item);
+    } else {
+      this._selectedItems.add(item);
+    }
+    
+    if (this.checkboxConfig.selectionChanged) {
+      this.checkboxConfig.selectionChanged(Array.from(this._selectedItems));
+    }
+    
+    if (this.checkboxConfig.selectedItems) {
+      this.checkboxConfig.selectedItems.splice(0);
+      this.checkboxConfig.selectedItems.push(...Array.from(this._selectedItems));
+    }
+  }
+
+  isItemSelected(item: T): boolean {
+    return this._selectedItems.has(item);
+  }
+
+  toggleAllSelection(): void {
+    if (this._selectedItems.size === this._data.length) {
+      this._selectedItems.clear();
+    } else {
+      this._data.forEach(item => this._selectedItems.add(item));
+    }
+    
+    if (this.checkboxConfig.selectionChanged) {
+      this.checkboxConfig.selectionChanged(Array.from(this._selectedItems));
+    }
+    
+    if (this.checkboxConfig.selectedItems) {
+      this.checkboxConfig.selectedItems.splice(0);
+      this.checkboxConfig.selectedItems.push(...Array.from(this._selectedItems));
+    }
+  }
+
+  isAllSelected(): boolean {
+    return this._selectedItems.size === this._data.length && this._data.length > 0;
   }
 }
 
