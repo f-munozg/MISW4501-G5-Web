@@ -5,14 +5,14 @@
         Generación de Rutas de Entrega
       </h2>
     </div>
-    <!-- Form starts here -->
+    <form [formGroup]="generacionRutasForm" (ngSubmit)="onSubmit()">
       <div class="generacionRutasGrid">
 
         <div class="grid-item-fechaEntregaForm">
           <h3>Fecha de Entrega</h3>
           <mat-form-field class="fechaEntregaFormField">
             <mat-label>Fecha de Entrega</mat-label>
-            <input matInput [matDatepicker]="picker"> <!-- formControlName="fieldFechaEntrega" -->
+            <input matInput [matDatepicker]="picker" formControlName="fieldFechaEntrega">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
@@ -26,14 +26,18 @@
         </div>
 
       </div>
-    <!-- Form ends here -->
+    </form>
     <div class="ordenesPendientesTableHeader">
       <h3 class="grid-item-ordenesPendientesTableHeader">
         Órdenes Pendientes
       </h3>
     </div>
     <div class="ordenesPendientesTableGrid">
-
+      <app-table-template
+        [data]="tableData"
+        [columns]="tableColumns"
+        [displayedColumns]="visibleColumns"
+      ></app-table-template>
     </div>
     <div class="mapaRutaGenerada">
 
