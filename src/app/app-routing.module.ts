@@ -33,6 +33,9 @@ import { ReporteVentasComponent } from './domains/reportes/reporte-ventas/report
 import { ReporteVendedorComponent } from './domains/reportes/reporte-vendedor/reporte-vendedor.component';
 import { ReporteRotacionInventarioComponent } from './domains/reportes/reporte-rotacion-inventario/reporte-rotacion-inventario.component';
 
+// Rutas
+import { GeneracionRutasComponent } from './domains/rutas/generacion-rutas/generacion-rutas.component';
+
 // Ventas y Vendedores
 import { ConsultaVentasComponent } from './domains/ventas/consulta-ventas/consulta-ventas.component';
 import { RegistroVendedoresComponent } from './domains/vendedores/registro-vendedores/registro-vendedores.component';
@@ -87,9 +90,12 @@ const routes: Routes = [
       { path: '', pathMatch: 'full', component: ReporteMenuComponent },
       { path: 'ventas', component: ReporteVentasComponent },
       { path: 'vendedor', component: ReporteVendedorComponent },
-      { path: 'rotacion_inventario', component: ReporteRotacionInventarioComponent }
+      { path: 'rotacion_inventario', component: ReporteRotacionInventarioComponent },
     ]
   },
+
+  /* Rutas */
+  {path: 'rutas/generacion', component: GeneracionRutasComponent},
 
   /* Vendedores */
   {path: 'vendedores/registro', component: RegistroVendedoresComponent,
