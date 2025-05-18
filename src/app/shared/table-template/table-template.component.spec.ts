@@ -315,4 +315,147 @@ describe('TableTemplateComponent', () => {
       });
     });
   });
+
+  describe('Checkbox functionality', () => {
+    beforeEach(() => {
+      component.data = [...testData];
+      component.columns = [...testColumns];
+      component.displayedColumns = ['id', 'name'];
+    });
+
+    describe('toggleItemSelection', () => {
+      it('should add item to selection when not selected', () => {
+        const item = testData[0];
+        expect(component.isItemSelected(item)).toBeFalse();
+        
+        component.toggleItemSelection(item);
+        
+        expect(component.isItemSelected(item)).toBeTrue();
+        expect(component['_selectedItems'].size).toBe(1);
+      });
+
+      it('should remove item from selection when already selected', () => {
+        const item = testData[0];
+        component['_selectedItems'].add(item);
+        
+        component.toggleItemSelection(item);
+        
+        expect(component.isItemSelected(item)).toBeFalse();
+        expect(component['_selectedItems'].size).toBe(0);
+      });
+
+      it('should call selectionChanged callback when provided', () => {
+        const selectionChangedSpy = jasmine.createSpy('selectionChanged');
+        component.checkboxConfig = {
+          enabled: true,
+          selectionChanged: selectionChangedSpy
+        };
+        
+        component.toggleItemSelection(testData[0]);
+        
+        expect(selectionChangedSpy).toHaveBeenCalledWith([testData[0]]);
+      });
+
+      it('should update selectedItems array when provided', () => {
+        const selectedItems: any[] = [];
+        component.checkboxConfig = {
+          enabled: true,
+          selectedItems: selectedItems
+        };
+        
+        component.toggleItemSelection(testData[0]);
+        
+        expect(selectedItems).toEqual([testData[0]]);
+      });
+    });
+
+    describe('isItemSelected', () => {
+      it('should return true when item is selected', () => {
+        component['_selectedItems'].add(testData[0]);
+        expect(component.isItemSelected(testData[0])).toBeTrue();
+      });
+
+      it('should return false when item is not selected', () => {
+        expect(component.isItemSelected(testData[0])).toBeFalse();
+      });
+    });
+
+    describe('toggleAllSelection', () => {
+      it('should select all items when none are selected', () => {
+        component.toggleAllSelection();
+        
+        expect(component.isAllSelected()).toBeTrue();
+        expect(component['_selectedItems'].size).toBe(2);
+      });
+
+      it('should deselect all items when all are selected', () => {
+        component['_selectedItems'].add(testData[0]);
+        component['_selectedItems'].add(testData[1]);
+        
+        component.toggleAllSelection();
+        
+        expect(component.isAllSelected()).toBeFalse();
+        expect(component['_selectedItems'].size).toBe(0);
+      });
+
+      it('should call selectionChanged callback when provided', () => {
+        const selectionChangedSpy = jasmine.createSpy('selectionChanged');
+        component.checkboxConfig = {
+          enabled: true,
+          selectionChanged: selectionChangedSpy
+        };
+        
+        component.toggleAllSelection();
+        
+        expect(selectionChangedSpy).toHaveBeenCalledWith(testData);
+      });
+
+      it('should update selectedItems array when provided', () => {
+        const selectedItems: any[] = [];
+        component.checkboxConfig = {
+          enabled: true,
+          selectedItems: selectedItems
+        };
+        
+        component.toggleAllSelection();
+        
+        expect(selectedItems).toEqual(testData);
+      });
+    });
+
+    describe('isAllSelected', () => {
+      it('should return true when all items are selected', () => {
+        component['_selectedItems'].add(testData[0]);
+        component['_selectedItems'].add(testData[1]);
+        
+        expect(component.isAllSelected()).toBeTrue();
+      });
+
+      it('should return false when not all items are selected', () => {
+        component['_selectedItems'].add(testData[0]);
+        
+        expect(component.isAllSelected()).toBeFalse();
+      });
+
+      it('should return false when data is empty', () => {
+        component.data = [];
+        component['_selectedItems'].add(testData[0]);
+        
+        expect(component.isAllSelected()).toBeFalse();
+      });
+    });
+
+    describe('displayedColumnsWithActions with checkboxes', () => {
+      it('should include select column when checkboxes are enabled', () => {
+        component.checkboxConfig = { enabled: true };
+        expect(component.displayedColumnsWithActions).toEqual(['select', 'id', 'name']);
+      });
+
+      it('should include both select and actions columns when both are enabled', () => {
+        component.checkboxConfig = { enabled: true };
+        component.actions = testActions;
+        expect(component.displayedColumnsWithActions).toEqual(['select', 'id', 'name', 'actions']);
+      });
+    });
+  });
 });
