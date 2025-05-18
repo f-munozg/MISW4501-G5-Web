@@ -4,6 +4,11 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { GeneracionRutasComponent } from './generacion-rutas.component';
+import { GeneracionRutasService } from './generacion-rutas.service';
+import { RutasModule } from '../rutas.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('GeneracionRutasComponent', () => {
   let component: GeneracionRutasComponent;
@@ -11,7 +16,16 @@ describe('GeneracionRutasComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ GeneracionRutasComponent ]
+      declarations: [ GeneracionRutasComponent ],
+      imports: [
+        RutasModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        RouterTestingModule
+      ],
+      providers: [
+        GeneracionRutasService
+      ]
     })
     .compileComponents();
   }));
