@@ -34,21 +34,32 @@
     </div>
     <div class="ordenesPendientesTableGrid">
       <app-table-template
+        [checkboxConfig]="checkboxConfig"
         [data]="tableData"
         [columns]="tableColumns"
         [displayedColumns]="visibleColumns"
       ></app-table-template>
     </div>
-    <div class="mapaRutaGenerada">
-
-    </div>
     <div class="optimizacionComprasFormBtnsContainer">
       <div class="grid-item-generarMapaBtnDiv">
-        <button mat-flat-button class="generarMapaBtn">Generar Ruta</button>
+        <button mat-flat-button class="generarMapaBtn" 
+                (click)="generarRuta()"
+                [disabled]="ordenesSeleccionadas.length === 0">
+          Generar Ruta
+        </button>
       </div>
       <div class="grid-item-consultarMapaBtnDiv">
         <button mat-flat-button class="consultarMapaBtn">Consultar Mapa</button>
       </div>
+    </div>
+    <div class="mapaRutaGenerada">
+      <div *ngIf="isMapLoading" class="map-loading">
+        <mat-spinner diameter="50"></mat-spinner>
+        <span>Generando mapa...</span>
+      </div>
+      <div *ngIf="showMapPlaceholder && !isMapLoading" class="map-placeholder">
+      </div>
+      <img *ngIf="mapaRutaBase64 && !isMapLoading" [src]="mapaRutaBase64" alt="Mapa de ruta generada" class="map-image">
     </div>
   </main>
 </app-default-window>

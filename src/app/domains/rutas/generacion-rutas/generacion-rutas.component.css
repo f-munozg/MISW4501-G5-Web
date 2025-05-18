@@ -4,11 +4,11 @@
     /* background-color: #e4e4e4; */
 }
 
-
+/*
 [class^='grid-item']{
     outline: 3px dashed #f90;
 }
-
+*/
 
 .generacionRutasHeaderGrid {
     display: grid;
@@ -64,15 +64,51 @@
 }
 
 
+.mapaRutaGenerada {
+    display: grid;
+    grid-row: 6;
+    grid-template-columns: repeat(9, 1fr);
+
+    .map-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(245, 245, 245, 0.8);
+    }
+
+    .map-loading span {
+        margin-top: 10px;
+        color: #666;
+    }
+    
+    .map-image {
+        grid-column: 2 / 9;
+        width: 100%;
+        height: auto;
+    }
+}
+
 .optimizacionComprasFormBtnsContainer {
     display: grid;
+    grid-row: 5;
     grid-template-columns: repeat(9, 1fr);
     gap: 10px; 
   }
   
-  .grid-item-generarMapaBtnDiv,
+  .grid-item-generarMapaBtnDiv {
+    grid-column: 2 / 5;
+    
+    .mat-mdc-unelevated-button:not(:disabled) {
+        color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));
+        background-color: #005d52 !important;
+    }
+  }
+
   .grid-item-consultarMapaBtnDiv {
-    grid-column: 7 / 9;
+    grid-column: 6 / 9;
     
     .mat-mdc-unelevated-button:not(:disabled) {
         color: var(--mdc-filled-button-label-text-color, var(--mat-sys-on-primary));

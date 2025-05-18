@@ -33,8 +33,9 @@ export class GeneracionRutasService {
     return this.http.get<ClientesResponse>(`${environment.apiUrlCustomers}/customers`);
   }
 
-  postDeliveryRoute(){
-
+  postDeliveryRoute(body: any): 
+  Observable<any> {
+    return this.http.post(`${environment.apiUrlRoutes}/routes/delivery`, body);
   }
 
 }
