@@ -30,3 +30,32 @@ export interface ReporteVentas {
     primera_venta: string;
     ultima_venta: string;
 }
+
+export interface ReporteVendedorPlan {
+    periodo: string;
+    producto: string;
+    meta: string;
+    cumplimiento: string;
+}
+
+export interface ReporteVendedorResumen {
+    total_ventas: number;
+    total_ventas_plan: number;
+    clientes_atendidos: number;
+    clientes_visitados: number;
+    tasa_conversion: string;
+    plan: ReporteVendedorPlan;
+}
+
+export interface ReporteVendedorDetalle {
+    producto: string;
+    fecha_venta: string;
+    cantidad: number;
+    valor_unitario: number;
+    valor_total: number;
+}
+
+export interface ReporteVendedorResponse {
+    resumen: ReporteVendedorResumen;
+    detalle_productos: ReporteVendedorDetalle[];
+}

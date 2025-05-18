@@ -1,3 +1,109 @@
 <app-default-window>
+    <main class="reporteVendedorContainer">
 
+      <div class="reporteVendedorHeaderGrid">
+        <h2 class="grid-item-reporteVendedorTitulo">
+          Generación de Reporte por Vendedor
+        </h2>
+      </div>
+      
+      <form [formGroup]="reporteVendedorForm" (ngSubmit)="onSubmit()">
+        <div class="reporteVendedorFormGrid">
+          <div class="grid-item-fechasForm">
+            <div class="grid-item-desdeForm">
+              <h3>Desde</h3>
+              <mat-form-field class="desdeFormField">
+                <mat-label>MM/DD/YYYY</mat-label>
+                <input matInput [matDatepicker]="picker1" formControlName="fieldDesde">
+                <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="grid-item-hastaForm">
+              <h3>Hasta</h3>
+              <mat-form-field class="hastaFormField">
+                <mat-label>MM/DD/YYYY</mat-label>
+                <input matInput [matDatepicker]="picker2" formControlName="fieldHasta">
+                <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+                <mat-error *ngIf="reporteVendedorForm.get('fieldHasta')?.hasError('invalidDate')">
+                  Fecha inválida
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          
+          <div class="grid-item-vendedorForm">
+            <h3>Vendedor</h3>
+            <mat-form-field class="vendedorFormField" appearance="fill">
+              <mat-label>Número de Identificación</mat-label>
+              <input 
+                type="text" 
+                matInput
+                id="reporteVentas-fieldVendedor" 
+                formControlName="fieldVendedor"
+                [matAutocomplete]="auto"
+              >
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="conVendedorSeleccionado($event.option.value)">
+                <mat-option *ngFor="let identification_number of numerosIdentificacionFiltrados | async" [value]="identification_number">
+                  {{ identification_number }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+
+          <div class="grid-item-generarReporteBtnForm">
+            <button mat-flat-button class="generarReporteBtn">Generar Reporte</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="reporteVendedorBoxGridTop">
+        <div class="reporteVendedorBoxFlexTop">
+          <div class="grid-item-reporteVendedorTotalVentasBox">
+            <h3>Total Ventas</h3>
+            <p>{{ totalVentas }}</p>
+          </div>
+          <div class="grid-item-reporteVendedorClientesAtendidosBox">
+            <h3>Clientes Atendidos</h3>
+            <p>{{ clientesAtendidos }}</p>
+          </div>
+          <div class="grid-item-reporteVendedorCumplimientoMetasBox">
+            <h3>Cumplimiento Metas</h3>
+            <p>{{ cumplimientoMetas }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="reporteVendedorBoxGridDown">
+        <div class="reporteVendedorBoxFlexDown">
+          <div class="grid-item-reporteVendedorTotalPlanVentasBox">
+            <h3>Total Plan Ventas</h3>
+            <p>{{ totalPlanVentas }}</p>
+          </div>
+          <div class="grid-item-reporteVendedorClientesVisitadosBox">
+            <h3>Clientes Visitados</h3>
+            <p>{{ clientesVisitados }}</p>
+          </div>
+          <div class="grid-item-reporteVendedorTasaConversionBox">
+            <h3>Tasa Conversión</h3>
+            <p>{{ tasaConversion }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reporteVendedorTablaHeaderGrid">
+        <h3 class="grid-item-reporteVendedorTablaTitulo">
+          Datos de Ventas
+        </h3>
+      </div>
+      
+      <div class="reporteVendedorTableGrid">
+        <app-table-template
+          [data]="tableData"
+          [columns]="tableColumns"
+          [displayedColumns]="visibleColumns">
+        </app-table-template>
+      </div>
+
+    </main>
 </app-default-window>
