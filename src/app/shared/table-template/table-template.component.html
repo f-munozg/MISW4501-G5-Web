@@ -9,6 +9,23 @@
   </div>
   <div class="tableGrid">
     <table mat-table [dataSource]="dataSource">
+      <!-- Checkbox -->
+      <ng-container matColumnDef="select" *ngIf="checkboxConfig?.enabled">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox 
+            [checked]="isAllSelected()"
+            [indeterminate]="isIndeterminateSelection()"
+            (change)="toggleAllSelection()"
+          ></mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox
+            [checked]="isItemSelected(element)"
+            (change)="toggleItemSelection(element)"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+
       <!-- Definiciones de columna -->
       <ng-container *ngFor="let column of columns" [matColumnDef]="column.name">
         <th mat-header-cell *matHeaderCellDef>{{column.header}}</th>
