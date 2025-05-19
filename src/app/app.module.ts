@@ -4,11 +4,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { LoginModule } from './domains/login/login.module';
+import { ComprasModule } from './domains/compras/compras.module';
 import { FabricantesModule } from './domains/fabricantes/fabricantes.module';
 import { InventariosModule } from './domains/inventarios/inventarios.module';
 import { ProductosModule } from './domains/productos/productos.module';
 import { ReglasModule } from './domains/reglas/reglas.module';
 import { ReportesModule } from './domains/reportes/reportes.module';
+import { RutasModule } from './domains/rutas/rutas.module';
 import { VendedoresModule } from './domains/vendedores/vendedores.module';
 import { VentasModule } from './domains/ventas/ventas.module';
 
@@ -25,11 +27,13 @@ import { TableDemoComponent } from './shared/table-template/table-demo.component
     AppRoutingModule,
     DefaultWindowComponent,
     LoginModule,
+    ComprasModule,
     FabricantesModule,
     InventariosModule,
     ProductosModule,
     ReglasModule,
     ReportesModule,
+    RutasModule,
     VendedoresModule,
     VentasModule,
     TableTemplateComponent,

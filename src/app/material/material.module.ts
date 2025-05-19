@@ -4,6 +4,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule} from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
@@ -17,7 +18,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatAutocompleteModule} from '@angular/material/autocomplete';
-import { MatSnackBarModule } from '@angular/material/snack-bar'
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 const materialModules = [
   MatFormFieldModule,
@@ -36,7 +38,9 @@ const materialModules = [
   MatSelectModule,
   MatTabsModule,
   MatAutocompleteModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatCheckboxModule,
+  MatProgressSpinnerModule
 ]
 
 @NgModule({

@@ -1,0 +1,65 @@
+<app-default-window>
+  <main class="generacionRutasContainer">
+    <div class="generacionRutasHeaderGrid">
+      <h2 class="grid-item-generacionRutasTitulo">
+        Generación de Rutas de Entrega
+      </h2>
+    </div>
+    <form [formGroup]="generacionRutasForm" (ngSubmit)="onSubmit()">
+      <div class="generacionRutasGrid">
+
+        <div class="grid-item-fechaEntregaForm">
+          <h3>Fecha de Entrega</h3>
+          <mat-form-field class="fechaEntregaFormField">
+            <mat-label>Fecha de Entrega</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="fieldFechaEntrega">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-item-buscarBtnDiv">
+          <button mat-flat-button class="buscarBtn" 
+                  type="submit" 
+                  >Buscar
+          </button>
+        </div>
+
+      </div>
+    </form>
+    <div class="ordenesPendientesTableHeader">
+      <h3 class="grid-item-ordenesPendientesTableHeader">
+        Órdenes Pendientes
+      </h3>
+    </div>
+    <div class="ordenesPendientesTableGrid">
+      <app-table-template
+        [checkboxConfig]="checkboxConfig"
+        [data]="tableData"
+        [columns]="tableColumns"
+        [displayedColumns]="visibleColumns"
+      ></app-table-template>
+    </div>
+    <div class="optimizacionComprasFormBtnsContainer">
+      <div class="grid-item-generarMapaBtnDiv">
+        <button mat-flat-button class="generarMapaBtn" 
+                (click)="generarRuta()"
+                [disabled]="ordenesSeleccionadas.length === 0">
+          Generar Ruta
+        </button>
+      </div>
+      <div class="grid-item-consultarMapaBtnDiv">
+        <button mat-flat-button class="consultarMapaBtn">Consultar Mapa</button>
+      </div>
+    </div>
+    <div class="mapaRutaGenerada">
+      <div *ngIf="isMapLoading" class="map-loading">
+        <mat-spinner diameter="50"></mat-spinner>
+        <span>Generando mapa...</span>
+      </div>
+      <div *ngIf="showMapPlaceholder && !isMapLoading" class="map-placeholder">
+      </div>
+      <img *ngIf="mapaRutaBase64 && !isMapLoading" [src]="mapaRutaBase64" alt="Mapa de ruta generada" class="map-image">
+    </div>
+  </main>
+</app-default-window>
