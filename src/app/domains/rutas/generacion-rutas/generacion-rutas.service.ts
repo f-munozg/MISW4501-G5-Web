@@ -1,16 +1,9 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { ActivatedRoute, Router } from '@angular/router';
-import { finalize, map, Observable, startWith } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment'
 import { OrdenResponse } from '../../pedidos/pedidos.model';
 import { HttpClient } from '@angular/common/http';
 import { ClientesResponse, VendedoresResponse } from '../../vendedores/vendedores.model';
-
-export interface TableRow {
-
-}
 
 @Injectable({
   providedIn: 'root'
