@@ -92,7 +92,6 @@ export class GeneracionRutasComponent implements OnInit {
   ngOnInit() {
     this.initializeForm();
     this.cargarVendedoresClientes();
-
   }
 
   initializeForm(): void {
@@ -107,9 +106,11 @@ export class GeneracionRutasComponent implements OnInit {
     this.apiService.getListaVendedores().subscribe({
       next: (response) => {
         this.listaVendedores = response.sellers;
+        this.isRefreshing = false; 
       },
       error: (error) => {
         console.error('Error loading sellers:', error);
+        this.isRefreshing = false;
       }
     });
 
@@ -139,7 +140,7 @@ export class GeneracionRutasComponent implements OnInit {
     
     this.apiService.getOrdenes().subscribe({
       next: (response) => {
-        const selectedDateStr = formatDate(this.selectedDate!, 'yyyy-MM-dd', 'en-US');
+        const selectedDateStr = formatDate(this.selectedDate!, 'yyyy-MM-dd', 'en-US', 'UTC');
         
         this.listaOrdenes = response.orders.filter(order => {
           const orderDateStr = order.date_delivery.split('T')[0];
@@ -219,6 +220,7 @@ export class GeneracionRutasComponent implements OnInit {
           this.showMapPlaceholder = true;
         }
 
+        this.isGeneratingRoute = false;
         this.isMapLoading = false;
       },
       error: (error) => {
